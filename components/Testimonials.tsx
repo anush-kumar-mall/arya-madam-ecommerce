@@ -1,4 +1,6 @@
-import { FC } from "react";
+'use client';
+
+import { FC, useEffect } from "react";
 import { Star } from "lucide-react";
 
 interface Testimonial {
@@ -55,37 +57,109 @@ const testimonials: Testimonial[] = [
 ];
 
 const Testimonials: FC = () => {
-  return (
-    <section className="bg-gray-50 py-16 px-6">
-      <div className="max-w-7xl mx-auto">
 
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-[#3d6b82] mb-3">
+  useEffect(() => {
+    const elements = document.querySelectorAll('[data-animate="card"]');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle(
+            'visible',
+            entry.isIntersecting
+          );
+        });
+      },
+      { threshold: 0.25 }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section className="relative py-28 px-6 font-serif overflow-hidden">
+
+      {/* Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
+        }}
+      />
+      <div className="absolute inset-0 bg-[#2b1d12]/90" />
+
+      <div className="relative max-w-7xl mx-auto">
+
+        {/* Heading */}
+        <div
+          data-animate="card"
+          className="text-center mb-20"
+        >
+          <span
+            className="inline-block mb-6 px-6 py-2
+                       rounded-full border border-[#e6cfa7]/60
+                       text-[#e6cfa7] tracking-widest uppercase text-xs"
+          >
+            Testimonials
+          </span>
+
+          <h2 className="text-4xl md:text-5xl font-bold text-[#fdfaf6] mb-6">
             Trusted by Professionals
           </h2>
-          <p className="text-gray-600">
-            What industry experts say about us
+
+          <div className="mb-6 text-[#e6cfa7] tracking-widest">
+            ───── ✦ ─────
+          </div>
+
+          <p className="text-[#eadbc4] text-lg max-w-3xl mx-auto">
+            Hear from artisans and designers who rely on our materials
+            to bring timeless creations to life.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {testimonials.map(t => (
+        {/* Grid */}
+        <div className="grid md:grid-cols-3 gap-10">
+          {testimonials.map((t) => (
             <div
               key={t.id}
-              className="bg-white p-8 rounded-lg border hover:shadow-md transition"
+              data-animate="card"
+              className="rounded-2xl
+                         border border-[#e6cfa7]/30
+                         bg-[#3b2a1a]/80
+                         p-8
+                         shadow-[0_20px_60px_rgba(0,0,0,0.5)]
+                         transition hover:-translate-y-1
+                         hover:shadow-[0_30px_80px_rgba(0,0,0,0.7)]"
             >
-              <div className="flex mb-4">
+              {/* Stars */}
+              <div className="flex mb-5">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-orange-400 text-orange-400" />
+                  <Star
+                    key={i}
+                    className="w-5 h-5 text-[#e6cfa7] fill-[#e6cfa7]"
+                  />
                 ))}
               </div>
 
-              <p className="text-gray-700 mb-6">"{t.text}"</p>
+              {/* Text */}
+              <p className="text-[#eadbc4] italic leading-relaxed mb-8">
+                “{t.text}”
+              </p>
 
+              {/* Author */}
               <div>
-                <h4 className="font-semibold text-[#3d6b82]">{t.name}</h4>
-                <p className="text-sm text-gray-600">{t.role}</p>
-                <p className="text-sm text-gray-400">{t.company}</p>
+                <h4 className="font-semibold text-[#fdfaf6]">
+                  {t.name}
+                </h4>
+                <p className="text-sm text-[#eadbc4]">
+                  {t.role}
+                </p>
+                <p className="text-sm text-[#eadbc4]/70">
+                  {t.company}
+                </p>
               </div>
             </div>
           ))}

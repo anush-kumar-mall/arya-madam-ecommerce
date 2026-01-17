@@ -1,10 +1,13 @@
+'use client';
+
+import { useEffect } from "react";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 
 const products = [
   {
     name: "Rainbow Glass Bead Set",
-    image: "/products/beads1.jpg",
+    image: "/assets/rainbowBead.jpeg",
     price: 299,
     oldPrice: 349,
     rating: 4.5,
@@ -13,7 +16,7 @@ const products = [
   },
   {
     name: "Embroidery Thread Collection",
-    image: "/products/thread1.jpg",
+    image: "/assets/embroideryThread.jpeg",
     price: 399,
     oldPrice: 499,
     rating: 4.7,
@@ -22,7 +25,7 @@ const products = [
   },
   {
     name: "Wooden Bead Assortment",
-    image: "/products/beads2.jpg",
+    image: "/assets/woodenBeads.jpeg",
     price: 249,
     oldPrice: 299,
     rating: 4.4,
@@ -30,7 +33,7 @@ const products = [
   },
   {
     name: "DIY Jewelry Making Kit",
-    image: "/products/kit1.jpg",
+    image: "/assets/DIYJewelry.jpeg",
     price: 599,
     oldPrice: 799,
     rating: 4.8,
@@ -39,7 +42,7 @@ const products = [
   },
   {
     name: "Metallic Charm Collection",
-    image: "/products/metal.jpg",
+    image: "/assets/metallicCharm.jpeg",
     price: 349,
     oldPrice: 449,
     rating: 4.6,
@@ -47,7 +50,7 @@ const products = [
   },
   {
     name: "Silk Thread Bundle",
-    image: "/products/thread2.jpg",
+    image: "/assets/silkThread.jpeg",
     price: 449,
     oldPrice: 599,
     rating: 4.5,
@@ -55,7 +58,7 @@ const products = [
   },
   {
     name: "Crystal Bead Mix",
-    image: "/products/crystal.jpg",
+    image: "/assets/crystalBead.jpeg",
     price: 499,
     oldPrice: 649,
     rating: 4.7,
@@ -64,7 +67,7 @@ const products = [
   },
   {
     name: "Craft Tool Essentials",
-    image: "/products/tools.jpg",
+    image: "/assets/craftTool.jpeg",
     price: 399,
     oldPrice: 499,
     rating: 4.6,
@@ -73,93 +76,128 @@ const products = [
 ];
 
 export default function BestSellers() {
-  return (
-    <section className="bg-gray-50 px-8 py-20">
-      <div className="mx-auto max-w-7xl">
+  useEffect(() => {
+    const elements = document.querySelectorAll('[data-animate="card"]');
 
-        {/* Header */}
-        <div className="mb-10 flex items-center justify-between">
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          } else {
+            entry.target.classList.remove("visible");
+          }
+        });
+      },
+      {
+        threshold: 0.3,
+      }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section className="relative px-8 py-24 font-serif overflow-hidden">
+
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
+        }}
+      />
+      <div className="absolute inset-0 bg-[#2b1d12]/90" />
+
+      <div className="relative mx-auto max-w-7xl">
+
+        <div
+          data-animate="card"
+          className="mb-14 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6"
+        >
           <div>
-            <h2 className="text-2xl font-semibold text-blue-800">
+            <h2 className="text-3xl font-bold text-[#fdfaf6]">
               Best Sellers
             </h2>
-            <p className="text-sm text-gray-500">
-              Premium products trusted by professionals
+            <p className="mt-2 text-[#eadbc4]">
+              Timeless pieces cherished by artisans
             </p>
           </div>
 
-          <span className="rounded bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
-            ⭐ Top Rated
+          <span className="inline-block rounded-full border border-[#e6cfa7]/60 px-5 py-2
+                           text-xs tracking-widest uppercase text-[#e6cfa7]">
+            ✦ Most Loved ✦
           </span>
         </div>
 
-        {/* Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {products.map((product, index) => (
             <div
               key={index}
-              className="relative rounded-lg bg-white p-4 shadow-sm transition hover:shadow-md"
+              data-animate="card"
+              className="relative rounded-xl bg-[#3b2a1a]/80 p-5
+                         border border-[#e6cfa7]/30
+                         shadow-[0_10px_40px_rgba(0,0,0,0.4)]
+                         hover:-translate-y-1
+                         hover:shadow-[0_20px_60px_rgba(0,0,0,0.6)]
+                         transition"
             >
-              {/* Wishlist */}
-              <button className="absolute right-3 top-3 rounded-full bg-white p-1 shadow">
-                <Heart className="h-4 w-4 text-gray-500" />
+              <button className="absolute right-4 top-4 rounded-full
+                                 bg-[#2b1d12]/80 p-2
+                                 border border-[#e6cfa7]/30">
+                <Heart className="h-4 w-4 text-[#e6cfa7]" />
               </button>
 
-              {/* Badge */}
               {product.badge && (
-                <span className="absolute left-3 top-3 rounded bg-orange-500 px-2 py-0.5 text-xs text-white">
+                <span className="absolute left-4 top-4 rounded
+                                 bg-[#e6cfa7] px-3 py-1
+                                 text-xs font-semibold text-[#3b2a1a]">
                   {product.badge}
                 </span>
               )}
 
-              {/* Image */}
-              <div className="relative h-40 w-full">
+              <div className="relative h-44 w-full mb-4 rounded-lg bg-[#2b1d12]/60">
                 <Image
                   src={product.image}
                   alt={product.name}
                   fill
-                  className="object-contain"
+                  className="object-contain p-4"
                 />
               </div>
 
-              {/* Info */}
-              <h3 className="mt-3 text-sm font-medium">
+              <h3 className="text-sm font-semibold text-[#fdfaf6]">
                 {product.name}
               </h3>
 
-              {/* Rating */}
-              <div className="mt-1 text-xs text-orange-500">
-                ⭐ {product.rating}{" "}
-                <span className="text-gray-400">
+              <div className="mt-2 text-xs text-[#e6cfa7]">
+                ★ {product.rating}{" "}
+                <span className="text-[#eadbc4]/70">
                   ({product.reviews})
                 </span>
               </div>
 
-              {/* Price */}
-              <div className="mt-2 flex items-center gap-2">
-                <span className="font-semibold text-gray-900">
+              <div className="mt-3 flex items-center gap-2">
+                <span className="font-semibold text-[#fdfaf6]">
                   ₹{product.price}
                 </span>
-                <span className="text-sm text-gray-400 line-through">
+                <span className="text-sm text-[#eadbc4]/60 line-through">
                   ₹{product.oldPrice}
-                </span>
-                <span className="text-xs text-green-600">
-                  {Math.round(
-                    ((product.oldPrice - product.price) /
-                      product.oldPrice) *
-                      100
-                  )}
-                  % OFF
                 </span>
               </div>
 
-              {/* Button */}
-              <button className="mt-4 w-full rounded bg-orange-500 py-2 text-sm font-medium text-white hover:bg-orange-600">
+              <button className="mt-5 w-full rounded-lg
+                                 bg-[#e6cfa7] py-2.5
+                                 text-sm font-semibold text-[#3b2a1a]
+                                 hover:bg-[#dcc39a]
+                                 transition">
                 Add to Cart
               </button>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );

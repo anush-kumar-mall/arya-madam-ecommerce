@@ -1,124 +1,130 @@
+'use client';
 
-import React from 'react';
-import { Palette, Search, ShoppingCart, Shield, Truck, Headphones, ArrowRight } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Palette,
+  Search,
+  ShoppingCart,
+  Shield,
+  Truck,
+  Headphones,
+} from 'lucide-react';
 import Link from 'next/link';
 
 const Hero: React.FC = () => {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [show, setShow] = useState(true);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShow(false);
+          requestAnimationFrame(() => setShow(true));
+        }
+      },
+      { threshold: 0.6 }
+    );
+
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="relative h-screen">
-      {/* Background Image with Overlay */}
-      <div 
+    <div
+      ref={heroRef}
+      className="relative h-screen font-serif overflow-hidden"
+    >
+      {/* Background */}
+      <div
         className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: "url('/hero-craft-supplies.jpg')",
+          backgroundImage:
+            "url('/hero-craft-supplies.jpg'), url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
+          backgroundBlendMode: 'multiply',
+          animation: 'depthMove 50s ease-in-out infinite alternate',
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-400/40 to-blue-300/30 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#2b1d12]/90 via-[#4a3323]/70 to-[#6a4a34]/50" />
+        <div className="absolute inset-0 shadow-[inset_0_0_160px_rgba(0,0,0,0.75)]" />
       </div>
 
-      {/* Navigation */}
-      <nav className="relative z-10 flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-blue-400/80 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-            <Palette className="w-7 h-7 text-white" />
-          </div>
-          <span className="text-white text-xl md:text-2xl font-bold drop-shadow-lg">
-            Arya Madam Craft Supplies
-          </span>
-        </Link>
+      {show && (
+        <>
+          {/* NAV */}
+          <nav className="relative z-10 flex items-center justify-between px-6 py-6 max-w-7xl mx-auto
+                          opacity-0 animate-[paperReveal_1.4s_ease-out_forwards]">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-[#4a3323]/80 rounded-xl
+                              border border-[#e6cfa7]/40 flex items-center justify-center">
+                <Palette className="w-7 h-7 text-[#e6cfa7]" />
+              </div>
+              <span className="text-[#fdfaf6] text-xl md:text-2xl font-bold">
+                Arya Madam Craft Supplies
+              </span>
+            </Link>
 
-        {/* Navigation Links */}
-        <div className="hidden md:flex items-center gap-8">
-          <Link href="/" className="text-white/90 hover:text-white font-medium transition-colors drop-shadow">
-            Home
-          </Link>
-          <Link href="/shop" className="text-white/90 hover:text-white font-medium transition-colors drop-shadow">
-            Shop
-          </Link>
-          <Link href="/collections" className="text-white/90 hover:text-white font-medium transition-colors drop-shadow">
-            Collections
-          </Link>
-          <Link href="/about" className="text-white/90 hover:text-white font-medium transition-colors drop-shadow">
-            About
-          </Link>
-          <Link href="/contact" className="text-white/90 hover:text-white font-medium transition-colors drop-shadow">
-            Contact
-          </Link>
-        </div>
-
-        {/* Icons */}
-        <div className="flex items-center gap-4">
-          <button className="text-white/90 hover:text-white transition-colors" aria-label="Search">
-            <Search className="w-6 h-6 drop-shadow" />
-          </button>
-          <button className="text-white/90 hover:text-white transition-colors" aria-label="Shopping Cart">
-            <ShoppingCart className="w-6 h-6 drop-shadow" />
-          </button>
-        </div>
-      </nav>
-
-      {/* Hero Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-32">
-        {/* Badge */}
-        <div className="inline-block mb-6">
-          <span className="inline-block px-5 py-2 bg-white/20 backdrop-blur-md rounded-full text-white text-sm font-medium tracking-wide uppercase border border-white/30">
-            Premium Craft Supplies
-          </span>
-        </div>
-
-        {/* Main Heading */}
-        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 max-w-3xl">
-          <span className="text-white drop-shadow-lg">Arya Madam</span>
-          <br />
-          <span className="text-[#d4af6a] drop-shadow-lg">Craft Supplies</span>
-        </h1>
-
-        {/* Description */}
-        <p className="text-white/95 text-lg md:text-xl mb-10 max-w-2xl leading-relaxed drop-shadow">
-          Professional-grade materials for artisans, designers, and creative
-          professionals. Elevate your craft with our curated collection.
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-20">
-          <Link
-            href="/collections"
-            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#d4af6a] hover:bg-[#c9a961] text-white font-semibold rounded-lg transition-colors shadow-lg group"
-          >
-            Explore Collection
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-          <Link
-            href="/catalog"
-            className="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-white/60 hover:border-white hover:bg-white/10 text-white font-semibold rounded-lg transition-all backdrop-blur-sm"
-          >
-            View Catalog
-          </Link>
-        </div>
-
-        {/* Features */}
-        <div className="flex flex-wrap gap-8">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center border border-white/30">
-              <Shield className="w-5 h-5 text-[#d4af6a]" />
+            <div className="hidden md:flex items-center gap-10">
+              {['Home', 'Shop', 'Collections', 'About', 'Contact'].map((item) => (
+                <Link key={item} href={`/${item.toLowerCase()}`} className="text-[#eadbc4]">
+                  {item}
+                </Link>
+              ))}
             </div>
-            <span className="text-white/90 font-medium drop-shadow">Quality Assured</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center border border-white/30">
-              <Truck className="w-5 h-5 text-[#d4af6a]" />
+
+            <div className="flex items-center gap-4">
+              <Search className="w-6 h-6 text-[#eadbc4]" />
+              <ShoppingCart className="w-6 h-6 text-[#eadbc4]" />
             </div>
-            <span className="text-white/90 font-medium drop-shadow">Fast Delivery</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-lg flex items-center justify-center border border-white/30">
-              <Headphones className="w-5 h-5 text-[#d4af6a]" />
+          </nav>
+
+          {/* CONTENT */}
+          <div className="relative z-10 max-w-7xl mx-auto px-6 pt-28 pb-32">
+            <span className="inline-block mb-8 px-6 py-2 border border-[#e6cfa7]/50
+                             rounded-full text-[#e6cfa7] uppercase text-xs
+                             opacity-0 animate-[paperReveal_1.4s_0.2s_ease-out_forwards]">
+              Timeless Craftsmanship
+            </span>
+
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold max-w-3xl mb-8
+                           opacity-0 animate-[inkSettle_1.6s_0.4s_ease-out_forwards]">
+              <span className="text-[#fdfaf6]">Arya Madam</span><br />
+              <span className="text-[#e6cfa7]">Craft Supplies</span>
+            </h1>
+
+            <p className="text-[#eadbc4] text-lg max-w-2xl mb-14
+                          opacity-0 animate-[paperReveal_1.4s_0.6s_ease-out_forwards]">
+              Professional-grade materials inspired by heritage craftsmanship.
+            </p>
+
+            <div className="flex gap-6 opacity-0
+                            animate-[paperReveal_1.4s_0.8s_ease-out_forwards]">
+              <Link href="/collections" className="px-10 py-4 bg-[#e6cfa7] text-[#3b2a1a] rounded-lg">
+                Explore Collection
+              </Link>
+              <Link href="/catalog" className="px-10 py-4 border border-[#e6cfa7]/60 text-[#fdfaf6] rounded-lg">
+                View Catalog
+              </Link>
             </div>
-            <span className="text-white/90 font-medium drop-shadow">Expert Support</span>
+
+            <div className="flex flex-wrap gap-12 mt-20">
+              {[Shield, Truck, Headphones].map((Icon, i) => (
+                <div key={i} className="flex items-center gap-4">
+                  <div className="w-12 h-12 border border-[#e6cfa7]/40 bg-[#4a3323]/60 rounded-lg flex items-center justify-center">
+                    <Icon className="w-5 h-5 text-[#e6cfa7]" />
+                  </div>
+                  <span className="text-[#eadbc4]">
+                    {['Quality Assured', 'Fast Delivery', 'Expert Support'][i]}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };

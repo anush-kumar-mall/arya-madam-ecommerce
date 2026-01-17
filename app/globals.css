@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* =========================
+   THEME VARIABLES
+========================= */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -23,4 +26,206 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* =========================
+   ANTIQUE ANIMATIONS
+========================= */
+
+/* Paper slide reveal (Hero + Collections + Sections) */
+@keyframes paperReveal {
+  from {
+    opacity: 0;
+    transform: translateY(36px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+/* Utility class */
+.paper-reveal {
+  opacity: 0;
+  animation: paperReveal 1.4s ease-out forwards;
+  will-change: opacity, transform;
+}
+
+/* Ink settle (ONLY headings) */
+@keyframes inkSettle {
+  0% {
+    opacity: 0;
+    letter-spacing: 0.25em;
+  }
+  100% {
+    opacity: 1;
+    letter-spacing: normal;
+  }
+}
+
+.ink-settle {
+  opacity: 0;
+  animation: inkSettle 1.6s ease-out forwards;
+  will-change: opacity, letter-spacing;
+}
+
+/* Slow antique background depth */
+@keyframes depthMove {
+  from {
+    transform: scale(1.05) translateX(0);
+  }
+  to {
+    transform: scale(1.08) translateX(-12px);
+  }
+}
+
+/* =========================
+   SAFETY: REDUCE MOTION
+========================= */
+@media (prefers-reduced-motion: reduce) {
+  .paper-reveal,
+  .ink-settle {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+/* =========================
+   ANTIQUE SHOWCASE ANIMATION
+   (Best Sellers)
+========================= */
+
+@keyframes showcaseReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.showcase-reveal {
+  opacity: 0;
+  animation: showcaseReveal 1.3s ease-out forwards;
+  will-change: opacity, transform;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .showcase-reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes antiqueAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* =========================
+   SCROLL REVEAL (ANTIQUE)
+========================= */
+
+.scroll-card {
+  opacity: 0;
+  transform: translateY(40px) scale(0.96);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+
+.scroll-card.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+/* =========================
+   SCROLL VISIBILITY ANIMATION
+========================= */
+/* =========================
+   LEFT / RIGHT SCROLL CARDS
+========================= */
+
+[data-animate="card"] {
+  opacity: 0;
+  transform: translateX(0);
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease;
+  will-change: opacity, transform;
+}
+
+/* EVEN cards → LEFT se */
+[data-animate="card"]:nth-child(even) {
+  transform: translateX(-80px);
+}
+
+/* ODD cards → RIGHT se */
+[data-animate="card"]:nth-child(odd) {
+  transform: translateX(80px);
+}
+
+/* WHEN VISIBLE */
+[data-animate="card"].visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* SAFETY */
+@media (prefers-reduced-motion: reduce) {
+  [data-animate="card"] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+/* ===============================
+   LEFT–RIGHT SCROLL ANIMATION
+   (Best Sellers FIX)
+================================ */
+
+/* Base state */
+[data-animate="lr-card"] {
+  opacity: 0;
+  transition:
+    opacity 0.9s ease,
+    transform 0.9s ease;
+  will-change: opacity, transform;
+}
+
+/* Start positions */
+.from-left {
+  transform: translateX(-80px);
+}
+
+.from-right {
+  transform: translateX(80px);
+}
+
+/* When visible */
+[data-animate="lr-card"].in-view {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-animate="lr-card"],
+  .from-left,
+  .from-right {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
