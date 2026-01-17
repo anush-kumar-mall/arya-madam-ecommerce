@@ -51,36 +51,7 @@ const Hero: React.FC = () => {
 
       {show && (
         <>
-          {/* NAV */}
-          <nav className="relative z-10 flex items-center justify-between px-6 py-6 max-w-7xl mx-auto
-                          opacity-0 animate-[paperReveal_1.4s_ease-out_forwards]">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-[#4a3323]/80 rounded-xl
-                              border border-[#e6cfa7]/40 flex items-center justify-center">
-                <Palette className="w-7 h-7 text-[#e6cfa7]" />
-              </div>
-              <span className="text-[#fdfaf6] text-xl md:text-2xl font-bold">
-                Arya Madam Craft Supplies
-              </span>
-            </Link>
-
-            <div className="hidden md:flex items-center gap-10">
-              {['Home', 'Shop', 'Collections', 'About', 'Contact'].map((item) => (
-                <Link
-                  key={item}
-                  href={`/${item.toLowerCase()}`}
-                  className="text-[#eadbc4] hover:text-[#fdfaf6] transition-colors"
-                >
-                  {item}
-                </Link>
-              ))}
-            </div>
-
-            <div className="flex items-center gap-4">
-              <Search className="w-6 h-6 text-[#eadbc4]" />
-              <ShoppingCart className="w-6 h-6 text-[#eadbc4]" />
-            </div>
-          </nav>
+          
 
           {/* CONTENT */}
           <div className="relative z-10 max-w-7xl mx-auto px-6 pt-28 pb-20">

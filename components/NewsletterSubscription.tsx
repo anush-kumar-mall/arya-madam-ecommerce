@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { CheckCircle, XCircle } from 'lucide-react'; // icons ke liye
 
 type Message = {
   type: 'success' | 'error';
@@ -38,6 +39,7 @@ const NewsletterSubscription = () => {
     setMessage(null);
 
     try {
+      // simulate API call
       await new Promise((res) => setTimeout(res, 1000));
 
       setMessage({
@@ -52,6 +54,9 @@ const NewsletterSubscription = () => {
       });
     } finally {
       setLoading(false);
+
+      // auto-hide message after 5 sec
+      setTimeout(() => setMessage(null), 5000);
     }
   };
 
@@ -129,13 +134,19 @@ const NewsletterSubscription = () => {
         {message && (
           <div
             data-animate="card"
-            className={`mb-6 p-4 rounded-lg border ${
-              message.type === 'success'
-                ? 'bg-green-900/30 border-green-400/40 text-green-100'
-                : 'bg-red-900/30 border-red-400/40 text-red-100'
-            }`}
+            className={`flex items-center justify-center gap-3 mb-6 p-4 rounded-lg border transition-all duration-500
+                        animate-fadeIn ${
+                          message.type === 'success'
+                            ? 'bg-green-900/30 border-green-400/40 text-green-100'
+                            : 'bg-red-900/30 border-red-400/40 text-red-100'
+                        }`}
           >
-            {message.text}
+            {message.type === 'success' ? (
+              <CheckCircle className="w-6 h-6 text-green-400" />
+            ) : (
+              <XCircle className="w-6 h-6 text-red-400" />
+            )}
+            <span>{message.text}</span>
           </div>
         )}
 

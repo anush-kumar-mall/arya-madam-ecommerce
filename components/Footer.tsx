@@ -163,9 +163,6 @@ const Footer: FC = () => {
             <a href="#" className="hover:text-[#fdfaf6]">
               Privacy Policy
             </a>
-            <a href="#" className="hover:text-[#fdfaf6]">
-              Powered by Readdy
-            </a>
           </div>
         </div>
       </div>
