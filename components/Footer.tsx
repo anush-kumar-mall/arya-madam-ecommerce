@@ -79,7 +79,7 @@ const Footer: FC = () => {
             </h3>
             <ul className="space-y-4">
               <li><Link href="/about#about">About Us</Link></li>
-              <li><Link href="/careers">Careers</Link></li>
+              <li><Link href="/career">Careers</Link></li>
               <li><Link href="/press">Press</Link></li>
               <li><Link href="/contact#contact">Contact</Link></li>
             </ul>
