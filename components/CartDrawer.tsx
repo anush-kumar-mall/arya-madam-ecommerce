@@ -122,22 +122,46 @@ export default function CartDrawer({ open, onClose }: Props) {
           )}
         </div>
 
-        {/* FOOTER */}
-        <div className="border-t border-[#e6cfa7]/20 px-5 py-4 space-y-3">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-[#eadbc4]">Total</span>
-            <span className="text-[#fdfaf6] font-bold">₹{totalPrice}</span>
-          </div>
+       {/* FOOTER */}
+<div
+  className={`
+    border-t border-[#e6cfa7]/20 px-5 py-4 space-y-3
+    md:mt-auto
+    ${open ? "md:mt-auto" : ""}
+    flex flex-col md:flex-col
+  `}
+>
+  {/* MOBILE ONLY: sticky top */}
+  <div className="md:hidden fixed bottom-0 left-0 w-full bg-[#2b1d12] border-t border-[#e6cfa7]/20 px-5 py-4 flex flex-col space-y-3 z-50">
+    <div className="flex items-center justify-between text-sm">
+      <span className="text-[#eadbc4]">Total</span>
+      <span className="text-[#fdfaf6] font-bold">₹{totalPrice}</span>
+    </div>
 
-          <button
-            onClick={handleCheckout}
-            className="w-full rounded-lg bg-[#e6cfa7]
-                       py-3 text-sm font-bold text-[#3b2a1a]
-                       hover:bg-[#dcc39a]"
-          >
-            Checkout
-          </button>
-        </div>
+    <button
+      onClick={handleCheckout}
+      className="w-full rounded-lg bg-[#e6cfa7] py-3 text-sm font-bold text-[#3b2a1a] hover:bg-[#dcc39a]"
+    >
+      Checkout
+    </button>
+  </div>
+
+  {/* DESKTOP FOOTER (original) */}
+  <div className="hidden md:flex flex-col space-y-3">
+    <div className="flex items-center justify-between text-sm">
+      <span className="text-[#eadbc4]">Total</span>
+      <span className="text-[#fdfaf6] font-bold">₹{totalPrice}</span>
+    </div>
+
+    <button
+      onClick={handleCheckout}
+      className="w-full rounded-lg bg-[#e6cfa7] py-3 text-sm font-bold text-[#3b2a1a] hover:bg-[#dcc39a]"
+    >
+      Checkout
+    </button>
+  </div>
+</div>
+
       </div>
     </>
   );
