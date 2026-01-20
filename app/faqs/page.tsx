@@ -1,12 +1,17 @@
-import Faq from "@/components/Faq"; 
+import { Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FAQClient from "@/components/FaqClient";
 
 export default function Page() {
   return (
     <>
       <Navbar />
-      <Faq />
+
+      <Suspense fallback={<div className="py-32 text-center">Loading FAQs...</div>}>
+        <FAQClient />
+      </Suspense>
+
       <Footer />
     </>
   );
