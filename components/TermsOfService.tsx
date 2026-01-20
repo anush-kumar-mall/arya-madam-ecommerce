@@ -13,10 +13,6 @@ const rollVariant = {
     opacity: 1,
     scaleY: 1,
     filter: 'brightness(1)',
-    transition: {
-      duration: 1,
-      ease: [0.33, 1, 0.68, 1],
-    },
   },
 };
 
@@ -26,6 +22,7 @@ const RollBlock = ({ children }: { children: React.ReactNode }) => (
     initial="hidden"
     whileInView="visible"
     viewport={{ once: false, margin: '-100px' }}
+    transition={{ duration: 1 }}
     style={{ transformOrigin: 'top' }}
   >
     {children}
@@ -80,7 +77,7 @@ const TermsPolicyPage = () => {
             },
             {
               title: 'Use of Website',
-              text: 'You agree to use our website only for lawful purposes and not infringe others’ rights.',
+              text: 'You agree to use our website only for lawful purposes and not infringe others\' rights.',
             },
             {
               title: 'Product Information',
