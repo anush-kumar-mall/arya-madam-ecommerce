@@ -49,7 +49,7 @@ const AnimatedCounter = ({ value }: { value: string }) => {
 };
 
 /* ================= PAGE ================= */
-export default function AboutPage() {
+export default function About() {
   useEffect(() => {
     if (window.location.hash === "#about") {
       setTimeout(() => {
