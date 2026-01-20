@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useCart } from '@/app/providers/CartProvider';
 import { useSearchParams } from 'next/navigation';
+import { motion } from 'framer-motion';
 
 type Product = {
   id: number;
@@ -33,7 +34,6 @@ export default function ProductsPage() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q')?.toLowerCase() || '';
 
-  /* ===== FILTER ===== */
   const filteredProducts = productsData.filter((p) => {
     const matchPrice = p.price <= maxPrice;
     const matchSearch = p.name.toLowerCase().includes(query);
@@ -41,8 +41,18 @@ export default function ProductsPage() {
     return matchPrice && matchSearch && matchCategory;
   });
 
-  const cartItemById = (id: number) =>
-    cartItems.find((item) => item.id === String(id));
+  const cartItemById = (id: number) => cartItems.find((item) => item.id === String(id));
+
+  /* ===== ANIMATION VARIANTS ===== */
+  const containerVariants = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.1 } },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+  };
 
   return (
     <section className="relative min-h-screen px-6 py-24 font-serif overflow-hidden">
@@ -59,13 +69,11 @@ export default function ProductsPage() {
       <div className="relative z-10 max-w-7xl mx-auto text-[#eadbc4]">
         {/* HEADER */}
         <div className="mb-16 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#fdfaf6]">
-            Shop All Products
-          </h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-[#fdfaf6]">Shop All Products</h1>
 
           {query && (
             <p className="mt-4 text-lg">
-              Showing results for{" "}
+              Showing results for{' '}
               <span className="text-[#e6cfa7] font-semibold">{query}</span>
             </p>
           )}
@@ -73,8 +81,13 @@ export default function ProductsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
           {/* SIDEBAR */}
-          <aside className="bg-[#2b1d12]/85 border border-[#e6cfa7]/30 p-6 rounded-2xl space-y-10">
-
+          <motion.aside
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: false, amount: 0.3 }} // repeatable scroll animation
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="bg-[#2b1d12]/85 border border-[#e6cfa7]/30 p-6 rounded-2xl space-y-10"
+          >
             {/* CATEGORY FILTER */}
             <div>
               <h3 className="text-lg font-semibold text-[#fdfaf6] mb-4">Categories</h3>
@@ -111,10 +124,16 @@ export default function ProductsPage() {
                 className="w-full accent-[#e6cfa7] cursor-pointer"
               />
             </div>
-          </aside>
+          </motion.aside>
 
           {/* PRODUCTS */}
-          <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: false, amount: 0.3 }} // repeatable
+            className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+          >
             {filteredProducts.length === 0 && (
               <p className="col-span-full text-center text-lg text-[#fdfaf6]">
                 No products found 😕
@@ -125,7 +144,14 @@ export default function ProductsPage() {
               const cartItem = cartItemById(p.id);
 
               return (
-                <div key={p.id} className="flex flex-col bg-[#2b1d12]/85 border border-[#e6cfa7]/30 p-6 rounded-2xl">
+                <motion.div
+                  key={p.id}
+                  variants={itemVariants}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={{ once: false, amount: 0.3 }} // repeatable scroll animation
+                  className="flex flex-col bg-[#2b1d12]/85 border border-[#e6cfa7]/30 p-6 rounded-2xl"
+                >
                   <div className="h-48 rounded-xl overflow-hidden mb-4 border border-[#e6cfa7]/30">
                     <img
                       src={p.image}
@@ -137,7 +163,6 @@ export default function ProductsPage() {
                   <h3 className="font-semibold text-[#fdfaf6] mb-1">{p.name}</h3>
                   <p className="text-[#e6cfa7] font-bold mb-4">₹{p.price}</p>
 
-                  {/* ===== ACTION ===== */}
                   {!cartItem ? (
                     <button
                       onClick={() =>
@@ -172,10 +197,10 @@ export default function ProductsPage() {
                       </button>
                     </div>
                   )}
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

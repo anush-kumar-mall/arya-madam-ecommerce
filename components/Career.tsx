@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 const openings = [
   {
@@ -40,28 +41,56 @@ const CareersPage = () => {
 
         {/* HERO */}
         <div className="mb-24 text-center">
-          <span className="inline-block mb-6 px-6 py-2 border border-[#e6cfa7]/60 rounded-full text-[#e6cfa7] tracking-widest uppercase text-xs">
+          <motion.span
+            initial={{ opacity: 0, y: -20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.8 }}
+            className="inline-block mb-6 px-6 py-2 border border-[#e6cfa7]/60 rounded-full text-[#e6cfa7] tracking-widest uppercase text-xs"
+          >
             Careers
-          </span>
+          </motion.span>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-[#fdfaf6]">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="text-4xl md:text-5xl font-bold text-[#fdfaf6]"
+          >
             Work With Arya Madam
-          </h1>
+          </motion.h1>
 
-          <div className="my-6 text-[#e6cfa7] tracking-widest">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="my-6 text-[#e6cfa7] tracking-widest"
+          >
             ───── ✦ ─────
-          </div>
+          </motion.div>
 
-          <p className="mx-auto max-w-2xl text-lg leading-relaxed">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="mx-auto max-w-2xl text-lg leading-relaxed"
+          >
             Join a team driven by craftsmanship, precision, and timeless values.
-          </p>
+          </motion.p>
         </div>
 
         {/* OPENINGS */}
         <div className="space-y-8">
           {openings.map((job, index) => (
-            <div
+            <motion.div
               key={index}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.2 }}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
               className="rounded-2xl border border-[#e6cfa7]/30
                          bg-[#2b1d12]/80
                          shadow-[0_20px_60px_rgba(0,0,0,0.5)]
@@ -91,12 +120,18 @@ const CareersPage = () => {
               >
                 Apply Now
               </Link>
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {/* CTA */}
-        <div className="mt-32 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, amount: 0.2 }}
+          transition={{ duration: 0.8 }}
+          className="mt-32 text-center"
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-[#fdfaf6] mb-6">
             Don’t See the Right Role?
           </h2>
@@ -117,7 +152,7 @@ const CareersPage = () => {
           >
             Get In Touch
           </Link>
-        </div>
+        </motion.div>
 
       </div>
     </section>
