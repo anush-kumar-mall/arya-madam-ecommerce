@@ -1,15 +1,20 @@
 "use client";
 
 import { motion, useMotionValue, useTransform } from "framer-motion";
+import React from "react";
 
-export default function ThreeDCard({ children }) {
+interface ThreeDCardProps {
+  children: React.ReactNode;
+}
+
+export default function ThreeDCard({ children }: ThreeDCardProps) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
   const rotateX = useTransform(y, [-150, 150], [18, -18]);
   const rotateY = useTransform(x, [-150, 150], [-18, 18]);
 
-  function handleMouseMove(e) {
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     const rect = e.currentTarget.getBoundingClientRect();
     x.set(e.clientX - rect.left - rect.width / 2);
     y.set(e.clientY - rect.top - rect.height / 2);
