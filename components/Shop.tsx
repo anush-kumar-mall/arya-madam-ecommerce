@@ -51,7 +51,7 @@ export default function ProductsPage() {
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+    show: { opacity: 1, y: 0 },
   };
 
   return (
@@ -84,8 +84,8 @@ export default function ProductsPage() {
           <motion.aside
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false, amount: 0.3 }} // repeatable scroll animation
-            transition={{ duration: 0.6, ease: 'easeOut' }}
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
             className="bg-[#2b1d12]/85 border border-[#e6cfa7]/30 p-6 rounded-2xl space-y-10"
           >
             {/* CATEGORY FILTER */}
@@ -131,7 +131,7 @@ export default function ProductsPage() {
             variants={containerVariants}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: false, amount: 0.3 }} // repeatable
+            viewport={{ once: false, amount: 0.3 }}
             className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
           >
             {filteredProducts.length === 0 && (
@@ -147,9 +147,7 @@ export default function ProductsPage() {
                 <motion.div
                   key={p.id}
                   variants={itemVariants}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: false, amount: 0.3 }} // repeatable scroll animation
+                  transition={{ duration: 0.5 }}
                   className="flex flex-col bg-[#2b1d12]/85 border border-[#e6cfa7]/30 p-6 rounded-2xl"
                 >
                   <div className="h-48 rounded-xl overflow-hidden mb-4 border border-[#e6cfa7]/30">
@@ -168,7 +166,7 @@ export default function ProductsPage() {
                       onClick={() =>
                         addToCart({
                           id: String(p.id),
-                          name: p.name,
+                          title: p.name,
                           price: p.price,
                           image: p.image,
                           quantity: 1,
