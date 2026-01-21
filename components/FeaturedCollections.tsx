@@ -50,10 +50,7 @@ export default function FeaturedCollections() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          entry.target.classList.toggle(
-            "visible",
-            entry.isIntersecting
-          );
+          entry.target.classList.toggle("visible", entry.isIntersecting);
         });
       },
       { threshold: 0.25 }
@@ -64,40 +61,29 @@ export default function FeaturedCollections() {
   }, []);
 
   return (
-    <section className="relative px-8 py-28 font-serif overflow-hidden">
-
-      {/* Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/90" />
-
-      <div className="relative mx-auto max-w-7xl">
+    <section className="relative px-8 py-28 font-serif bg-white overflow-hidden">
+      <div className="mx-auto max-w-7xl">
 
         {/* Heading */}
         <div data-animate="card" className="mb-16 text-center">
           <span
             className="inline-block mb-6 px-6 py-2
-                       border border-[#e6cfa7]/60
-                       rounded-full text-[#e6cfa7]
+                       border border-[#cbb79a]
+                       rounded-full text-[#8a6a44]
                        tracking-widest uppercase text-xs"
           >
             Our Heritage
           </span>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-[#fdfaf6]">
+          <h2 className="text-4xl md:text-5xl font-bold text-[#2b1d12]">
             Featured Collections
           </h2>
 
-          <div className="my-6 text-[#e6cfa7] tracking-widest">
+          <div className="my-6 text-[#cbb79a] tracking-widest">
             ───── ✦ ─────
           </div>
 
-          <p className="mx-auto max-w-3xl text-[#eadbc4] text-lg leading-relaxed">
+          <p className="mx-auto max-w-3xl text-[#5c4a3a] text-lg leading-relaxed">
             Curated selections of timeless materials crafted for artisans
             who value tradition, precision, and quality.
           </p>
@@ -110,9 +96,9 @@ export default function FeaturedCollections() {
               key={index}
               data-animate="card"
               className="group relative h-[280px] overflow-hidden rounded-2xl
-                         border border-[#e6cfa7]/30
-                         shadow-[0_20px_60px_rgba(0,0,0,0.5)]
-                         cursor-pointer"
+                         border border-black/10
+                         shadow-[0_20px_40px_rgba(0,0,0,0.08)]
+                         cursor-pointer bg-white"
             >
               {/* Image */}
               <Image
@@ -123,10 +109,10 @@ export default function FeaturedCollections() {
                            group-hover:scale-105"
               />
 
-              {/* Overlay */}
+              {/* Soft Overlay */}
               <div
                 className="absolute inset-0 bg-gradient-to-t
-                           from-[#1f140c]/90 via-[#2b1d12]/60 to-transparent"
+                           from-white/95 via-white/60 to-transparent"
               />
 
               {/* Content */}
@@ -140,11 +126,11 @@ export default function FeaturedCollections() {
                   {item.items}
                 </span>
 
-                <h3 className="text-2xl font-semibold text-[#fdfaf6]">
+                <h3 className="text-2xl font-semibold text-[#2b1d12]">
                   {item.title}
                 </h3>
 
-                <p className="mt-2 text-sm text-[#eadbc4]">
+                <p className="mt-2 text-sm text-[#5c4a3a]">
                   {item.subtitle}
                 </p>
 
@@ -152,8 +138,7 @@ export default function FeaturedCollections() {
                   href="#"
                   className="mt-4 inline-flex items-center gap-2
                              text-sm font-semibold
-                             text-[#e6cfa7]
-                             cursor-pointer
+                             text-[#8a6a44]
                              hover:gap-3 transition-all duration-300"
                 >
                   Explore Collection →
@@ -162,6 +147,7 @@ export default function FeaturedCollections() {
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );

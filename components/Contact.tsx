@@ -69,15 +69,16 @@ export default function ContactPage() {
             "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
         }}
       />
-      <div className="absolute inset-0 bg-[#2b1d12]/90" />
+      <div className="absolute inset-0 bg-white" />
 
       {/* ===== GET IN TOUCH ===== */}
-      <div className="relative py-32 px-6 text-center">
+      <div className="relative py-30 px-6 text-center">
         <div
           data-animate="antique"
-          className="max-w-5xl mx-auto px-10 py-20 rounded-3xl
-                     bg-[#3b2a1a]/80 border border-[#e6cfa7]/40
-                     shadow-[0_30px_90px_rgba(0,0,0,0.6)]"
+          className="max-w-8xl mx-auto px-1 py-20 rounded-3xl
+                     bg-[rgb(44_95_124)] border border-[rgb(44_95_124)]
+                     shadow-[0_30px_90px_rgba(44,95,124,0.6)]
+"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-[#fdfaf6] mb-6">
             Get In Touch
@@ -85,10 +86,10 @@ export default function ContactPage() {
 
           <div className="mb-8 text-[#e6cfa7]">───── ✦ ─────</div>
 
-          <p className="text-[#eadbc4] text-lg md:text-xl max-w-3xl mx-auto">
-            Have questions or need guidance?
+          <p className="text-white text-lg md:text-xl max-w-3xl mx-auto">
+            Have questions? We'd love to hear from you. Send us a message and we'll
             <br />
-            We’d love to hear from you.
+           respond as soon as possible.
           </p>
         </div>
       </div>
@@ -101,8 +102,8 @@ export default function ContactPage() {
             <div
               key={i}
               data-animate="antique"
-              className="rounded-2xl p-8 bg-[#3b2a1a]/80
-                         border border-[#e6cfa7]/40 text-center"
+              className="rounded-2xl p-8 bg-white
+                         border border-[rgb(44_95_124)] text-center"
             >
               <div className="mx-auto mb-5 w-14 h-14 rounded-xl
                               flex items-center justify-center
@@ -110,12 +111,12 @@ export default function ContactPage() {
                 <Icon className="w-6 h-6 text-[#3b2a1a]" />
               </div>
 
-              <h3 className="text-[#fdfaf6] font-semibold mb-3">
+              <h3 className="text-[rgb(44_95_124)] font-semibold mb-3">
                 {item.title}
               </h3>
 
               {item.lines.map((line, idx) => (
-                <p key={idx} className="text-[#eadbc4] text-sm">
+                <p key={idx} className="text-black text-sm">
                   {line}
                 </p>
               ))}
@@ -130,10 +131,10 @@ export default function ContactPage() {
         {/* FORM */}
         <div
           data-animate="antique"
-          className="lg:col-span-2 bg-[#3b2a1a]/80
+          className="lg:col-span-2 bg-white
                      border border-[#e6cfa7]/40 rounded-2xl p-10"
         >
-          <h2 className="text-3xl font-bold text-[#fdfaf6] mb-6">
+          <h2 className="text-3xl font-bold text-[rgb(44_95_124)] mb-6">
             Send Us a Message
           </h2>
 
@@ -148,11 +149,11 @@ export default function ContactPage() {
               onChange={e => setMessage(e.target.value)}
               placeholder="Tell us how we can help you…"
               className="w-full h-32 px-5 py-3 rounded-lg
-                         bg-[#2b1d12]/70 border border-[#e6cfa7]/40
-                         text-[#fdfaf6]"
+                         bg-white border border-[#e6cfa7]/40
+                         text-black"
             />
 
-            <p className="text-xs text-[#eadbc4]/70">
+            <p className="text-xs text-black">
               {message.length}/500 characters
             </p>
 
@@ -166,7 +167,7 @@ export default function ContactPage() {
         <div className="space-y-10">
           <div
             data-animate="antique"
-            className="bg-[#3b2a1a]/80 border border-[#e6cfa7]/40
+            className="bg-[rgb(44_95_124)] border border-[#e6cfa7]/40
                        rounded-2xl p-8"
           >
             <h3 className="text-xl font-semibold text-[#fdfaf6] mb-4">

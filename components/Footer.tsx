@@ -30,18 +30,12 @@ const Footer: FC = () => {
   }, []);
 
   return (
-    <footer className="relative font-serif text-[#eadbc4] overflow-hidden">
-
-      {/* Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/95" />
-
+    <footer
+      className="relative font-serif text-white overflow-hidden"
+      style={{
+        backgroundColor: "rgb(44 95 124 / var(--tw-bg-opacity, 1))",
+      }}
+    >
       {/* Main Footer */}
       <div
         data-animate="card"
@@ -51,10 +45,10 @@ const Footer: FC = () => {
 
           {/* BRAND */}
           <div>
-            <h2 className="text-3xl font-bold tracking-widest text-[#fdfaf6] mb-6">
+            <h2 className="text-3xl font-bold tracking-widest text-white mb-6">
               ARYA MADAM
             </h2>
-            <p className="leading-relaxed mb-8">
+            <p className="leading-relaxed mb-8 text-white">
               Professional-grade craft supplies rooted in tradition,
               precision, and timeless craftsmanship.
             </p>
@@ -74,10 +68,10 @@ const Footer: FC = () => {
 
           {/* COMPANY */}
           <div>
-            <h3 className="text-lg font-semibold mb-6 text-[#fdfaf6]">
+            <h3 className="text-lg font-semibold mb-6 text-white">
               Company
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-4 text-white">
               <li><Link href="/about#about">About Us</Link></li>
               <li><Link href="/career">Careers</Link></li>
               <li><Link href="/press">Press</Link></li>
@@ -87,10 +81,10 @@ const Footer: FC = () => {
 
           {/* SUPPORT */}
           <div>
-            <h3 className="text-lg font-semibold mb-6 text-[#fdfaf6]">
+            <h3 className="text-lg font-semibold mb-6 text-white">
               Support
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-4 text-white">
               <li><Link href="/faqs">FAQs</Link></li>
               <li><Link href="/shippingPolicy">Shipping Policy</Link></li>
               <li><Link href="/returnsAndExchanges">Returns & Exchanges</Link></li>
@@ -100,20 +94,20 @@ const Footer: FC = () => {
 
           {/* CONTACT */}
           <div>
-            <h3 className="text-lg font-semibold mb-6 text-[#fdfaf6]">
+            <h3 className="text-lg font-semibold mb-6 text-white">
               Contact Info
             </h3>
-            <ul className="space-y-5">
+            <ul className="space-y-5 text-white">
               <li className="flex gap-4">
-                <MapPin className="text-[#e6cfa7]" />
+                <MapPin className="text-[rgb(244_162_97)]" />
                 Mumbai, Maharashtra 400001
               </li>
               <li className="flex gap-4">
-                <Phone className="text-[#e6cfa7]" />
+                <Phone className="text-[rgb(244_162_97)]" />
                 +91 98765 43210
               </li>
               <li className="flex gap-4">
-                <Mail className="text-[#e6cfa7]" />
+                <Mail className="text-[rgb(244_162_97)]" />
                 info@aryamadamcraft.com
               </li>
             </ul>
@@ -125,9 +119,9 @@ const Footer: FC = () => {
       {/* Bottom Bar */}
       <div
         data-animate="card"
-        className="relative border-t border-[#e6cfa7]/30"
+        className="relative border-t border-white/30"
       >
-        <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between text-sm">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between text-sm text-white">
           <p>© 2026 Arya Madam Craft Supplies</p>
           <Link href="/privacy-policy">Privacy Policy</Link>
         </div>

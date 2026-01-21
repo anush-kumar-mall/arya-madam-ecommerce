@@ -37,60 +37,39 @@ export default function WhyChooseUs() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-          } else {
-            entry.target.classList.remove("visible");
-          }
+          entry.target.classList.toggle("visible", entry.isIntersecting);
         });
       },
-      {
-        threshold: 0.25,
-      }
+      { threshold: 0.25 }
     );
 
     elements.forEach((el) => observer.observe(el));
-
     return () => observer.disconnect();
   }, []);
 
   return (
-    <section className="relative min-h-screen py-28 px-6 font-serif overflow-hidden">
-
-      {/* Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/90" />
-
+    <section className="relative min-h-screen py-28 px-6 font-serif overflow-hidden bg-[#1A4A5E] text-white">
       <div className="relative mx-auto max-w-7xl">
 
         {/* Heading */}
-        <div
-          data-animate="card"
-          className="mb-20 text-center"
-        >
+        <div data-animate="card" className="mb-20 text-center">
           <span
             className="inline-block mb-6 px-6 py-2 rounded-full
-                       border border-[#e6cfa7]/60
-                       text-[#e6cfa7] tracking-widest uppercase text-xs"
+                       border border-white/40
+                       text-white tracking-widest uppercase text-xs"
           >
             Our Promise
           </span>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-[#fdfaf6]">
+          <h2 className="text-4xl md:text-5xl font-bold text-white">
             Why Choose Us
           </h2>
 
-          <div className="my-6 text-[#e6cfa7] tracking-widest">
+          <div className="my-6 text-white tracking-widest">
             ───── ✦ ─────
           </div>
 
-          <p className="mx-auto max-w-3xl text-[#eadbc4] text-lg leading-relaxed">
+          <p className="mx-auto max-w-3xl text-white text-lg leading-relaxed">
             A heritage of excellence built on trust, craftsmanship, and
             unwavering commitment to quality.
           </p>
@@ -103,30 +82,31 @@ export default function WhyChooseUs() {
               key={index}
               data-animate="card"
               className="group rounded-2xl
-                         border border-[#e6cfa7]/30
-                         bg-[#3b2a1a]/80
+                         border border-white/20
+                         bg-white/10
+                         backdrop-blur
                          p-8 text-center
-                         shadow-[0_20px_60px_rgba(0,0,0,0.5)]
+                         shadow-[0_20px_50px_rgba(0,0,0,0.25)]
                          transition hover:-translate-y-1
-                         hover:shadow-[0_30px_80px_rgba(0,0,0,0.7)]"
+                         hover:shadow-[0_30px_70px_rgba(0,0,0,0.35)]"
             >
               {/* Icon */}
               <div
                 className="mx-auto mb-6 flex h-14 w-14 items-center justify-center
-                           rounded-xl border border-[#e6cfa7]/40
-                           bg-[#2b1d12]/80
+                           rounded-xl border border-white/30
+                           bg-white/10
                            transition group-hover:scale-105"
               >
-                <feature.icon className="h-7 w-7 text-[#e6cfa7]" />
+                <feature.icon className="h-7 w-7 text-white" />
               </div>
 
               {/* Title */}
-              <h3 className="text-lg font-semibold text-[#fdfaf6] tracking-wide">
+              <h3 className="text-lg font-semibold text-white tracking-wide">
                 {feature.title}
               </h3>
 
               {/* Description */}
-              <p className="mt-4 text-sm text-[#eadbc4] leading-relaxed">
+              <p className="mt-4 text-sm text-white leading-relaxed">
                 {feature.description}
               </p>
             </div>

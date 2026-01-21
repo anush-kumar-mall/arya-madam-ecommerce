@@ -45,41 +45,42 @@ const StepCard: React.FC<{ step: Step }> = ({ step }) => {
   return (
     <div
       data-animate="card"
-      className="flex flex-col items-center text-center font-serif"
+      className="flex flex-col items-center text-center font-serif text-black"
     >
       {/* Icon + Number */}
       <div className="relative mb-8">
         <div
           className="w-24 h-24 rounded-2xl
-                     bg-[#3b2a1a]/80
-                     border border-[#e6cfa7]/40
+                     bg-white
+                     border border-black/20
                      flex items-center justify-center
-                     shadow-[0_10px_30px_rgba(0,0,0,0.4)]"
+                     shadow-[0_10px_30px_rgba(0,0,0,0.15)]"
         >
-          <div className="text-[#e6cfa7]">
+          <div className="text-black">
             {step.icon}
           </div>
         </div>
 
+        {/* 👇 NUMBER BOX (UPDATED BG COLOR) */}
         <div
           className="absolute -top-4 -right-4 w-12 h-12
-                     bg-[#e6cfa7]
+                     bg-[rgb(212_175_55)]
                      rounded-lg flex items-center justify-center
                      shadow-lg"
         >
-          <span className="text-[#3b2a1a] font-bold tracking-wider">
+          <span className="text-black font-bold tracking-wider">
             {step.id.toString().padStart(2, '0')}
           </span>
         </div>
       </div>
 
       {/* Title */}
-      <h3 className="text-2xl font-semibold text-[#fdfaf6] mb-4">
+      <h3 className="text-2xl font-semibold text-black mb-4">
         {step.title}
       </h3>
 
       {/* Description */}
-      <p className="text-[#eadbc4] leading-relaxed max-w-sm">
+      <p className="text-black/80 leading-relaxed max-w-sm">
         {step.description}
       </p>
     </div>
@@ -87,64 +88,45 @@ const StepCard: React.FC<{ step: Step }> = ({ step }) => {
 };
 
 const HowItWorks: React.FC = () => {
-
   useEffect(() => {
     const elements = document.querySelectorAll('[data-animate="card"]');
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          entry.target.classList.toggle(
-            'visible',
-            entry.isIntersecting
-          );
+          entry.target.classList.toggle('visible', entry.isIntersecting);
         });
       },
       { threshold: 0.25 }
     );
 
     elements.forEach((el) => observer.observe(el));
-
     return () => observer.disconnect();
   }, []);
 
   return (
-    <section className="relative py-28 px-6 font-serif overflow-hidden">
-
-      {/* Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/90" />
-
+    <section className="relative py-28 px-6 font-serif overflow-hidden bg-white text-black">
       <div className="relative max-w-7xl mx-auto">
 
         {/* Header */}
-        <div
-          data-animate="card"
-          className="text-center mb-20"
-        >
+        <div data-animate="card" className="text-center mb-20">
           <span
             className="inline-block mb-6 px-6 py-2
-                       rounded-full border border-[#e6cfa7]/60
-                       text-[#e6cfa7] tracking-widest uppercase text-xs"
+                       rounded-full border border-black/30
+                       text-black tracking-widest uppercase text-xs"
           >
             Our Process
           </span>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-[#fdfaf6] mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-black mb-6">
             How It Works
           </h2>
 
-          <div className="mb-6 text-[#e6cfa7] tracking-widest">
+          <div className="mb-6 text-black tracking-widest">
             ───── ✦ ─────
           </div>
 
-          <p className="text-[#eadbc4] text-lg md:text-xl max-w-3xl mx-auto">
+          <p className="text-black/80 text-lg md:text-xl max-w-3xl mx-auto">
             A seamless journey from selection to delivery, designed with
             precision, care, and timeless craftsmanship.
           </p>

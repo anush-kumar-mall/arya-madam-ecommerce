@@ -64,7 +64,6 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-
 const Testimonials: FC = () => {
   useEffect(() => {
     const elements = document.querySelectorAll('[data-animate="card"]');
@@ -79,38 +78,29 @@ const Testimonials: FC = () => {
     );
 
     elements.forEach((el) => observer.observe(el));
-
     return () => observer.disconnect();
   }, []);
 
   return (
-    <section className="relative py-28 px-6 font-serif overflow-hidden">
-      {/* Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/90" />
+    <section className="relative py-28 px-6 font-serif overflow-hidden bg-white text-black">
+      <div className="absolute inset-0 bg-white" />
 
       <div className="relative max-w-7xl mx-auto">
         {/* Heading */}
         <div data-animate="card" className="text-center mb-20">
-          <span className="inline-block mb-6 px-6 py-2 rounded-full border border-[#e6cfa7]/60 text-[#e6cfa7] tracking-widest uppercase text-xs">
+          <span className="inline-block mb-6 px-6 py-2 rounded-full border border-black/30 text-black tracking-widest uppercase text-xs">
             Testimonials
           </span>
 
-          <h2 className="text-4xl md:text-5xl font-bold text-[#fdfaf6] mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-black mb-6">
             Trusted by Professionals
           </h2>
 
-          <div className="mb-6 text-[#e6cfa7] tracking-widest">
+          <div className="mb-6 text-black tracking-widest">
             ───── ✦ ─────
           </div>
 
-          <p className="text-[#eadbc4] text-lg max-w-3xl mx-auto">
+          <p className="text-black/80 text-lg max-w-3xl mx-auto">
             Hear from artisans and designers who rely on our materials
             to bring timeless creations to life.
           </p>
@@ -122,20 +112,23 @@ const Testimonials: FC = () => {
             <div
               key={t.id}
               data-animate="card"
-              className="rounded-2xl border border-[#e6cfa7]/30 bg-[#3b2a1a]/80 p-8 shadow-[0_20px_60px_rgba(0,0,0,0.5)] transition hover:-translate-y-1 hover:shadow-[0_30px_80px_rgba(0,0,0,0.7)]"
+              className="rounded-2xl border border-black/20 bg-white p-8
+                         shadow-[0_20px_60px_rgba(0,0,0,0.15)]
+                         transition hover:-translate-y-1
+                         hover:shadow-[0_30px_80px_rgba(0,0,0,0.25)]"
             >
-              {/* Stars */}
+              {/* ⭐ Stars (UPDATED COLOR) */}
               <div className="flex mb-5">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className="w-5 h-5 text-[#e6cfa7] fill-[#e6cfa7]"
+                    className="w-5 h-5 text-[rgb(244_162_97)] fill-[rgb(244_162_97)]"
                   />
                 ))}
               </div>
 
               {/* Text */}
-              <p className="text-[#eadbc4] italic leading-relaxed mb-8">
+              <p className="text-black/80 italic leading-relaxed mb-8">
                 “{t.text}”
               </p>
 
@@ -150,9 +143,9 @@ const Testimonials: FC = () => {
                   />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-[#fdfaf6]">{t.name}</h4>
-                  <p className="text-sm text-[#eadbc4]">{t.role}</p>
-                  <p className="text-sm text-[#eadbc4]/70">{t.company}</p>
+                  <h4 className="font-semibold text-[rgb(44_95_124)]">{t.name}</h4>
+                  <p className="text-sm text-black/80">{t.role}</p>
+                  <p className="text-sm text-black/60">{t.company}</p>
                 </div>
               </div>
             </div>

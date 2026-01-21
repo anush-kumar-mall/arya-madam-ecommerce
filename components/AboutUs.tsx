@@ -136,7 +136,7 @@ export default function AboutUs() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#2b1d12]/95 via-[#3b2a1a]/85 to-[#2b1d12]/95" />
 
-        <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
+        <div className="relative z-10 h-full flex items-center bg-[rgb(44_95_124)] justify-center text-center px-6">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -161,7 +161,7 @@ export default function AboutUs() {
       </section>
 
       {/* ================= OUR STORY ================= */}
-      <section className="py-28 px-6 max-w-7xl mx-auto">
+      <section className="py-28 px-6 bg-white max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -170,12 +170,53 @@ export default function AboutUs() {
             transition={{ duration: 1 }}
           >
             <h2 className="text-3xl font-bold mb-6">Our Story</h2>
-            <p className="text-[#eadbc4] mb-4">
-              Founded in 2010, Arya Madam Craft Supplies began as a small shop in Mumbai.
-            </p>
-            <p className="text-[#eadbc4]">
-              Today, we proudly serve creators across India.
-            </p>
+            <p className="text-black mb-6 leading-relaxed">
+  Arya Madam Art and Craft Services is a purpose-driven initiative founded by
+  <span className="text-[#e6cfa7] font-semibold"> Arya Madam</span>, a highly respected
+  educator and master craftsperson with over
+  <span className="text-[#e6cfa7] font-semibold"> 30 years of experience</span>
+  in art and craft education.
+</p>
+
+<p className="text-[#eadbc4] mb-6 leading-relaxed">
+  Her journey began in <span className="font-semibold">Tumsar, Maharashtra</span>,
+  where she spent 15 years nurturing creativity, discipline, and artistic excellence
+  among students. She later continued her mission in
+  <span className="font-semibold"> Bhiwani, Haryana</span>, serving for more than
+  15 years at <span className="italic">Vaish Model Senior Secondary School</span>
+  as an Art and Craft Instructor.
+</p>
+
+<p className="text-[#eadbc4] mb-6 leading-relaxed">
+  Throughout her career, Arya Madam became known not only for her technical expertise,
+  but also for her commitment to holistic education—building confidence, character,
+  and self-expression through creative learning.
+</p>
+
+<p className="text-[#eadbc4] mb-6 leading-relaxed">
+  After retiring from formal school teaching, she dedicated herself to
+  <span className="text-[#e6cfa7] font-semibold"> community upliftment</span>.
+  She initiated free education and awareness programs in
+  <span className="font-semibold"> Rudra Colony near TIT School, Bhiwani</span>,
+  with a strong focus on girls’ education, women empowerment, and social awareness.
+</p>
+
+<p className="text-[#eadbc4] mb-6 leading-relaxed">
+  This vision was deeply shared with her late husband,
+  <span className="font-semibold"> Lt. Shri Ramakant Arya Ji</span>,
+  a dedicated music teacher who believed in uplifting society through education
+  and culture. After his retirement and later his untimely demise, Arya Madam
+  carried forward their shared mission with even greater resolve.
+</p>
+
+<p className="text-[#eadbc4] leading-relaxed">
+  At the heart of Arya Madam Art and Craft Services lies a powerful vision—to empower
+  girls, boys, and young individuals through structured degree and diploma programs
+  in art and craft. By combining hands-on training, mentorship, and value-based learning,
+  the initiative strives to create sustainable livelihoods, financial independence,
+  and a sense of purpose—transforming creativity into dignity and long-term success.
+</p>
+
           </motion.div>
 
           <ThreeDCard>

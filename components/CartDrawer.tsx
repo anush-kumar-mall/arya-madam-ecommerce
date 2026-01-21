@@ -45,7 +45,7 @@ export default function CartDrawer({ open, onClose }: Props) {
       <div
         className={`
           fixed top-0 right-0 z-50 h-screen w-[380px]
-          bg-[#2b1d12] border-l border-[#e6cfa7]/30
+          bg-white border-l border-[#e6cfa7]/30
           transform transition-transform duration-300
           flex flex-col
           ${open ? "translate-x-0" : "translate-x-full"}
@@ -53,7 +53,7 @@ export default function CartDrawer({ open, onClose }: Props) {
       >
         {/* HEADER */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-[#e6cfa7]/20">
-          <h2 className="text-lg font-bold text-[#fdfaf6]">Your Cart</h2>
+          <h2 className="text-lg font-bold text-black">Shopping Cart</h2>
           <button onClick={onClose} className="cursor-pointer">
             <X className="w-5 h-5 text-[#eadbc4]" />
           </button>
@@ -64,21 +64,21 @@ export default function CartDrawer({ open, onClose }: Props) {
           {/* TOTAL + CHECKOUT ABOVE ITEMS */}
           <div className="mb-4 border-b border-[#e6cfa7]/20 pb-4">
             <div className="flex items-center justify-between text-sm mb-2">
-              <span className="text-[#eadbc4]">Total</span>
-              <span className="text-[#fdfaf6] font-bold">₹{totalPrice}</span>
+              <span className="text-black">Total</span>
+              <span className="text-black font-bold">₹{totalPrice}</span>
             </div>
             <button
               onClick={handleCheckout}
-              className="w-full rounded-lg bg-[#e6cfa7]
-                         py-3 text-sm font-bold text-[#3b2a1a]
-                         hover:bg-[#dcc39a]"
+              className="w-full rounded-lg bg-[#E76F51]
+                         py-3 text-sm font-bold text-white
+                         hover:bg-[#D55A3A]"
             >
-              Checkout
+              Proceed to Checkout
             </button>
           </div>
 
           {items.length === 0 ? (
-            <p className="text-[#eadbc4]/70 text-sm">Your cart is empty</p>
+            <p className="text-black text-sm">Your cart is empty</p>
           ) : (
             items.map((item) => (
               <div

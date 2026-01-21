@@ -58,25 +58,15 @@ export default function CollectionsPage() {
   };
 
   return (
-    <section className="relative min-h-screen px-6 py-24 font-serif overflow-hidden">
-
-      {/* BACKGROUND */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#1c120b]/95" />
+    <section className="relative min-h-screen px-6 py-24 font-serif overflow-hidden bg-white text-[#2b1d12]">
 
       {/* CONTENT */}
-      <div className="relative z-10 max-w-7xl mx-auto text-[#eadbc4]">
+      <div className="relative z-10 max-w-7xl mx-auto">
 
         {/* HEADER */}
         <CurtainReveal>
           <div className="text-center mb-20">
-            <h1 className="text-4xl md:text-5xl font-bold text-[#fdfaf6] mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
               Our Collections
             </h1>
             <p className="max-w-3xl mx-auto text-lg opacity-90">
@@ -91,10 +81,10 @@ export default function CollectionsPage() {
             <CurtainReveal key={c.id} delay={i * 0.12}>
               <div className="group relative rounded-3xl overflow-hidden
                               border border-[#e6cfa7]/25
-                              bg-[#2b1d12]/70
-                              shadow-[0_20px_60px_rgba(0,0,0,0.5)]
+                              bg-white
+                              shadow-[0_10px_30px_rgba(0,0,0,0.1)]
                               cursor-pointer
-                              hover:shadow-[0_25px_70px_rgba(0,0,0,0.7)]
+                              hover:shadow-[0_15px_40px_rgba(0,0,0,0.15)]
                               transition-all duration-300">
 
                 <div className="h-56 overflow-hidden">
@@ -102,24 +92,24 @@ export default function CollectionsPage() {
                     src={c.image}
                     alt={c.title}
                     className="w-full h-full object-cover
-                               group-hover:scale-110
+                               group-hover:scale-105
                                transition duration-700"
                   />
                 </div>
 
                 <div className="absolute inset-0 bg-gradient-to-t
-                                from-[#1c120b]/95
-                                via-[#1c120b]/40
+                                from-white/95
+                                via-white/40
                                 to-transparent" />
 
                 <div className="absolute bottom-0 p-6">
                   <span className="inline-block mb-2 px-3 py-1 text-xs
                                    rounded-full bg-[#e6cfa7]/20
-                                   text-[#e6cfa7]">
+                                   text-[#2b1d12]">
                     {c.count}
                   </span>
 
-                  <h3 className="text-xl font-semibold text-[#fdfaf6] mb-2">
+                  <h3 className="text-xl font-semibold mb-2">
                     {c.title}
                   </h3>
 
@@ -131,9 +121,9 @@ export default function CollectionsPage() {
                     onClick={() => handleExplore(c.title)}
                     className="px-5 py-2 rounded-full
                                border border-[#e6cfa7]
-                               text-[#e6cfa7]
+                               text-[#2b1d12]
                                hover:bg-[#e6cfa7]
-                               hover:text-[#3b2a1a]
+                               hover:text-white
                                cursor-pointer
                                transition text-sm"
                   >
@@ -148,12 +138,12 @@ export default function CollectionsPage() {
         {/* HELP SECTION */}
         <CurtainReveal>
           <div className="rounded-3xl border border-[#e6cfa7]/30
-                          bg-[#2b1d12]/80 p-14 text-center
-                          shadow-[0_20px_60px_rgba(0,0,0,0.6)]
+                          bg-white p-14 text-center
+                          shadow-[0_10px_30px_rgba(0,0,0,0.1)]
                           cursor-pointer
-                          hover:shadow-[0_25px_70px_rgba(0,0,0,0.7)]
+                          hover:shadow-[0_15px_40px_rgba(0,0,0,0.15)]
                           transition-all duration-300">
-            <h2 className="text-3xl font-bold text-[#fdfaf6] mb-4">
+            <h2 className="text-3xl font-bold mb-4">
               Need Help Finding Something?
             </h2>
             <p className="max-w-2xl mx-auto opacity-90">

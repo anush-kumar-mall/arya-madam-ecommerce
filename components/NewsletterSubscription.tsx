@@ -12,7 +12,7 @@ const NewsletterSubscription = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<Message | null>(null);
-  const [joined, setJoined] = useState(false); // ✅ NEW
+  const [joined, setJoined] = useState(false);
 
   useEffect(() => {
     const elements = document.querySelectorAll('[data-animate="card"]');
@@ -38,7 +38,6 @@ const NewsletterSubscription = () => {
     setMessage(null);
 
     try {
-      // simulate API call
       await new Promise((res) => setTimeout(res, 1000));
 
       setMessage({
@@ -46,7 +45,7 @@ const NewsletterSubscription = () => {
         text: "Thank you for joining our circle. Please check your email.",
       });
 
-      setJoined(true); // ✅ IMPORTANT
+      setJoined(true);
       setEmail("");
     } catch {
       setMessage({
@@ -60,16 +59,8 @@ const NewsletterSubscription = () => {
   };
 
   return (
-    <section className="relative py-24 px-6 font-serif overflow-hidden">
-      {/* Background */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/85" />
+    <section className="relative py-24 px-6 font-serif overflow-hidden
+                        bg-gradient-to-b from-[#0f2f3a] to-[#1A4A5E]">
 
       {/* Content */}
       <div
@@ -129,11 +120,7 @@ const NewsletterSubscription = () => {
               disabled:opacity-60
             `}
           >
-            {loading
-              ? "Joining…"
-              : joined
-              ? "Joined ✓"
-              : "Join Now"}
+            {loading ? "Joining…" : joined ? "Joined ✓" : "Join Now"}
           </button>
         </form>
 
