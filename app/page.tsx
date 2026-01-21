@@ -7,15 +7,14 @@ import NewsletterSubscription from "@/components/NewsletterSubscription";
 import HowItWorks from "@/components/HowItWorks";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import BestSellers from "@/components/BestSellers";
-import CouponPopup from "@/components/CouponPopup";
-
-
+import HomePopup from "@/components/HomePopup";
 
 export default function HomePage() {
   return (
     <main>
-    
-      <CouponPopup />
+      {/* POPUP */}
+      <HomePopup />
+
       <Navbar />
       <HeroSection />
       <Collections />
