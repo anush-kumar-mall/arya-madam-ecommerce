@@ -66,13 +66,13 @@ export default function ProductPage() {
               "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
           }}
         />
-        <div className="absolute inset-0 bg-[#2b1d12]/90" />
+        <div className="absolute inset-0 bg-white" />
 
         <div className="relative max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
             {/* LEFT - Product Images */}
-            <div className="bg-[#3b2a1a]/80 border border-[#e6cfa7]/40 p-6 rounded-xl">
+            <div className="bg-[rgb(44_95_124)] border border-[#e6cfa7]/40 p-6 rounded-xl">
               <img
                 src={product.images[selectedImage]}
                 className="w-full max-h-[320px] object-contain mb-6 rounded-lg"
@@ -95,7 +95,7 @@ export default function ProductPage() {
             </div>
 
             {/* RIGHT - Product Details */}
-            <div className="bg-[#3b2a1a]/80 border border-[#e6cfa7]/40 p-8 rounded-xl">
+            <div className="bg-[rgb(44_95_124)] border border-[#e6cfa7]/40 p-8 rounded-xl">
               <h1 className="text-3xl font-bold mb-2 text-[#fdfaf6]">
                 {product.name}
               </h1>
@@ -132,14 +132,14 @@ export default function ProductPage() {
                   <div className="flex border border-[#e6cfa7]/40 rounded overflow-hidden">
                     <button 
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-4 py-2 hover:bg-[#e6cfa7]/20 transition"
+                      className="px-4 py-2 hover:bg-[rgb(44_95_124)] transition"
                     >
                       −
                     </button>
                     <span className="px-6 py-2 border-x border-[#e6cfa7]/40">{quantity}</span>
                     <button 
                       onClick={() => setQuantity(quantity + 1)}
-                      className="px-4 py-2 hover:bg-[#e6cfa7]/20 transition"
+                      className="px-4 py-2 hover:bg-[rgb(44_95_124)] transition"
                     >
                       +
                     </button>
@@ -147,7 +147,7 @@ export default function ProductPage() {
 
                   <button 
                     onClick={handleAddToCart}
-                    className="flex-1 px-6 py-3 bg-[#e6cfa7] text-[#2b1d12] font-semibold rounded hover:bg-[#d4bd95] transition"
+                    className="flex-1 px-6 py-3 bg-orange-500 text-[#2b1d12] font-semibold rounded hover:bg-[#d4bd95] transition"
                   >
                     ADD TO CART
                   </button>
@@ -201,7 +201,7 @@ export default function ProductPage() {
           </div>
 
           {/* Additional Product Info */}
-          <div className="mt-10 bg-[#3b2a1a]/80 border border-[#e6cfa7]/40 rounded-xl">
+          <div className="mt-10 bg-[rgb(44_95_124)] border border-[#e6cfa7]/40 rounded-xl">
             <details open className="p-6">
               <summary className="cursor-pointer text-[#fdfaf6] font-semibold text-lg">
                 PRODUCT DETAILS
@@ -233,7 +233,7 @@ export default function ProductPage() {
                   <a
                     key={relatedProduct.id}
                     href={`/product/${relatedProduct.id}`}
-                    className="bg-[#3b2a1a]/80 border border-[#e6cfa7]/40 rounded-lg p-4 hover:border-[#e6cfa7] transition group"
+                    className="bg-[rgb(44_95_124)] border-[#e6cfa7]/40 rounded-lg p-4 hover:border-[#e6cfa7] transition group"
                   >
                     <div className="h-32 bg-[#2b1d12]/60 rounded mb-3 overflow-hidden">
                       <img

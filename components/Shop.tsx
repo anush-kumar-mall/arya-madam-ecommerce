@@ -3,88 +3,10 @@
 import React, { useState } from 'react';
 import { useCart } from '@/app/providers/CartProvider';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
-
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  category: string;
-};
-
-const productsData: Product[] = [
-  {
-    id: 1,
-    name: 'Rainbow Glass Bead Set',
-    price: 299,
-    image: '/assets/rainbowBead.jpeg',
-    category: 'Beads',
-  },
-  {
-    id: 2,
-    name: 'Embroidery Thread Collection',
-    price: 399,
-    image: '/assets/embroideryThread.jpeg',
-    category: 'Thread',
-  },
-  {
-    id: 3,
-    name: 'Wooden Bead Assortment',
-    price: 249,
-    image: '/assets/woodenBeads.jpeg',
-    category: 'Beads',
-  },
-  {
-    id: 4,
-    name: 'DIY Jewelry Making Kit',
-    price: 599,
-    image: '/assets/DIYJewelry.jpeg',
-    category: 'Premium Gift Hampers',
-  },
-  {
-    id: 5,
-    name: 'Metallic Charm Collection',
-    price: 349,
-    image: '/assets/metallicCharm.jpeg',
-    category: 'Beads',
-  },
-  {
-    id: 6,
-    name: 'Silk Thread Bundle',
-    price: 449,
-    image: '/assets/silkThread.jpeg',
-    category: 'Thread',
-  },
-  {
-    id: 7,
-    name: 'Crystal Bead Mix',
-    price: 499,
-    image: '/assets/crystalBead.jpeg',
-    category: 'Crystal Combo Set',
-  },
-  {
-    id: 8,
-    name: 'Craft Tool Essentials',
-    price: 399,
-    image: '/assets/craftTool.jpeg',
-    category: 'Tools',
-  },
-  {
-    id: 9,
-    name: 'Pearl Bead Collection',
-    price: 549,
-    image: '/assets/pearlBead.jpeg',
-    category: 'Crystal Combo Set',
-  },
-  {
-    id: 10,
-    name: 'Luxury Craft Gift Box',
-    price: 699,
-    image: '/assets/giftHamper.jpeg',
-    category: 'Premium Gift Hampers',
-  },
-];
+import { products } from '@/lib/products';
 
 export default function ProductsPage() {
   const [maxPrice, setMaxPrice] = useState(1000);
@@ -93,11 +15,10 @@ export default function ProductsPage() {
   const categories = [
     'All',
     'Beads',
-    'Thread',
-    'DIY Kits',
+    'Threads',
+    'Kits',
     'Tools',
-    'Crystal Combo Set',
-    'Premium Gift Hampers',
+    'Charms',
     'Gifts Under Rs.699',
   ];
 
@@ -105,7 +26,7 @@ export default function ProductsPage() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q')?.toLowerCase() || '';
 
-  const filteredProducts = productsData.filter((p) => {
+  const filteredProducts = products.filter((p) => {
     const matchPrice = p.price <= maxPrice;
     const matchSearch = p.name.toLowerCase().includes(query);
 
@@ -117,8 +38,8 @@ export default function ProductsPage() {
     return matchPrice && matchSearch && matchCategory;
   });
 
-  const cartItemById = (id: number) =>
-    cartItems.find((item) => item.id === String(id));
+  const cartItemById = (id: string) =>
+    cartItems.find((item) => item.id === id);
 
   const containerVariants = {
     hidden: {},
@@ -224,48 +145,72 @@ export default function ProductsPage() {
                 <motion.div
                   key={p.id}
                   variants={itemVariants}
-                  className="bg-white text-[#2b1d12] p-6 rounded-2xl flex flex-col"
+                  className="bg-white text-[#2b1d12] p-6 rounded-2xl flex flex-col group"
                 >
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    className="h-48 w-full object-cover rounded-xl mb-4"
-                  />
+                  {/* Product Link - Click pe details page khulega */}
+                  <Link href={`/product/${p.id}`} className="block">
+                    <div className="relative h-48 w-full mb-4 rounded-xl overflow-hidden bg-[#f5f1ea]">
+                      <Image
+                        src={p.images[0]}
+                        alt={p.name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </div>
 
-                  <h3 className="font-semibold">{p.name}</h3>
-                  <p className="font-bold mb-4">
-                    ₹{p.price}
-                  </p>
+                    <h3 className="font-semibold group-hover:text-[#E76F51] transition">
+                      {p.name}
+                    </h3>
+                  </Link>
 
+                  {/* Rating */}
+                  <div className="mt-2 text-xs text-[#8a6a44]">
+                    ★ {p.rating}{" "}
+                    <span className="text-[#5c4a3a]/70">
+                      ({p.reviews})
+                    </span>
+                  </div>
+
+                  {/* Price */}
+                  <div className="mt-3 flex items-center gap-2 mb-4">
+                    <span className="font-bold text-[#2b1d12]">
+                      ₹{p.price}
+                    </span>
+                    {p.oldPrice && (
+                      <span className="text-sm text-[#5c4a3a]/60 line-through">
+                        ₹{p.oldPrice}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Cart Actions */}
                   {!cartItem ? (
                     <button
                       onClick={() =>
                         addToCart({
-                          id: String(p.id),
+                          id: p.id,
                           title: p.name,
                           price: p.price,
-                          image: p.image,
+                          image: p.images[0],
                           quantity: 1,
                         })
                       }
-                      className="mt-auto bg-[#E76F51] text-white py-2 rounded-lg hover:bg-[#D55A3A]"
+                      className="mt-auto bg-[#E76F51] text-white py-2 rounded-lg hover:bg-[#D55A3A] transition"
                     >
                       Add to Cart
                     </button>
                   ) : (
-                    <div className="mt-auto flex justify-between items-center border rounded-lg px-4 py-2">
+                    <div className="mt-auto flex justify-between items-center border border-black/20 rounded-lg px-4 py-2">
                       <button
-                        onClick={() =>
-                          decreaseQty(String(p.id))
-                        }
+                        onClick={() => decreaseQty(cartItem.id)}
+                        className="text-lg font-semibold"
                       >
                         -
                       </button>
-                      <span>{cartItem.quantity}</span>
+                      <span className="font-semibold">{cartItem.quantity}</span>
                       <button
-                        onClick={() =>
-                          increaseQty(String(p.id))
-                        }
+                        onClick={() => increaseQty(cartItem.id)}
+                        className="text-lg font-semibold"
                       >
                         +
                       </button>
