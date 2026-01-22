@@ -6,20 +6,17 @@ import { useCart } from '@/app/providers/CartProvider';
 export default function CheckoutPage() {
   const { items: cartItems, increaseQty, decreaseQty } = useCart();
 
-  // Delivery fields state
   const [name, setName] = React.useState('');
   const [phone, setPhone] = React.useState('');
   const [street, setStreet] = React.useState('');
   const [city, setCity] = React.useState('');
   const [pincode, setPincode] = React.useState('');
 
-  // Total price
   const total = cartItems.reduce(
     (sum, p) => sum + p.price * p.quantity,
     0
   );
 
-  // WhatsApp order
   const orderOnWhatsApp = () => {
     if (!name || !phone || !street || !city || !pincode) return;
 
@@ -43,29 +40,19 @@ Phone: ${phone}
 Address: ${street}, ${city}, ${pincode}
     `.trim();
 
-    const whatsappNumber = '919876543210'; // 👈 apna number
+    const whatsappNumber = '919876543210';
     window.open(
       `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`,
       '_blank'
     );
   };
 
-  // Form validation
   const isFormValid = name && phone && street && city && pincode;
 
   return (
-    <section className="relative min-h-screen px-6 py-24 font-serif overflow-hidden">
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/95" />
-
-      <div className="relative z-10 max-w-7xl mx-auto text-[#eadbc4]">
-        <h1 className="text-4xl font-bold text-[#fdfaf6] mb-14">
+    <section className="min-h-screen px-6 py-24 font-serif bg-white">
+      <div className="max-w-7xl mx-auto text-black">
+        <h1 className="text-4xl font-bold mb-14 text-[rgb(44_95_124)]">
           Checkout
         </h1>
 
@@ -73,19 +60,21 @@ Address: ${street}, ${city}, ${pincode}
 
           {/* LEFT */}
           <div className="lg:col-span-2 space-y-10">
+
             {/* DELIVERY ADDRESS */}
             <div className="card">
               <h2 className="title">Delivery Address</h2>
+
               <div className="grid md:grid-cols-2 gap-6">
                 <input
                   placeholder="Full Name"
-                  className="input cursor-text"
+                  className="input"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
                 <input
                   placeholder="Phone Number"
-                  className="input cursor-text"
+                  className="input"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                 />
@@ -93,7 +82,7 @@ Address: ${street}, ${city}, ${pincode}
 
               <textarea
                 placeholder="Street Address"
-                className="input mt-6 cursor-text"
+                className="input mt-6"
                 rows={3}
                 value={street}
                 onChange={(e) => setStreet(e.target.value)}
@@ -102,13 +91,13 @@ Address: ${street}, ${city}, ${pincode}
               <div className="grid md:grid-cols-2 gap-6 mt-6">
                 <input
                   placeholder="City"
-                  className="input cursor-text"
+                  className="input"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                 />
                 <input
                   placeholder="Pincode"
-                  className="input cursor-text"
+                  className="input"
                   value={pincode}
                   onChange={(e) => setPincode(e.target.value)}
                 />
@@ -118,7 +107,9 @@ Address: ${street}, ${city}, ${pincode}
             {/* PAYMENT */}
             <div className="card">
               <h2 className="title">Payment Method</h2>
-              <div className="mt-4 p-4 rounded-xl border border-[#25D366]/60 bg-[#25D366]/10">
+
+              {/* ✅ SAME GREEN COLOUR AS ORIGINAL */}
+              <div className="mt-4 p-4 rounded-xl border border-[#25D366]/60 bg-[#25D366]/10 text-[#25D366] font-semibold">
                 ✔ Order on WhatsApp (No online payment)
               </div>
             </div>
@@ -130,14 +121,14 @@ Address: ${street}, ${city}, ${pincode}
 
             <div className="space-y-6">
               {cartItems.length === 0 && (
-                <p className="text-center text-[#fdfaf6]">
+                <p className="text-center text-white">
                   Your cart is empty 😕
                 </p>
               )}
 
               {cartItems.map((p) => (
                 <div key={p.id} className="flex gap-4 items-center">
-                  <div className="w-20 h-20 rounded-xl overflow-hidden border border-[#e6cfa7]/30">
+                  <div className="w-20 h-20 rounded-xl overflow-hidden border border-white/30">
                     <img
                       src={p.image}
                       alt={p.title}
@@ -146,23 +137,23 @@ Address: ${street}, ${city}, ${pincode}
                   </div>
 
                   <div className="flex-1">
-                    <p className="font-medium text-[#fdfaf6]">{p.title}</p>
-                    <p className="text-sm opacity-70">
+                    <p className="font-medium text-white">{p.title}</p>
+                    <p className="text-sm opacity-80">
                       ₹{p.price} × {p.quantity}
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2 border border-[#e6cfa7]/40 rounded-lg px-2 py-1">
+                  <div className="flex items-center gap-2 border border-white/40 rounded-lg px-2 py-1">
                     <button
                       onClick={() => decreaseQty(String(p.id))}
-                      className="text-xl font-bold hover:text-white hover:cursor-pointer"
+                      className="text-xl font-bold hover:text-white"
                     >
                       -
                     </button>
                     <span className="font-semibold">{p.quantity}</span>
                     <button
                       onClick={() => increaseQty(String(p.id))}
-                      className="text-xl font-bold hover:text-white hover:cursor-pointer"
+                      className="text-xl font-bold hover:text-white"
                     >
                       +
                     </button>
@@ -171,9 +162,9 @@ Address: ${street}, ${city}, ${pincode}
               ))}
             </div>
 
-            <hr className="my-6 border-[#e6cfa7]/30" />
+            <hr className="my-6 border-white/30" />
 
-            <div className="flex justify-between text-lg font-bold text-[#fdfaf6] mb-8">
+            <div className="flex justify-between text-lg font-bold text-white mb-8">
               <span>Total</span>
               <span>₹{total}</span>
             </div>
@@ -181,8 +172,11 @@ Address: ${street}, ${city}, ${pincode}
             <button
               onClick={orderOnWhatsApp}
               disabled={!isFormValid}
-              className={`w-full py-4 rounded-full text-[#1f3b2c] font-semibold tracking-wide transition
-                ${isFormValid ? 'bg-[#25D366] hover:opacity-90 cursor-pointer' : 'bg-gray-500 cursor-not-allowed'}`}
+              className={`w-full py-4 rounded-full font-semibold tracking-wide transition
+                ${isFormValid
+                  ? 'bg-[#25D366] text-[#1f3b2c] hover:opacity-90'
+                  : 'bg-gray-400 text-white cursor-not-allowed'
+                }`}
             >
               Order on WhatsApp
             </button>
@@ -193,28 +187,29 @@ Address: ${street}, ${city}, ${pincode}
       {/* STYLES */}
       <style jsx>{`
         .card {
-          background: rgba(43, 29, 18, 0.85);
-          border: 1px solid rgba(230, 207, 167, 0.3);
+          background: rgb(44, 95, 124);
+          border: 1px solid rgba(255, 255, 255, 0.25);
           padding: 32px;
           border-radius: 20px;
+          color: white;
         }
         .title {
           font-size: 22px;
           font-weight: 600;
-          color: #fdfaf6;
+          color: white;
           margin-bottom: 20px;
         }
         .input {
           width: 100%;
-          background: transparent;
-          border: 1px solid rgba(230, 207, 167, 0.4);
+          background: white;
+          border: none;
           border-radius: 12px;
           padding: 12px 16px;
-          color: #fdfaf6;
+          color: black;
           outline: none;
         }
         .input::placeholder {
-          color: rgba(234, 219, 196, 0.6);
+          color: #555;
         }
       `}</style>
     </section>
