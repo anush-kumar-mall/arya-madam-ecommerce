@@ -1,7 +1,7 @@
 
 
 import ProductForm from "@/components/admin/ProductForm";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma"; 
 
 
 
