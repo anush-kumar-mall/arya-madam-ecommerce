@@ -1,13 +1,13 @@
-import Navbar from "@/components/Navbar";
-import HeroSection from "@/components/HeroSection";
-import Testimonials from "@/components/Testimonials";
-import Footer from "@/components/Footer";
-import Collections from "@/components/FeaturedCollections";
-import NewsletterSubscription from "@/components/NewsletterSubscription";
-import HowItWorks from "@/components/HowItWorks";
-import WhyChooseUs from "@/components/WhyChooseUs";
-import BestSellers from "@/components/BestSellers";
-import HomePopup from "@/components/HomePopup";
+import Navbar from "@/Components/Navbar";
+import HeroSection from "@/Components/HeroSection";
+import Testimonials from "@/Components/Testimonials";
+import Footer from "@/Components/Footer";
+import Collections from "@/Components/FeaturedCollections";
+import NewsletterSubscription from "@/Components/NewsletterSubscription";
+import HowItWorks from "@/Components/HowItWorks";
+import WhyChooseUs from "@/Components/WhyChooseUs";
+import BestSellers from "@/Components/BestSellers";
+import HomePopup from "@/Components/HomePopup";
 
 export default function HomePage() {
   return (

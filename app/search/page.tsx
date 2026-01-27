@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import SearchClient from "@/components/SearchClient";
+import Navbar from "@/Components/Navbar";
+import Footer from "@/Components/Footer";
+import SearchClient from "@/Components/SearchClient";
 
 export default function Page() {
   return (

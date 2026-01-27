@@ -13,7 +13,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { motion, animate, useMotionValue, useInView } from "framer-motion";
-import ThreeDCard from "@/components/ThreeDCard";
+import ThreeDCard from "@/Components/ThreeDCard";
 
 /* ================= Animated Counter ================= */
 const AnimatedCounter = ({ value }: { value: string }) => {
