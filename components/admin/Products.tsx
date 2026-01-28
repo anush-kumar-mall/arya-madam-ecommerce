@@ -262,7 +262,7 @@ export const Products = () => {
                             <div className="flex gap-2">
                               <button
                                 onClick={() =>
-                                  router.push(`/manage/products/${product.id}`)
+                                  router.push(`/admin/products/${product.id}`)
                                 }
                                 className="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition cursor-pointer"
                                 title="Edit Product"

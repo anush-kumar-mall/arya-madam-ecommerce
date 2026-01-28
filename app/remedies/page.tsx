@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { motion } from "framer-motion";
 import {
   Coins,
   Heart,
@@ -29,6 +30,42 @@ interface Remedy {
   bgColor: string;
   description: string;
 }
+
+/* 🔹 Card animation */
+const cardVariants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.9,
+    filter: "blur(8px)",
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.9,
+      ease: "easeOut",
+    },
+  },
+};
+
+/* 🔹 CTA animation */
+const ctaVariants = {
+  hidden: {
+    opacity: 0,
+    y: 60,
+    scale: 0.95,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.8,
+      ease: "easeOut",
+    },
+  },
+};
 
 export default function RemediesPage() {
   const remedies: Remedy[] = [
@@ -156,7 +193,7 @@ export default function RemediesPage() {
       <Navbar />
 
       <div className="min-h-screen bg-white">
-        {/* Hero Section */}
+        {/* Hero – unchanged */}
         <section className="relative py-20 px-6 bg-gradient-to-br from-[#fdfaf6] via-[#f5f1e8] to-[#eadbc4]/40">
           <div className="max-w-7xl mx-auto text-center">
             <h1 className="text-5xl md:text-6xl font-bold text-[rgb(44_95_124)] mb-6">
@@ -167,24 +204,27 @@ export default function RemediesPage() {
               balance your chakras with our carefully curated spiritual solutions
             </p>
           </div>
-
-          <div className="absolute top-10 left-10 w-20 h-20 bg-[#e6cfa7]/30 rounded-full blur-2xl" />
-          <div className="absolute bottom-10 right-10 w-32 h-32 bg-[rgb(44_95_124)]/10 rounded-full blur-3xl" />
         </section>
 
-        {/* Remedies Grid */}
+        {/* Cards */}
         <section className="py-16 px-6 bg-[#fdfaf6]">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {remedies.map((remedy) => (
-              <Link
-                key={remedy.id}
-                href={`/remedies/${remedy.slug}`}
-                className="group"
-              >
-                <div
+              <Link key={remedy.id} href={`/remedies/${remedy.slug}`}>
+                <motion.div
+                  variants={cardVariants}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: false, amount: 0.3 }}
+                  whileHover={{
+                    rotateX: 6,
+                    rotateY: -6,
+                    scale: 1.03,
+                  }}
+                  transition={{ type: "spring", stiffness: 120 }}
                   className={`relative h-full p-8 rounded-2xl ${remedy.bgColor}
                   border-2 border-gray-200 hover:border-[rgb(44_95_124)]/40
-                  transition-all duration-300 hover:shadow-2xl hover:-translate-y-2`}
+                  transition-all duration-300 hover:shadow-2xl`}
                 >
                   <div className={`${remedy.color} mb-6`}>
                     {remedy.icon}
@@ -198,35 +238,47 @@ export default function RemediesPage() {
                     {remedy.description}
                   </p>
 
-                  <div className="mt-6 flex items-center gap-2 text-[rgb(44_95_124)] font-semibold">
-                    <span>Explore</span>
+                  <div className="mt-6 font-semibold text-[rgb(44_95_124)]">
+                    Explore
                   </div>
 
                   <div className="absolute top-4 right-4 text-6xl font-bold text-gray-900/5">
                     {remedy.id}
                   </div>
-                </div>
+                </motion.div>
               </Link>
             ))}
           </div>
         </section>
 
-        {/* CTA */}
+        {/* CTA – animated */}
         <section className="py-20 px-6 bg-white">
-          <div className="max-w-4xl mx-auto text-center bg-gradient-to-r from-[rgb(44_95_124)] to-[#5a7a95] rounded-3xl p-12 shadow-2xl">
+          <motion.div
+            variants={ctaVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.4 }}
+            className="max-w-4xl mx-auto text-center bg-gradient-to-r from-[rgb(44_95_124)] to-[#5a7a95] rounded-3xl p-12 shadow-2xl"
+          >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
               Not Sure Where to Start?
             </h2>
             <p className="text-xl text-white/90 mb-8">
               Let us guide you to the perfect remedy for your needs
             </p>
-            <Link
-              href="/contact"
-              className="inline-block px-8 py-4 bg-white text-[rgb(44_95_124)] font-bold rounded-xl hover:bg-[#eadbc4] transition"
+
+            <motion.div
+              whileHover={{ scale: 1.08 }}
+              whileTap={{ scale: 0.95 }}
             >
-              Get Personalized Guidance
-            </Link>
-          </div>
+              <Link
+                href="/contact"
+                className="inline-block px-8 py-4 bg-white text-[rgb(44_95_124)] font-bold rounded-xl hover:bg-[#eadbc4] transition"
+              >
+                Get Personalized Guidance
+              </Link>
+            </motion.div>
+          </motion.div>
         </section>
       </div>
 

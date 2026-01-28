@@ -59,8 +59,6 @@ export default function CollectionsPage() {
 
   return (
     <section className="relative min-h-screen px-6 py-24 font-serif overflow-hidden bg-white text-[#2b1d12]">
-
-      {/* CONTENT */}
       <div className="relative z-10 max-w-7xl mx-auto">
 
         {/* HEADER */}
@@ -75,18 +73,19 @@ export default function CollectionsPage() {
           </div>
         </CurtainReveal>
 
-        {/* COLLECTION GRID */}
+        {/* COLLECTION GRID – NO CHANGE */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 mb-24">
           {collections.map((c, i) => (
             <CurtainReveal key={c.id} delay={i * 0.12}>
-              <div className="group relative rounded-3xl overflow-hidden
-                              border border-[#e6cfa7]/25
-                              bg-white
-                              shadow-[0_10px_30px_rgba(0,0,0,0.1)]
-                              cursor-pointer
-                              hover:shadow-[0_15px_40px_rgba(0,0,0,0.15)]
-                              transition-all duration-300">
-
+              <div
+                className="group relative rounded-3xl overflow-hidden
+                           border border-[#e6cfa7]/25
+                           bg-white
+                           shadow-[0_10px_30px_rgba(0,0,0,0.1)]
+                           cursor-pointer
+                           hover:shadow-[0_15px_40px_rgba(0,0,0,0.15)]
+                           transition-all duration-300"
+              >
                 <div className="h-56 overflow-hidden">
                   <img
                     src={c.image}
@@ -97,15 +96,12 @@ export default function CollectionsPage() {
                   />
                 </div>
 
-                <div className="absolute inset-0 bg-gradient-to-t
-                                from-white/95
-                                via-white/40
-                                to-transparent" />
-
                 <div className="absolute bottom-0 p-6">
-                  <span className="inline-block mb-2 px-3 py-1 text-xs
-                                   rounded-full bg-[#e6cfa7]/20
-                                   text-[#2b1d12]">
+                  <span
+                    className="inline-block mb-2 px-3 py-1 text-xs
+                               rounded-full bg-[#e6cfa7]/20
+                               text-[#2b1d12]"
+                  >
                     {c.count}
                   </span>
 
@@ -135,18 +131,22 @@ export default function CollectionsPage() {
           ))}
         </div>
 
-        {/* HELP SECTION */}
+        {/* HELP SECTION – BLUE THEME ONLY HERE */}
         <CurtainReveal>
-          <div className="rounded-3xl border border-[#e6cfa7]/30
-                          bg-white p-14 text-center
-                          shadow-[0_10px_30px_rgba(0,0,0,0.1)]
-                          cursor-pointer
-                          hover:shadow-[0_15px_40px_rgba(0,0,0,0.15)]
-                          transition-all duration-300">
-            <h2 className="text-3xl font-bold mb-4">
+          <div
+            className="rounded-3xl border border-[rgb(44_95_124)]/40
+                       bg-[rgb(44_95_124)]/10
+                       p-14 text-center
+                       shadow-[0_10px_30px_rgba(44,95,124,0.3)]
+                       cursor-pointer
+                       hover:bg-[rgb(44_95_124)]/20
+                       hover:shadow-[0_15px_40px_rgba(44,95,124,0.45)]
+                       transition-all duration-300"
+          >
+            <h2 className="text-3xl font-bold mb-4 text-[rgb(44_95_124)]">
               Need Help Finding Something?
             </h2>
-            <p className="max-w-2xl mx-auto opacity-90">
+            <p className="max-w-2xl mx-auto opacity-90 text-[rgb(44_95_124)]">
               Our team of craft experts is here to help you.
             </p>
           </div>

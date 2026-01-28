@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { HelpCircle, Mail } from 'lucide-react';
 
 const faqs = [
   {
@@ -20,7 +21,7 @@ const faqs = [
   },
   {
     q: 'Can I apply if no role matches my profile?',
-    a: 'Absolutely. You can send us your resume, and we’ll reach out when a suitable opportunity arises.',
+    a: 'Absolutely. You can send us your resume, and we'll reach out when a suitable opportunity arises.',
   },
   {
     q: 'What kind of work culture do you promote?',
@@ -40,81 +41,89 @@ export default function FAQPage() {
   }, [searchParams]);
 
   return (
-    <section
-      id="faqs"
-      className="relative min-h-screen px-6 py-32 font-serif overflow-hidden"
-    >
-      {/* BACKGROUND */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/90" />
+    <div id="faqs" className="font-serif bg-white">
+      {/* ================= HERO ================= */}
+      <section className="relative h-[70vh] min-h-[420px] overflow-hidden">
+        <motion.div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
+          }}
+          initial={{ scale: 1.1 }}
+          whileInView={{ scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[rgb(44_95_124)]/95 via-[rgb(44_95_124)]/85 to-[rgb(44_95_124)]/95" />
 
-      {/* CONTENT */}
-      <motion.div
-        initial={{
-          clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)',
-          opacity: 0,
-        }}
-        whileInView={{
-          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-          opacity: 1,
-        }}
-        exit={{
-          clipPath: 'polygon(100% 0, 100% 0, 100% 100%, 100% 100%)',
-          opacity: 0,
-        }}
-        viewport={{ once: false }}
-        transition={{ duration: 1.1, ease: [0.77, 0, 0.18, 1] }}
-        className="relative z-10 mx-auto max-w-4xl text-[#eadbc4]"
-      >
-        {/* HERO */}
-        <div className="mb-24 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#fdfaf6]">
-            Frequently Asked Questions
-          </h1>
+        <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <span className="inline-block mb-6 px-6 py-2 border border-white/60 rounded-full text-white text-xs tracking-widest">
+              HELP CENTER
+            </span>
 
-          <p className="mt-6 mx-auto max-w-2xl text-lg">
-            Answers to common questions about working with us
-          </p>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              Frequently Asked Questions
+            </h1>
+
+            <div className="mb-6 text-white tracking-[0.3em] text-sm md:text-base">
+              ───── ✦ YOUR QUESTIONS • OUR ANSWERS ✦ ─────
+            </div>
+
+            <p className="text-white text-lg max-w-2xl mx-auto">
+              Find answers to common questions about working with us
+            </p>
+          </motion.div>
         </div>
+      </section>
 
-        {/* FAQ LIST */}
+      {/* ================= FAQ LIST ================= */}
+      <section className="py-28 px-6 max-w-4xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <HelpCircle className="mx-auto mb-4 text-[rgb(44_95_124)] w-12 h-12" />
+          <h2 className="text-3xl font-bold text-[rgb(44_95_124)] mb-4">
+            How Can We Help?
+          </h2>
+          <p className="text-black text-lg">
+            Browse through our most frequently asked questions
+          </p>
+        </motion.div>
+
         <div className="space-y-6">
           {faqs.map((item, index) => (
             <motion.div
               key={index}
-              initial={{
-                clipPath: 'inset(0 100% 0 0)',
-                opacity: 0,
-              }}
-              whileInView={{
-                clipPath: 'inset(0 0% 0 0)',
-                opacity: 1,
-              }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false }}
               transition={{
-                duration: 0.9,
-                ease: [0.77, 0, 0.18, 1],
-                delay: index * 0.12,
+                duration: 0.6,
+                ease: "easeOut",
+                delay: index * 0.1,
               }}
-              className="rounded-2xl border border-[#e6cfa7]/30 bg-[#2b1d12]/80 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+              className="rounded-2xl border-2 border-[rgb(44_95_124)]/20 bg-white shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
               <button
                 onClick={() =>
                   setOpenIndex(openIndex === index ? null : index)
                 }
-                className="flex w-full items-center justify-between p-6 text-left"
+                className="flex w-full items-center justify-between p-6 text-left group"
               >
-                <h3 className="text-lg font-semibold text-[#fdfaf6]">
+                <h3 className="text-lg font-semibold text-[rgb(44_95_124)] group-hover:text-[rgb(44_95_124)]/80 transition-colors">
                   {item.q}
                 </h3>
-                <span className="text-xl text-[#e6cfa7]">
-                  {openIndex === index ? '—' : '+'}
+                <span className="text-2xl font-bold text-[rgb(44_95_124)] transition-transform duration-300 flex-shrink-0 ml-4">
+                  {openIndex === index ? '−' : '+'}
                 </span>
               </button>
 
@@ -124,51 +133,57 @@ export default function FAQPage() {
                     initial={{
                       height: 0,
                       opacity: 0,
-                      letterSpacing: '0.2em',
                     }}
                     animate={{
                       height: 'auto',
                       opacity: 1,
-                      letterSpacing: '0em',
                     }}
                     exit={{
                       height: 0,
                       opacity: 0,
-                      letterSpacing: '0.2em',
                     }}
                     transition={{
-                      duration: 0.5,
+                      duration: 0.4,
                       ease: 'easeInOut',
                     }}
-                    className="overflow-hidden px-6 pb-6 text-sm leading-relaxed text-[#eadbc4]"
+                    className="overflow-hidden"
                   >
-                    {item.a}
+                    <div className="px-6 pb-6 text-base leading-relaxed text-black border-t border-[rgb(44_95_124)]/10 pt-4">
+                      {item.a}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </motion.div>
           ))}
         </div>
+      </section>
 
-        {/* CTA */}
+      {/* ================= CTA ================= */}
+      <section className="py-20 pb-32 px-6 bg-white">
         <motion.div
-          initial={{ clipPath: 'inset(0 0 100% 0)', opacity: 0 }}
-          whileInView={{ clipPath: 'inset(0 0 0% 0)', opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="mt-32 text-center"
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="max-w-4xl mx-auto text-center bg-[rgb(44_95_124)] p-16 rounded-3xl border border-[rgb(44_95_124)]/40"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-[#fdfaf6] mb-6">
+          <Mail className="mx-auto mb-6 text-white w-12 h-12" />
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             Still Have Questions?
           </h2>
+          <p className="text-white text-lg mb-10">
+            We're here to help. Reach out to our team and we'll get back to you as soon as possible.
+          </p>
 
           <Link
             href="/contact#contact"
-            className="inline-block px-8 py-3 border border-[#e6cfa7] text-[#e6cfa7] rounded-full tracking-wide hover:bg-[#e6cfa7] hover:text-[#3b2a1a] transition"
+            className="inline-block px-8 py-4 bg-white text-[rgb(44_95_124)] rounded-lg font-semibold hover:bg-white/90 transition-colors duration-300"
           >
             Contact Us
           </Link>
         </motion.div>
-      </motion.div>
-    </section>
+      </section>
+    </div>
   );
 }

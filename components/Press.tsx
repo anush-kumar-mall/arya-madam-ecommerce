@@ -44,8 +44,8 @@ const MagneticCard = ({ item }: { item: any }) => {
     const dx = e.clientX - (rect.left + rect.width / 2);
     const dy = e.clientY - (rect.top + rect.height / 2);
 
-    x.set(dx * 0.25);
-    y.set(dy * 0.25);
+    x.set(dx * 0.2);
+    y.set(dy * 0.2);
   };
 
   const reset = () => {
@@ -69,9 +69,10 @@ const MagneticCard = ({ item }: { item: any }) => {
     >
       <div
         className="group overflow-hidden rounded-2xl
-                   border border-[#e6cfa7]/30
-                   bg-[#2b1d12]/85
-                   shadow-[0_40px_100px_rgba(0,0,0,0.6)]"
+                   border border-gray-200
+                   bg-white
+                   shadow-[0_20px_60px_rgba(0,0,0,0.12)]
+                   transition-shadow"
         style={{ transform: 'translateZ(40px)' }}
       >
         {/* Image */}
@@ -84,20 +85,20 @@ const MagneticCard = ({ item }: { item: any }) => {
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t
-                          from-[#1f140c]/90 via-[#2b1d12]/60 to-transparent" />
+                          from-white/90 via-white/30 to-transparent" />
         </div>
 
         {/* Content */}
         <div className="p-6">
-          <p className="text-xs tracking-widest uppercase text-[#e6cfa7] mb-2">
+          <p className="text-xs tracking-widest uppercase text-gray-500 mb-2">
             {item.source} · {item.date}
           </p>
 
-          <h3 className="text-xl font-semibold text-[#fdfaf6] mb-3">
+          <h3 className="text-xl font-semibold text-[#2c5f7c] mb-3">
             {item.title}
           </h3>
 
-          <span className="text-sm font-semibold text-[#e6cfa7]">
+          <span className="text-sm font-semibold text-[#2c5f7c]">
             Read Article →
           </span>
         </div>
@@ -109,21 +110,11 @@ const MagneticCard = ({ item }: { item: any }) => {
 const PressPage = () => {
   return (
     <section
-      className="relative min-h-screen px-6 py-32 font-serif overflow-hidden"
+      className="relative min-h-screen px-6 py-32 font-serif bg-white"
       style={{ perspective: '1200px' }}
     >
-      {/* BACKGROUND */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/90" />
-
       {/* CONTENT */}
-      <div className="relative z-10 mx-auto max-w-7xl text-[#eadbc4]">
+      <div className="mx-auto max-w-7xl text-[#3b2a1a]">
 
         {/* HEADER */}
         <motion.div
@@ -133,19 +124,23 @@ const PressPage = () => {
           viewport={{ once: false }}
           className="mb-24 text-center max-w-4xl mx-auto"
         >
-          <span className="inline-block mb-6 px-6 py-2 border border-[#e6cfa7]/60 rounded-full text-[#e6cfa7] tracking-widest uppercase text-xs">
+          <span className="inline-block mb-6 px-6 py-2
+                           border border-[#2c5f7c]/40
+                           rounded-full
+                           text-[#2c5f7c]
+                           tracking-widest uppercase text-xs">
             Press
           </span>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-[#fdfaf6]">
+          <h1 className="text-4xl md:text-5xl font-bold text-[#2c5f7c]">
             In the Press
           </h1>
 
-          <div className="my-6 text-[#e6cfa7] tracking-widest">
+          <div className="my-6 text-[#2c5f7c] tracking-widest">
             ───── ✦ ─────
           </div>
 
-          <p className="text-lg leading-relaxed">
+          <p className="text-lg leading-relaxed text-gray-600">
             Discover what leading publications are saying about our
             commitment to craftsmanship and quality.
           </p>

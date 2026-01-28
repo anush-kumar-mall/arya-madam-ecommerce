@@ -94,28 +94,33 @@ export default function FeaturedCollections() {
                            group-hover:scale-105"
               />
 
-              {/* Soft light overlay (NOT blue) */}
-              <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-white/50 to-transparent" />
+              {/* ✅ SOFT READABILITY OVERLAY */}
+              <div
+                className="absolute inset-0
+                           bg-gradient-to-t
+                           from-black/30
+                           via-black/15
+                           to-transparent"
+              />
 
               {/* Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-8">
-                <span className="mb-3 inline-block text-xs font-semibold tracking-wide text-gray-600">
+              <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
+                <span className="mb-3 inline-block text-xs font-semibold tracking-wide text-white/80">
                   {item.items}
                 </span>
 
-                <h3 className="text-2xl font-semibold text-[#2b1d12]">
+                <h3 className="text-2xl font-semibold">
                   {item.title}
                 </h3>
 
-                {/* Subtitle — readable, NO blue */}
-                <p className="text-gray-700 text-sm mb-4">
+                <p className="text-white/85 text-sm mb-4">
                   {item.subtitle}
                 </p>
 
                 <Link
                   href="#"
                   className="inline-flex items-center gap-2
-                             text-sm font-semibold text-[#8a6a44]
+                             text-sm font-semibold text-[#F4A261]
                              hover:gap-3 transition-all duration-300"
                 >
                   Explore Collection →

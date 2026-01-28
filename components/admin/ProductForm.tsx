@@ -278,7 +278,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
           category,
           stone: stone || undefined,
           badge: badge || undefined,
-          status: "ACTIVE", // Set as ACTIVE by default
+          status: "ACTIVE",
           rating: 0,
           reviews: 0,
         }),
@@ -342,7 +342,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
       }
 
       showMessage("Product created successfully!");
-      setTimeout(() => router.push("/manage/products"), 1000);
+      setTimeout(() => router.push("/admin/products"), 1000);
     } catch (err) {
       console.error("❌ Error:", err);
       showMessage("Something went wrong. Please try again.", true);
@@ -378,11 +378,20 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
         if (uploadedVideoUrl) videoUrl = uploadedVideoUrl;
       }
 
+      // Upload new images first
+      let newImageUrls: string[] = [];
+      if (newImages.length > 0) {
+        newImageUrls = await uploadImages(id);
+      }
+
+      // Combine existing and new image URLs
+      const allImages = [...existingImages, ...newImageUrls];
+
       const payload = {
         title,
         description,
         stock,
-        images: existingImages,
+        images: allImages,
         price,
         oldPrice,
         exclusive,
@@ -410,17 +419,8 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
         return;
       }
 
-      const productId = data.id || data.productId || data.product?.id;
-      if (!productId) {
-        showMessage("Product updated but ID missing. Please refresh.", true);
-        setLoading(false);
-        return;
-      }
-
-      if (newImages.length > 0) await uploadImages(productId);
-
       showMessage("Product updated successfully!");
-      setTimeout(() => router.push("/manage/products"), 1000);
+      setTimeout(() => router.push("/admin/products"), 1000);
     } catch (err) {
       console.error("Update error:", err);
       showMessage("Unexpected error", true);
@@ -463,7 +463,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Enter product title"
-            className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
             disabled={loading}
           />
         </div>
@@ -478,7 +478,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
             value={details}
             onChange={(e) => setDetails(e.target.value)}
             placeholder="Enter product subtitle (optional)"
-            className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
             disabled={loading}
           />
         </div>
@@ -491,7 +491,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
             disabled={loading}
           >
             <option value="">Select Category</option>
@@ -513,7 +513,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
             value={stone}
             onChange={(e) => setStone(e.target.value)}
             placeholder="E.g., Crystal, Glass, Metal (optional)"
-            className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
             disabled={loading}
           />
         </div>
@@ -528,7 +528,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
             value={badge}
             onChange={(e) => setBadge(e.target.value)}
             placeholder="E.g., NEW, SALE, LIMITED (optional)"
-            className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
             disabled={loading}
           />
         </div>
@@ -542,7 +542,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter product description"
-            className="w-full outline-none p-2.5 sm:p-3 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+            className="w-full outline-none p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
             rows={4}
             disabled={loading}
           />
@@ -559,7 +559,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
               value={price || ""}
               onChange={(e) => setPrice(Number(e.target.value))}
               placeholder="0"
-              className="w-full outline-none p-2.5 sm:p-3 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+              className="w-full outline-none p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
               disabled={loading}
             />
           </div>
@@ -573,7 +573,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
               value={oldPrice || ""}
               onChange={(e) => setOldPrice(Number(e.target.value))}
               placeholder="0"
-              className="w-full outline-none p-2.5 sm:p-3 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+              className="w-full outline-none p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
               disabled={loading}
             />
           </div>
@@ -591,7 +591,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
                 )
               }
               placeholder="Optional"
-              className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+              className="w-full p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
               disabled={loading}
             />
           </div>
@@ -607,7 +607,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
             value={stock || ""}
             onChange={(e) => setStock(Number(e.target.value))}
             placeholder="0"
-            className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
             disabled={loading}
           />
         </div>
@@ -629,12 +629,12 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
                   value={col}
                   onChange={(e) => handleColourChange(index, e.target.value.trim())}
                   placeholder="#FF5733 (optional)"
-                  className={`flex-1 outline-none p-2.5 sm:p-3 text-sm sm:text-base rounded-lg border focus:ring-2 ${
+                  className={`flex-1 outline-none p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 rounded-lg border focus:ring-2 bg-white ${
                     col
                       ? validator.isHexColor(col)
                         ? "focus:ring-green-400 border-green-400"
                         : "focus:ring-red-400 border-gray-300"
-                      : "focus:ring-yellow-200 border-gray-300"
+                      : "focus:ring-amber-400 border-gray-300"
                   }`}
                 />
                 {validator.isHexColor(col) && (
@@ -673,7 +673,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
                 value={item}
                 onChange={(e) => handleChange(index, e.target.value)}
                 placeholder="Enter something..."
-                className="flex-1 outline-none p-2.5 sm:p-3 text-sm sm:text-base rounded-lg border focus:ring-2 focus:ring-[#fcd34d]"
+                className="flex-1 outline-none p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
               />
               {items.length > 1 && (
                 <button
@@ -721,7 +721,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
               className={`w-24 h-24 sm:w-32 sm:h-32 flex flex-col items-center justify-center border-2 border-dashed rounded-lg cursor-pointer transition ${
                 loading
                   ? "border-gray-200 text-gray-400"
-                  : "border-gray-300 hover:border-[#fcd34d]"
+                  : "border-gray-300 hover:border-amber-400"
               }`}
             >
               <Plus className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 mb-1" />
@@ -772,7 +772,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
               className={`w-full max-w-md h-32 flex flex-col items-center justify-center border-2 border-dashed rounded-lg cursor-pointer transition ${
                 loading
                   ? "border-gray-200 text-gray-400"
-                  : "border-gray-300 hover:border-[#fcd34d]"
+                  : "border-gray-300 hover:border-amber-400"
               }`}
             >
               <Video className="w-8 h-8 text-gray-400 mb-2" />
@@ -793,7 +793,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end pt-2 sm:pt-4">
           <button
             type="button"
-            onClick={() => router.push("/manage/products")}
+            onClick={() => router.push("/admin/products")}
             className="w-full sm:w-auto px-4 sm:px-6 py-2 text-sm sm:text-base bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
             disabled={loading || uploadingVideo}
           >

@@ -76,7 +76,15 @@ export default function Navbar() {
     }
   };
 
-  const navItems = ["Home", "Shop", "Collections", "Remedies", "Gallery", "About", "Contact"];
+  const navItems = [
+    "Home",
+    "Shop",
+    "Collections",
+    "Remedies",
+    "Gallery",
+    "About",
+    "Contact",
+  ];
 
   return (
     <>
@@ -131,7 +139,7 @@ export default function Navbar() {
             {/* SEARCH */}
             <div className="relative">
               <Search
-                className="w-6 h-6 text-black cursor-pointer "
+                className="w-6 h-6 text-black cursor-pointer"
                 onClick={() => setSearchOpen((p) => !p)}
               />
 
@@ -182,9 +190,9 @@ export default function Navbar() {
           </div>
         </nav>
 
-        {/* ===== MOBILE MENU ===== */}
+        {/* ===== MOBILE MENU (BLUE THEME) ===== */}
         {menuOpen && (
-          <div className="md:hidden bg-[#2b1d12]/95 backdrop-blur-md border-t border-[#e6cfa7]/20">
+          <div className="md:hidden bg-[rgb(44_95_124)]/95 backdrop-blur-md border-t border-white/20">
             <div className="flex flex-col px-6 py-6 gap-6">
               {navItems.map((item) => {
                 const href =
@@ -201,7 +209,9 @@ export default function Navbar() {
                     key={item}
                     href={href}
                     onClick={(e) => handleNavClick(e, item)}
-                    className="text-[#eadbc4] text-lg hover:text-[#fdfaf6]"
+                    className="text-white text-lg
+                               hover:text-[#eadbc4]
+                               transition"
                   >
                     {item}
                   </Link>

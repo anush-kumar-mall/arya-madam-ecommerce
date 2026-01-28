@@ -34,32 +34,26 @@ const sections = [
   },
 ];
 
+const BLUE = 'rgb(44,95,124)';
+
 export default function ShippingPolicyPage() {
   const { scrollYProgress } = useScroll();
-
   const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <section className="relative min-h-screen px-6 py-32 font-serif overflow-hidden">
-
+    <section
+      className="relative min-h-screen px-6 py-32 font-serif
+                 bg-white overflow-hidden"
+      style={{ color: BLUE }}
+    >
       {/* SCROLL PROGRESS BAR */}
       <motion.div
-        style={{ scaleX }}
-        className="fixed top-0 left-0 right-0 h-[2px] bg-[#e6cfa7] origin-left z-50"
+        style={{ scaleX, backgroundColor: BLUE }}
+        className="fixed top-0 left-0 right-0 h-[2px] origin-left z-50"
       />
-
-      {/* BACKGROUND */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/90" />
 
       {/* CONTENT */}
-      <div className="relative z-10 mx-auto max-w-4xl text-[#eadbc4]">
+      <div className="relative z-10 mx-auto max-w-4xl">
 
         {/* HEADER */}
         <motion.div
@@ -69,19 +63,32 @@ export default function ShippingPolicyPage() {
           viewport={{ once: false }}
           className="mb-20 text-center"
         >
-          <span className="inline-block mb-6 px-6 py-2 border border-[#e6cfa7]/60 rounded-full text-[#e6cfa7] tracking-widest uppercase text-xs">
+          <span
+            className="inline-block mb-6 px-6 py-2 rounded-full
+                       border tracking-widest uppercase text-xs"
+            style={{
+              borderColor: BLUE,
+              color: BLUE,
+            }}
+          >
             Shipping Policy
           </span>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-[#fdfaf6]">
+          <h1
+            className="text-4xl md:text-5xl font-bold mb-6"
+            style={{ color: BLUE }}
+          >
             Shipping & Delivery
           </h1>
 
-          <div className="my-6 text-[#e6cfa7] tracking-widest">
+          <div
+            className="my-6 tracking-widest"
+            style={{ color: BLUE }}
+          >
             ───── ✦ ─────
           </div>
 
-          <p className="mx-auto max-w-3xl text-lg leading-relaxed">
+          <p className="mx-auto max-w-3xl text-lg leading-relaxed opacity-90">
             Everything you need to know about how we ship our products.
           </p>
         </motion.div>
@@ -91,20 +98,19 @@ export default function ShippingPolicyPage() {
           {sections.map((item, i) => (
             <motion.div
               key={i}
-              initial="hidden"
-              whileInView="visible"
               viewport={{ once: false, margin: '-120px' }}
               className="relative pl-10"
             >
-              {/* DRAW LINE */}
+              {/* VERTICAL LINE */}
               <motion.span
                 initial={{ height: 0 }}
                 whileInView={{ height: '100%' }}
                 transition={{ duration: 0.8, ease: 'easeOut' }}
-                className="absolute left-0 top-0 w-[2px] bg-[#e6cfa7]/60"
+                className="absolute left-0 top-0 w-[2px]"
+                style={{ backgroundColor: BLUE }}
               />
 
-              {/* CONTENT */}
+              {/* CONTENT CARD */}
               <motion.div
                 initial={{ clipPath: 'inset(0 100% 0 0)' }}
                 whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
@@ -112,12 +118,23 @@ export default function ShippingPolicyPage() {
                   duration: 0.9,
                   ease: [0.77, 0, 0.18, 1],
                 }}
-                className="rounded-2xl border border-[#e6cfa7]/30 bg-[#2b1d12]/80 p-8 shadow-[0_20px_60px_rgba(0,0,0,0.5)]"
+                className="rounded-2xl p-8 bg-white
+                           border
+                           shadow-[0_10px_30px_rgba(44,95,124,0.2)]
+                           hover:shadow-[0_15px_40px_rgba(44,95,124,0.35)]
+                           transition-all duration-300"
+                style={{ borderColor: `${BLUE}40` }}
               >
-                <h2 className="text-2xl font-semibold text-[#fdfaf6] mb-4">
+                <h2
+                  className="text-2xl font-semibold mb-4"
+                  style={{ color: BLUE }}
+                >
                   {item.title}
                 </h2>
-                <p className="leading-relaxed">{item.text}</p>
+
+                <p className="leading-relaxed opacity-85">
+                  {item.text}
+                </p>
               </motion.div>
             </motion.div>
           ))}
@@ -131,11 +148,14 @@ export default function ShippingPolicyPage() {
           viewport={{ once: false }}
           className="mt-32 text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-[#fdfaf6] mb-6">
+          <h2
+            className="text-3xl md:text-4xl font-bold mb-6"
+            style={{ color: BLUE }}
+          >
             Need Help With Shipping?
           </h2>
 
-          <p className="mb-10 text-lg">
+          <p className="mb-10 text-lg opacity-90">
             Contact our support team for any shipping-related queries.
           </p>
 
@@ -143,7 +163,15 @@ export default function ShippingPolicyPage() {
             initial={{ borderBottomWidth: 0 }}
             whileHover={{ borderBottomWidth: 2 }}
             transition={{ duration: 0.3 }}
-            className="px-8 py-3 border border-[#e6cfa7] text-[#e6cfa7] rounded-full tracking-wide hover:bg-[#e6cfa7] hover:text-[#3b2a1a]"
+            className="px-8 py-3 rounded-full border transition"
+            style={{
+              borderColor: BLUE,
+              color: BLUE,
+            }}
+            whileHover={{
+              backgroundColor: BLUE,
+              color: '#fff',
+            }}
           >
             Contact Support
           </motion.button>

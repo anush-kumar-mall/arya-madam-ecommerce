@@ -7,12 +7,10 @@ const rollVariant = {
   hidden: {
     opacity: 0,
     scaleY: 0,
-    filter: 'brightness(0.9)',
   },
   visible: {
     opacity: 1,
     scaleY: 1,
-    filter: 'brightness(1)',
   },
 };
 
@@ -22,7 +20,7 @@ const RollBlock = ({ children }: { children: React.ReactNode }) => (
     initial="hidden"
     whileInView="visible"
     viewport={{ once: false, margin: '-100px' }}
-    transition={{ duration: 1 }}
+    transition={{ duration: 1, ease: [0.77, 0, 0.18, 1] }}
     style={{ transformOrigin: 'top' }}
   >
     {children}
@@ -31,29 +29,27 @@ const RollBlock = ({ children }: { children: React.ReactNode }) => (
 
 const TermsPolicyPage = () => {
   return (
-    <section className="relative min-h-screen px-6 py-32 font-serif overflow-hidden">
-
-      {/* BACKGROUND */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/90" />
-
+    <section
+      className="relative min-h-screen px-6 py-32 font-serif
+                 bg-white text-[#2b1d12] overflow-hidden"
+    >
       {/* CONTENT */}
-      <div className="relative z-10 mx-auto max-w-4xl text-[#eadbc4]">
+      <div className="relative z-10 mx-auto max-w-4xl">
 
         {/* HEADER */}
         <RollBlock>
           <div className="mb-20 text-center">
-            <span className="inline-block mb-6 px-6 py-2 border border-[#e6cfa7]/60 rounded-full text-[#e6cfa7] tracking-widest uppercase text-xs">
+            <span
+              className="inline-block mb-6 px-6 py-2
+                         border border-[#e6cfa7]
+                         rounded-full
+                         text-[#2b1d12]
+                         tracking-widest uppercase text-xs"
+            >
               Terms & Policy
             </span>
 
-            <h1 className="text-4xl md:text-5xl font-bold text-[#fdfaf6]">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
               Terms & Conditions
             </h1>
 
@@ -61,14 +57,14 @@ const TermsPolicyPage = () => {
               ───── ✦ ─────
             </div>
 
-            <p className="mx-auto max-w-3xl text-lg leading-relaxed">
+            <p className="mx-auto max-w-3xl text-lg leading-relaxed opacity-80">
               Please read these terms carefully before using our website
               and purchasing our products.
             </p>
           </div>
         </RollBlock>
 
-        {/* CONTENT */}
+        {/* CONTENT BLOCKS */}
         <div className="space-y-12">
           {[
             {
@@ -101,11 +97,21 @@ const TermsPolicyPage = () => {
             },
           ].map((item, i) => (
             <RollBlock key={i}>
-              <div className="rounded-2xl border border-[#e6cfa7]/30 bg-[#2b1d12]/80 p-8 shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
-                <h2 className="text-2xl font-semibold text-[#fdfaf6] mb-4">
+              <div
+                className="rounded-2xl p-8
+                           border border-[#e6cfa7]/25
+                           bg-white
+                           shadow-[0_10px_30px_rgba(0,0,0,0.12)]
+                           hover:shadow-[0_15px_40px_rgba(0,0,0,0.16)]
+                           transition-all duration-300"
+              >
+                <h2 className="text-2xl font-semibold mb-4">
                   {item.title}
                 </h2>
-                <p className="leading-relaxed">{item.text}</p>
+
+                <p className="leading-relaxed opacity-80">
+                  {item.text}
+                </p>
               </div>
             </RollBlock>
           ))}
@@ -114,15 +120,22 @@ const TermsPolicyPage = () => {
         {/* CTA */}
         <RollBlock>
           <div className="mt-32 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#fdfaf6] mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
               Questions About Our Terms?
             </h2>
 
-            <p className="mb-10 text-lg">
+            <p className="mb-10 text-lg opacity-80">
               Contact us if you need clarification.
             </p>
 
-            <button className="px-8 py-3 border border-[#e6cfa7] text-[#e6cfa7] rounded-full tracking-wide hover:bg-[#e6cfa7] hover:text-[#3b2a1a] transition">
+            <button
+              className="px-8 py-3 rounded-full
+                         border border-[#e6cfa7]
+                         text-[#2b1d12]
+                         hover:bg-[#e6cfa7]
+                         hover:text-white
+                         transition"
+            >
               Contact Support
             </button>
           </div>

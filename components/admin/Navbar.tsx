@@ -16,12 +16,12 @@ const Navbar: React.FC = () => {
   const pathname = usePathname();
 
   const navItems: NavItem[] = [
-    { label: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
-    { label: 'Users', href: '/admin/users', icon: '👥' },
+    // { label: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
+    // { label: 'Users', href: '/admin/users', icon: '👥' },
     { label: 'Products', href: '/admin/products', icon: '📦' },
-    { label: 'Orders', href: '/admin/orders', icon: '🛒' },
-    { label: 'Analytics', href: '/admin/analytics', icon: '📈' },
-    { label: 'Settings', href: '/admin/settings', icon: '⚙️' },
+    // { label: 'Orders', href: '/admin/orders', icon: '🛒' },
+    // { label: 'Analytics', href: '/admin/analytics', icon: '📈' },
+    // { label: 'Settings', href: '/admin/settings', icon: '⚙️' },
   ];
 
   const isActive = (href: string) => pathname === href;
@@ -62,11 +62,11 @@ const Navbar: React.FC = () => {
 
           {/* Right Side - Notifications & Profile */}
           <div className="flex items-center space-x-4">
-            {/* Notification Bell */}
+            {/* Notification Bell
             <button className="relative p-2 text-gray-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
               <span className="text-xl">🔔</span>
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
+            </button> */}
 
             {/* Profile Dropdown */}
             <div className="relative">

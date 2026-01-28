@@ -24,20 +24,10 @@ const openings = [
 
 const CareersPage = () => {
   return (
-    <section className="relative min-h-screen px-6 py-32 font-serif overflow-hidden">
-
-      {/* BACKGROUND */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/90" />
+    <section className="relative min-h-screen px-6 py-32 font-serif bg-white">
 
       {/* CONTENT */}
-      <div className="relative z-10 mx-auto max-w-5xl text-[#eadbc4]">
+      <div className="mx-auto max-w-5xl text-[#3b2a1a]">
 
         {/* HERO */}
         <div className="mb-24 text-center">
@@ -46,7 +36,11 @@ const CareersPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.8 }}
-            className="inline-block mb-6 px-6 py-2 border border-[#e6cfa7]/60 rounded-full text-[#e6cfa7] tracking-widest uppercase text-xs"
+            className="inline-block mb-6 px-6 py-2
+                       border border-[#2c5f7c]/40
+                       rounded-full
+                       text-[#2c5f7c]
+                       tracking-widest uppercase text-xs"
           >
             Careers
           </motion.span>
@@ -56,7 +50,7 @@ const CareersPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 1, delay: 0.2 }}
-            className="text-4xl md:text-5xl font-bold text-[#fdfaf6]"
+            className="text-4xl md:text-5xl font-bold text-[#2c5f7c]"
           >
             Work With Arya Madam
           </motion.h1>
@@ -66,7 +60,7 @@ const CareersPage = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="my-6 text-[#e6cfa7] tracking-widest"
+            className="my-6 text-[#2c5f7c] tracking-widest"
           >
             ───── ✦ ─────
           </motion.div>
@@ -76,7 +70,7 @@ const CareersPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="mx-auto max-w-2xl text-lg leading-relaxed"
+            className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-600"
           >
             Join a team driven by craftsmanship, precision, and timeless values.
           </motion.p>
@@ -91,31 +85,31 @@ const CareersPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
-              className="rounded-2xl border border-[#e6cfa7]/30
-                         bg-[#2b1d12]/80
-                         shadow-[0_20px_60px_rgba(0,0,0,0.5)]
+              className="rounded-2xl border border-gray-200
+                         bg-white
+                         shadow-[0_10px_40px_rgba(0,0,0,0.08)]
                          p-8"
             >
-              <h3 className="text-2xl font-semibold text-[#fdfaf6] mb-2">
+              <h3 className="text-2xl font-semibold text-[#2c5f7c] mb-2">
                 {job.title}
               </h3>
 
-              <p className="text-sm uppercase tracking-widest text-[#e6cfa7] mb-4">
+              <p className="text-sm uppercase tracking-widest text-gray-500 mb-4">
                 {job.type}
               </p>
 
-              <p className="leading-relaxed mb-6">
+              <p className="leading-relaxed mb-6 text-gray-600">
                 {job.desc}
               </p>
 
               <Link
                 href="/contact#contact"
                 className="inline-block px-6 py-2
-                           border border-[#e6cfa7]
-                           text-[#e6cfa7]
+                           border border-[#2c5f7c]
+                           text-[#2c5f7c]
                            rounded-full tracking-wide
-                           hover:bg-[#e6cfa7]
-                           hover:text-[#3b2a1a]
+                           hover:bg-[#2c5f7c]
+                           hover:text-white
                            transition"
               >
                 Apply Now
@@ -132,22 +126,22 @@ const CareersPage = () => {
           transition={{ duration: 0.8 }}
           className="mt-32 text-center"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-[#fdfaf6] mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#2c5f7c] mb-6">
             Don’t See the Right Role?
           </h2>
 
-          <p className="mb-10 text-lg">
+          <p className="mb-10 text-lg text-gray-600">
             Send us your resume — we’re always open to great talent.
           </p>
 
           <Link
             href="/contact#contact"
             className="inline-block px-8 py-3
-                       border border-[#e6cfa7]
-                       text-[#e6cfa7]
+                       border border-[#2c5f7c]
+                       text-[#2c5f7c]
                        rounded-full tracking-wide
-                       hover:bg-[#e6cfa7]
-                       hover:text-[#3b2a1a]
+                       hover:bg-[#2c5f7c]
+                       hover:text-white
                        transition"
           >
             Get In Touch
