@@ -1,11 +1,7 @@
 'use client';
 
 import React from 'react';
-import {
-  motion,
-  useScroll,
-  useTransform,
-} from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 const sections = [
   {
@@ -42,17 +38,15 @@ export default function ShippingPolicyPage() {
 
   return (
     <section
-      className="relative min-h-screen px-6 py-32 font-serif
-                 bg-white overflow-hidden"
+      className="relative min-h-screen px-6 py-32 font-serif bg-white overflow-hidden"
       style={{ color: BLUE }}
     >
       {/* SCROLL PROGRESS BAR */}
       <motion.div
-        style={{ scaleX, backgroundColor: BLUE }}
         className="fixed top-0 left-0 right-0 h-[2px] origin-left z-50"
+        style={{ scaleX, backgroundColor: BLUE }}
       />
 
-      {/* CONTENT */}
       <div className="relative z-10 mx-auto max-w-4xl">
 
         {/* HEADER */}
@@ -64,12 +58,8 @@ export default function ShippingPolicyPage() {
           className="mb-20 text-center"
         >
           <span
-            className="inline-block mb-6 px-6 py-2 rounded-full
-                       border tracking-widest uppercase text-xs"
-            style={{
-              borderColor: BLUE,
-              color: BLUE,
-            }}
+            className="inline-block mb-6 px-6 py-2 rounded-full border tracking-widest uppercase text-xs"
+            style={{ borderColor: BLUE, color: BLUE }}
           >
             Shipping Policy
           </span>
@@ -81,12 +71,7 @@ export default function ShippingPolicyPage() {
             Shipping & Delivery
           </h1>
 
-          <div
-            className="my-6 tracking-widest"
-            style={{ color: BLUE }}
-          >
-            ───── ✦ ─────
-          </div>
+          <div className="my-6 tracking-widest">───── ✦ ─────</div>
 
           <p className="mx-auto max-w-3xl text-lg leading-relaxed opacity-90">
             Everything you need to know about how we ship our products.
@@ -114,21 +99,13 @@ export default function ShippingPolicyPage() {
               <motion.div
                 initial={{ clipPath: 'inset(0 100% 0 0)' }}
                 whileInView={{ clipPath: 'inset(0 0% 0 0)' }}
-                transition={{
-                  duration: 0.9,
-                  ease: [0.77, 0, 0.18, 1],
-                }}
-                className="rounded-2xl p-8 bg-white
-                           border
-                           shadow-[0_10px_30px_rgba(44,95,124,0.2)]
+                transition={{ duration: 0.9, ease: [0.77, 0, 0.18, 1] }}
+                className="rounded-2xl p-8 bg-white border shadow-[0_10px_30px_rgba(44,95,124,0.2)]
                            hover:shadow-[0_15px_40px_rgba(44,95,124,0.35)]
                            transition-all duration-300"
                 style={{ borderColor: `${BLUE}40` }}
               >
-                <h2
-                  className="text-2xl font-semibold mb-4"
-                  style={{ color: BLUE }}
-                >
+                <h2 className="text-2xl font-semibold mb-4" style={{ color: BLUE }}>
                   {item.title}
                 </h2>
 
@@ -161,17 +138,14 @@ export default function ShippingPolicyPage() {
 
           <motion.button
             initial={{ borderBottomWidth: 0 }}
-            whileHover={{ borderBottomWidth: 2 }}
-            transition={{ duration: 0.3 }}
-            className="px-8 py-3 rounded-full border transition"
-            style={{
-              borderColor: BLUE,
-              color: BLUE,
-            }}
             whileHover={{
+              borderBottomWidth: 2,
               backgroundColor: BLUE,
               color: '#fff',
             }}
+            transition={{ duration: 0.3 }}
+            className="px-8 py-3 rounded-full border transition"
+            style={{ borderColor: BLUE, color: BLUE }}
           >
             Contact Support
           </motion.button>
