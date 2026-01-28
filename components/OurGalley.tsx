@@ -6,6 +6,7 @@ import {
   AnimatePresence,
   useScroll,
   useMotionValueEvent,
+  Variants,
 } from 'framer-motion';
 
 const galleryImages: string[] = [
@@ -25,7 +26,7 @@ const galleryImages: string[] = [
   '/gallery/g14.jpeg',
 ];
 
-const containerVariants = {
+const containerVariants: Variants = {
   show: {
     transition: {
       staggerChildren: 0.15,
@@ -33,8 +34,9 @@ const containerVariants = {
   },
 };
 
-const GalleryPage: React.FC = () => {
+const GalleryPage = () => {
   const { scrollY } = useScroll();
+
   const [scrollDirection, setScrollDirection] =
     useState<'up' | 'down'>('down');
 
@@ -48,7 +50,7 @@ const GalleryPage: React.FC = () => {
     }
   });
 
-  const imageVariants = {
+  const imageVariants: Variants = {
     hidden: {
       opacity: 0,
       x: scrollDirection === 'down' ? -150 : 150,
@@ -60,7 +62,7 @@ const GalleryPage: React.FC = () => {
       scale: 1,
       transition: {
         duration: 0.7,
-        ease: [0.25, 0.1, 0.25, 1], // ✅ TS-safe easeOut
+        ease: 'easeOut', // ✅ TS-safe
       },
     },
   };
@@ -104,7 +106,6 @@ const GalleryPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: -40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }}
           transition={{ duration: 0.8 }}
           className="text-center bg-[rgb(44_95_124)] py-20 mb-16"
         >
@@ -121,16 +122,12 @@ const GalleryPage: React.FC = () => {
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.25 }}
           className="grid grid-cols-1 sm:grid-cols-2 gap-6"
         >
           {galleryImages.map((img, index) => (
             <motion.div
               key={index}
               variants={imageVariants}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: false }}
               onClick={() => setActiveIndex(index)}
               className="relative w-full h-64 overflow-hidden rounded-xl shadow-md cursor-pointer"
               whileHover={{ scale: 1.05 }}
@@ -156,7 +153,6 @@ const GalleryPage: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {/* CLOSE */}
             <button
               onClick={() => setActiveIndex(null)}
               className="absolute top-6 right-6 text-white text-3xl"
@@ -164,7 +160,6 @@ const GalleryPage: React.FC = () => {
               ✕
             </button>
 
-            {/* PREV */}
             <button
               onClick={() =>
                 setActiveIndex(
@@ -177,18 +172,14 @@ const GalleryPage: React.FC = () => {
               ‹
             </button>
 
-            {/* IMAGE */}
             <motion.img
-              key={activeIndex}
               src={galleryImages[activeIndex]}
               className="max-h-[85vh] max-w-[90vw] object-contain rounded-xl"
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.85, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.4 }}
+              exit={{ scale: 0.85, opacity: 0 }}
             />
 
-            {/* NEXT */}
             <button
               onClick={() =>
                 setActiveIndex(
