@@ -1,42 +1,84 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '@/app/providers/CartProvider';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { products } from '@/lib/products';
+
+interface Product {
+  id: string;
+  title: string;
+  details?: string;
+  description: string;
+  price: number;
+  oldPrice?: number;
+  exclusive?: number;
+  stock: number;
+  images: string[];
+  video?: string;
+  colour: string[];
+  insideBox: string[];
+  rating: number;
+  reviews: number;
+  badge?: string;
+  sku: string;
+  category: string;
+  stone?: string;
+  status: string;
+}
 
 export default function ProductsPage() {
   const [maxPrice, setMaxPrice] = useState(1000);
   const [selectedCategory, setSelectedCategory] = useState('All');
-
-  const categories = [
-    'All',
-    'Beads',
-    'Threads',
-    'Kits',
-    'Tools',
-    'Charms',
-    'Gifts Under Rs.699',
-  ];
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState<string[]>(['All']);
 
   const { addToCart, increaseQty, decreaseQty, items: cartItems } = useCart();
   const searchParams = useSearchParams();
   const query = searchParams.get('q')?.toLowerCase() || '';
 
-  const filteredProducts = products.filter((p) => {
-    const matchPrice = p.price <= maxPrice;
-    const matchSearch = p.name.toLowerCase().includes(query);
+  // Fetch products from API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams();
+        
+        if (selectedCategory !== 'All') {
+          params.append('category', selectedCategory);
+        }
+        
+        params.append('maxPrice', maxPrice.toString());
+        
+        if (query) {
+          params.append('search', query);
+        }
 
-    const matchCategory =
-      selectedCategory === 'All' ||
-      p.category === selectedCategory ||
-      (selectedCategory === 'Gifts Under Rs.699' && p.price <= 699);
+        const res = await fetch(`/api/products?${params.toString()}`);
+        
+        if (!res.ok) {
+          throw new Error('Failed to fetch products');
+        }
 
-    return matchPrice && matchSearch && matchCategory;
-  });
+        const data = await res.json();
+        setProducts(data);
+
+        // Extract unique categories from products
+        const uniqueCategories = ['All', ...new Set(data.map((p: Product) => p.category))];
+        setCategories(uniqueCategories as string[]);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [selectedCategory, maxPrice, query]);
 
   const cartItemById = (id: string) =>
     cartItems.find((item) => item.id === id);
@@ -115,7 +157,7 @@ export default function ProductsPage() {
               <input
                 type="range"
                 min="0"
-                max="1000"
+                max="10000"
                 value={maxPrice}
                 onChange={(e) =>
                   setMaxPrice(Number(e.target.value))
@@ -132,93 +174,106 @@ export default function ProductsPage() {
             whileInView="show"
             className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
           >
-            {filteredProducts.length === 0 && (
+            {loading ? (
+              <div className="col-span-full text-center py-12">
+                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent"></div>
+                <p className="mt-4">Loading products...</p>
+              </div>
+            ) : products.length === 0 ? (
               <p className="col-span-full text-center">
                 No products found 😕
               </p>
-            )}
+            ) : (
+              products.map((p) => {
+                const cartItem = cartItemById(p.id);
 
-            {filteredProducts.map((p) => {
-              const cartItem = cartItemById(p.id);
+                return (
+                  <motion.div
+                    key={p.id}
+                    variants={itemVariants}
+                    className="bg-white text-[#2b1d12] p-6 rounded-2xl flex flex-col group"
+                  >
+                    {/* Product Link - Click pe details page khulega */}
+                    <Link href={`/product/${p.id}`} className="block">
+                      <div className="relative h-48 w-full mb-4 rounded-xl overflow-hidden bg-[#f5f1ea]">
+                        {p.images && p.images.length > 0 ? (
+                          <Image
+                            src={p.images[0]}
+                            alt={p.title}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                            <span className="text-gray-400">No Image</span>
+                          </div>
+                        )}
+                      </div>
 
-              return (
-                <motion.div
-                  key={p.id}
-                  variants={itemVariants}
-                  className="bg-white text-[#2b1d12] p-6 rounded-2xl flex flex-col group"
-                >
-                  {/* Product Link - Click pe details page khulega */}
-                  <Link href={`/product/${p.id}`} className="block">
-                    <div className="relative h-48 w-full mb-4 rounded-xl overflow-hidden bg-[#f5f1ea]">
-                      <Image
-                        src={p.images[0]}
-                        alt={p.name}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
+                      <h3 className="font-semibold group-hover:text-[#E76F51] transition">
+                        {p.title}
+                      </h3>
+                    </Link>
 
-                    <h3 className="font-semibold group-hover:text-[#E76F51] transition">
-                      {p.name}
-                    </h3>
-                  </Link>
-
-                  {/* Rating */}
-                  <div className="mt-2 text-xs text-[#8a6a44]">
-                    ★ {p.rating}{" "}
-                    <span className="text-[#5c4a3a]/70">
-                      ({p.reviews})
-                    </span>
-                  </div>
-
-                  {/* Price */}
-                  <div className="mt-3 flex items-center gap-2 mb-4">
-                    <span className="font-bold text-[#2b1d12]">
-                      ₹{p.price}
-                    </span>
-                    {p.oldPrice && (
-                      <span className="text-sm text-[#5c4a3a]/60 line-through">
-                        ₹{p.oldPrice}
+                    {/* Rating */}
+                    <div className="mt-2 text-xs text-[#8a6a44]">
+                      ★ {p.rating}{" "}
+                      <span className="text-[#5c4a3a]/70">
+                        ({p.reviews})
                       </span>
-                    )}
-                  </div>
-
-                  {/* Cart Actions */}
-                  {!cartItem ? (
-                    <button
-                      onClick={() =>
-                        addToCart({
-                          id: p.id,
-                          title: p.name,
-                          price: p.price,
-                          image: p.images[0],
-                          quantity: 1,
-                        })
-                      }
-                      className="mt-auto bg-[#E76F51] text-white py-2 rounded-lg hover:bg-[#D55A3A] transition"
-                    >
-                      Add to Cart
-                    </button>
-                  ) : (
-                    <div className="mt-auto flex justify-between items-center border border-black/20 rounded-lg px-4 py-2">
-                      <button
-                        onClick={() => decreaseQty(cartItem.id)}
-                        className="text-lg font-semibold"
-                      >
-                        -
-                      </button>
-                      <span className="font-semibold">{cartItem.quantity}</span>
-                      <button
-                        onClick={() => increaseQty(cartItem.id)}
-                        className="text-lg font-semibold"
-                      >
-                        +
-                      </button>
                     </div>
-                  )}
-                </motion.div>
-              );
-            })}
+
+                    {/* Price */}
+                    <div className="mt-3 flex items-center gap-2 mb-4">
+                      <span className="font-bold text-[#2b1d12]">
+                        ₹{p.price}
+                      </span>
+                      {p.oldPrice && (
+                        <span className="text-sm text-[#5c4a3a]/60 line-through">
+                          ₹{p.oldPrice}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Cart Actions */}
+                    {!cartItem ? (
+                      <button
+                        onClick={() =>
+                          addToCart({
+                            id: p.id,
+                            title: p.title,
+                            price: p.price,
+                            image: p.images[0] || '/placeholder.jpg',
+                            quantity: 1,
+                          })
+                        }
+                        className="mt-auto bg-[#E76F51] text-white py-2 rounded-lg hover:bg-[#D55A3A] transition"
+                        disabled={p.stock === 0}
+                      >
+                        {p.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                      </button>
+                    ) : (
+                      <div className="mt-auto flex justify-between items-center border border-black/20 rounded-lg px-4 py-2">
+                        <button
+                          onClick={() => decreaseQty(cartItem.id)}
+                          className="text-lg font-semibold"
+                        >
+                          -
+                        </button>
+                        <span className="font-semibold">{cartItem.quantity}</span>
+                        <button
+                          onClick={() => increaseQty(cartItem.id)}
+                          className="text-lg font-semibold"
+                          disabled={cartItem.quantity >= p.stock}
+                        >
+                          +
+                        </button>
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })
+            )}
           </motion.div>
         </div>
       </div>

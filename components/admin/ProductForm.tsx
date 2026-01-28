@@ -2,9 +2,8 @@
 
 import React, { useState, ChangeEvent, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { X, Plus, Upload, Video } from "lucide-react";
+import { X, Plus, Video } from "lucide-react";
 import Image from "next/image";
-import CategoryDropdown from "@/components/CategoryDropdown";
 import validator from "validator";
 import { toast } from "react-hot-toast";
 
@@ -26,7 +25,18 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
   const [colour, setColour] = useState<string[]>([""]);
   const [video, setVideo] = useState<{ url: string; file?: File; serverId?: string } | null>(null);
   const [uploadingVideo, setUploadingVideo] = useState(false);
-  const [isSpotlight, setIsSpotlight] = useState(false);
+
+  // Available categories
+  const availableCategories = [
+    'Beads',
+    'Threads',
+    'Kits',
+    'Tools',
+    'Charms',
+    'Accessories',
+    'Sets',
+    'Other'
+  ];
 
   const handleChange = (index: number, value: string) => {
     const newItems = [...items];
@@ -74,8 +84,10 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
   const [price, setPrice] = useState<number>();
   const [oldPrice, setOldPrice] = useState<number>();
   const [exclusive, setExclusive] = useState<number>();
+  const [category, setCategory] = useState("");
+  const [stone, setStone] = useState("");
+  const [badge, setBadge] = useState("");
   const [loading, setLoading] = useState(false);
-  const [category, setCategory] = useState<string>("");
   const [images, setImages] = useState<PreviewImage[]>([]);
   const [message, setMessage] = useState<{
     text: string;
@@ -95,14 +107,15 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
     setTitle(product.title || "");
     setDetails(product.details || "");
     setDescription(product.description || "");
-    setStock(product.stock?.currentStock || product.stock || 0);
+    setStock(product.stock || 0);
     setPrice(product.price || 0);
     setOldPrice(product.oldPrice || 0);
     setExclusive(product.exclusive || undefined);
     setCategory(product.category || "");
+    setStone(product.stone || "");
+    setBadge(product.badge || "");
     setItems(product.insideBox?.length ? product.insideBox : [""]);
     setColour(product.colour?.length ? [...product.colour, ""] : [""]);
-    setIsSpotlight(product.isSpotlight || false);
 
     if (product.images?.length) {
       const serverImages = product.images.map((img: any) => ({
@@ -228,24 +241,19 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
   };
 
   const handleCreate = async () => {
-    // Validation - spotlight products don't need price
     if (
       !title ||
       !description ||
-      stock === undefined ||
       !category ||
+      stock === undefined ||
+      !price ||
+      !oldPrice ||
       images.length === 0
     ) {
       showMessage(
         "Please fill all required fields and upload at least one image",
         true
       );
-      return;
-    }
-
-    // Only check price for non-spotlight products
-    if (!isSpotlight && (!price || !oldPrice)) {
-      showMessage("Please enter price and old price", true);
       return;
     }
 
@@ -261,14 +269,18 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
           images: [],
           details,
           insideBox: items.filter((i) => i.trim() !== ""),
-          initialStock: stock,
-          price: isSpotlight ? 0 : price,
-          oldPrice: isSpotlight ? 0 : oldPrice,
+          stock,
+          price,
+          oldPrice,
           exclusive: exclusive || undefined,
-          category,
           colour: finalHexColours,
           video: null,
-          isSpotlight,
+          category,
+          stone: stone || undefined,
+          badge: badge || undefined,
+          status: "ACTIVE", // Set as ACTIVE by default
+          rating: 0,
+          reviews: 0,
         }),
       });
 
@@ -310,12 +322,14 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
           details,
           insideBox: items.filter((i) => i.trim() !== ""),
           stock,
-          price: isSpotlight ? 0 : price,
-          oldPrice: isSpotlight ? 0 : oldPrice,
+          price,
+          oldPrice,
           exclusive,
-          category,
           colour: finalHexColours,
-          isSpotlight,
+          category,
+          stone,
+          badge,
+          status: "ACTIVE",
         }),
       });
 
@@ -341,17 +355,13 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
     if (
       !title ||
       !description ||
+      !category ||
       stock === undefined ||
-      !id ||
-      !category
+      !price ||
+      !oldPrice ||
+      !id
     ) {
       showMessage("Fill all required fields", true);
-      return;
-    }
-
-    // Only check price for non-spotlight products
-    if (!isSpotlight && (!price || !oldPrice)) {
-      showMessage("Please enter price and old price", true);
       return;
     }
 
@@ -373,15 +383,17 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
         description,
         stock,
         images: existingImages,
-        price: isSpotlight ? 0 : price,
-        oldPrice: isSpotlight ? 0 : oldPrice,
+        price,
+        oldPrice,
         exclusive,
-        category,
         details,
         colour: finalHexColours,
         insideBox: items.filter((i) => i.trim() !== ""),
         video: videoUrl,
-        isSpotlight,
+        category,
+        stone,
+        badge,
+        status: "ACTIVE",
       };
 
       const res = await fetch(`/api/products/${id}`, {
@@ -441,26 +453,6 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
           </div>
         )}
 
-        {/* Spotlight Toggle */}
-        <div className="flex items-center gap-3 p-4 bg-purple-50 border border-purple-200 rounded-lg">
-          <input
-            type="checkbox"
-            id="spotlight"
-            checked={isSpotlight}
-            onChange={(e) => setIsSpotlight(e.target.checked)}
-            className="w-5 h-5 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
-            disabled={loading}
-          />
-          <label htmlFor="spotlight" className="flex-1 cursor-pointer">
-            <span className="block text-gray-800 font-medium text-sm sm:text-base">
-              Add to Spotlight
-            </span>
-            <span className="text-xs text-gray-600">
-              This product will only appear on the Spotlight page for users
-            </span>
-          </label>
-        </div>
-
         {/* Title */}
         <div>
           <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
@@ -479,13 +471,63 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
         {/* Subtitle */}
         <div>
           <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
-            SubTitle <span className="text-red-500">*</span>
+            SubTitle
           </label>
           <input
             type="text"
             value={details}
             onChange={(e) => setDetails(e.target.value)}
-            placeholder="Enter product subtitle"
+            placeholder="Enter product subtitle (optional)"
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+            disabled={loading}
+          />
+        </div>
+
+        {/* Category */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
+            Category <span className="text-red-500">*</span>
+          </label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+            disabled={loading}
+          >
+            <option value="">Select Category</option>
+            {availableCategories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Stone/Material */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
+            Material/Stone
+          </label>
+          <input
+            type="text"
+            value={stone}
+            onChange={(e) => setStone(e.target.value)}
+            placeholder="E.g., Crystal, Glass, Metal (optional)"
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+            disabled={loading}
+          />
+        </div>
+
+        {/* Badge */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
+            Badge
+          </label>
+          <input
+            type="text"
+            value={badge}
+            onChange={(e) => setBadge(e.target.value)}
+            placeholder="E.g., NEW, SALE, LIMITED (optional)"
             className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
             disabled={loading}
           />
@@ -506,83 +548,68 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
           />
         </div>
 
-        {/* Pricing Section - Only show if NOT spotlight */}
-        {!isSpotlight && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-            <div>
-              <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
-                Price <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                value={price || ""}
-                onChange={(e) => setPrice(Number(e.target.value))}
-                placeholder="0"
-                className="w-full outline-none p-2.5 sm:p-3 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
-                disabled={loading}
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
-                Old Price <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                value={oldPrice || ""}
-                onChange={(e) => setOldPrice(Number(e.target.value))}
-                placeholder="0"
-                className="w-full outline-none p-2.5 sm:p-3 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
-                disabled={loading}
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
-                Exclusive
-              </label>
-              <input
-                type="number"
-                value={exclusive || ""}
-                onChange={(e) =>
-                  setExclusive(
-                    e.target.value ? Number(e.target.value) : undefined
-                  )
-                }
-                placeholder="Optional"
-                className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
-                disabled={loading}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Stock & Category */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-end">
-          <div className="flex-1 flex flex-col">
+        {/* Pricing Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+          <div>
             <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
-              Stock <span className="text-red-500">*</span>
+              Price <span className="text-red-500">*</span>
             </label>
             <input
               type="number"
-              value={stock || ""}
-              onChange={(e) => setStock(Number(e.target.value))}
+              value={price || ""}
+              onChange={(e) => setPrice(Number(e.target.value))}
               placeholder="0"
+              className="w-full outline-none p-2.5 sm:p-3 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+              disabled={loading}
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
+              Old Price <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              value={oldPrice || ""}
+              onChange={(e) => setOldPrice(Number(e.target.value))}
+              placeholder="0"
+              className="w-full outline-none p-2.5 sm:p-3 text-sm sm:text-base border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+              disabled={loading}
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
+              Exclusive
+            </label>
+            <input
+              type="number"
+              value={exclusive || ""}
+              onChange={(e) =>
+                setExclusive(
+                  e.target.value ? Number(e.target.value) : undefined
+                )
+              }
+              placeholder="Optional"
               className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
               disabled={loading}
             />
           </div>
+        </div>
 
-          <div className="flex-1 flex flex-col">
-            <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
-              Category <span className="text-red-500">*</span>
-            </label>
-            <CategoryDropdown
-              selectedCategory={category}
-              onCategoryChange={setCategory}
-              disabled={loading}
-            />
-          </div>
+        {/* Stock */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
+            Stock <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            value={stock || ""}
+            onChange={(e) => setStock(Number(e.target.value))}
+            placeholder="0"
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base outline-none border rounded-lg focus:ring-2 focus:ring-[#fcd34d]"
+            disabled={loading}
+          />
         </div>
 
         {/* Colour */}

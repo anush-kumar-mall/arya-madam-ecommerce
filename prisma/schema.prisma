@@ -1,9 +1,13 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -13,24 +17,49 @@ model User {
   password  String?
   role      Role     @default(USER)
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   orders Order[]
 }
 
 model Product {
-  id        String   @id @default(uuid())
-  name      String
-  price     Int
-  images    String[]
-  status    ProductStatus @default(ACTIVE)
-  createdAt DateTime      @default(now())
+  id          String        @id @default(uuid())
+  title       String        // Product name
+  details     String?       // Subtitle
+  description String        // Full description
+  price       Int           // Current price in rupees
+  oldPrice    Int?          // Original price (for discount display)
+  exclusive   Int?          // Exclusive price (optional)
+  stock       Int           @default(0) // Current stock quantity
+  images      String[]      // Array of image URLs
+  video       String?       // Optional video URL
+  colour      String[]      // Array of hex colors
+  insideBox   String[]      // What's included in the box
+  rating      Float         @default(0) // Product rating (0-5)
+  reviews     Int           @default(0) // Number of reviews
+  badge       String?       // Badge text like "NEW", "SALE", etc
+  sku         String        @unique // Stock Keeping Unit (auto-generated)
+  category    String        // Product category
+  stone       String?       // Material/Stone type
+  status      ProductStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([category])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Order {
   id        String   @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  total     Int      @default(0)
+  status    String   @default("pending")
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 enum Role {
@@ -41,4 +70,5 @@ enum Role {
 enum ProductStatus {
   ACTIVE
   DRAFT
+  ARCHIVED
 }
