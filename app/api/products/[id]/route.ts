@@ -1,5 +1,3 @@
-// app/api/products/route.ts - COMPLETE FILE (Replace entirely)
-
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
@@ -10,17 +8,17 @@ export async function GET(req: NextRequest) {
     const category = searchParams.get("category");
     const maxPrice = searchParams.get("maxPrice");
     const search = searchParams.get("search");
-    const bestSeller = searchParams.get("bestSeller");
+    const bestSeller = searchParams.get("bestSeller"); // ✅ Added
 
     console.log("📥 GET /api/products called");
     console.log("Query params:", { category, maxPrice, search, bestSeller });
 
     // Build the where clause dynamically
     const where: any = {
-      status: "ACTIVE", // Only fetch active products
+      status: "ACTIVE",
     };
 
-    // Filter by best seller if requested
+    // ✅ Filter by best seller
     if (bestSeller === "true") {
       where.badge = "Best Seller";
     }
@@ -57,18 +55,26 @@ export async function GET(req: NextRequest) {
     const products = await prisma.product.findMany({
       where,
       orderBy: {
-        createdAt: "desc", // Newest first
+        createdAt: "desc",
       },
     });
 
     console.log(`✅ Found ${products.length} products`);
 
-    // Always return an array, even if empty
-    return NextResponse.json(products || [], { status: 200 });
+    // ✅ Transform data: title → name for frontend
+    const transformedProducts = products.map(product => ({
+      ...product,
+      name: product.title, // Add 'name' field for frontend compatibility
+    }));
+
+    // ✅ ALWAYS return array
+    return NextResponse.json(transformedProducts, { status: 200 });
+    
   } catch (error: any) {
     console.error("❌ Error fetching products:", error);
-    // Return empty array on error to prevent .map() crashes
-    return NextResponse.json([], { status: 500 });
+    
+    // ✅ Return empty array on error
+    return NextResponse.json([], { status: 200 });
   }
 }
 
@@ -80,7 +86,6 @@ export async function POST(req: NextRequest) {
     console.log("📥 POST /api/products called");
     console.log("Body:", body);
 
-    // Generate unique SKU based on category
     const generateSKU = (category: string) => {
       const categoryPrefix = category.substring(0, 3).toUpperCase();
       const randomNumber = Math.floor(10000 + Math.random() * 90000);
@@ -88,12 +93,9 @@ export async function POST(req: NextRequest) {
     };
 
     const sku = generateSKU(body.category || "PRD");
-
-    // Ensure stock is a number
     const stock = typeof body.stock === 'number' ? body.stock : 
                   typeof body.initialStock === 'number' ? body.initialStock : 0;
 
-    // Create product with all fields
     const product = await prisma.product.create({
       data: {
         title: body.title,

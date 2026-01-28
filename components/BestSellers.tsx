@@ -28,10 +28,22 @@ export default function BestSellers() {
     const fetchProducts = async () => {
       try {
         const res = await fetch("/api/products?bestSeller=true");
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
         const data = await res.json();
-        setProducts(data);
+        
+        // ✅ Ensure data is always an array
+        const productsArray = Array.isArray(data) ? data : [];
+        setProducts(productsArray);
+        
+        console.log(`✅ Loaded ${productsArray.length} best sellers`);
+        
       } catch (error) {
-        console.error("Failed to fetch products", error);
+        console.error("❌ Failed to fetch products:", error);
+        setProducts([]); // ✅ Set empty array on error
       } finally {
         setLoading(false);
       }
@@ -63,6 +75,18 @@ export default function BestSellers() {
     return (
       <section className="py-24 text-center">
         <p className="text-lg">Loading best sellers...</p>
+      </section>
+    );
+  }
+
+  // ✅ Show message if no products
+  if (products.length === 0) {
+    return (
+      <section className="py-24 text-center">
+        <h2 className="text-3xl font-bold text-[rgb(44_95_124)] mb-4">
+          Best Sellers
+        </h2>
+        <p className="text-gray-600">No best sellers available at the moment.</p>
       </section>
     );
   }
@@ -111,12 +135,18 @@ export default function BestSellers() {
 
                 <Link href={`/product/${product.id}`}>
                   <div className="relative h-44 mb-4 rounded-lg overflow-hidden bg-[#f5f1ea]">
-                    <Image
-                      src={product.images[0]}
-                      alt={product.name}
-                      fill
-                      className="object-cover hover:scale-105 transition"
-                    />
+                    {product.images && product.images.length > 0 ? (
+                      <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        fill
+                        className="object-cover hover:scale-105 transition"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                        <span className="text-gray-400">No Image</span>
+                      </div>
+                    )}
                   </div>
 
                   <h3 className="text-sm font-semibold">
@@ -146,7 +176,7 @@ export default function BestSellers() {
                         id: product.id,
                         title: product.name,
                         price: product.price,
-                        image: product.images[0],
+                        image: product.images?.[0] || '/placeholder.jpg',
                         quantity: 1,
                       })
                     }
