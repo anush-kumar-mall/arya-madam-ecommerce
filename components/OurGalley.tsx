@@ -58,7 +58,10 @@ const GalleryPage: React.FC = () => {
       opacity: 1,
       x: 0,
       scale: 1,
-      transition: { duration: 0.7, ease: 'easeOut' },
+      transition: {
+        duration: 0.7,
+        ease: [0.25, 0.1, 0.25, 1], // ✅ TS-safe easeOut
+      },
     },
   };
 
@@ -68,16 +71,25 @@ const GalleryPage: React.FC = () => {
       if (activeIndex === null) return;
 
       if (e.key === 'Escape') setActiveIndex(null);
-      if (e.key === 'ArrowRight')
-        setActiveIndex((prev) =>
-          prev !== null ? (prev + 1) % galleryImages.length : prev
+
+      if (e.key === 'ArrowRight') {
+        setActiveIndex(
+          (prev) =>
+            prev !== null
+              ? (prev + 1) % galleryImages.length
+              : prev
         );
-      if (e.key === 'ArrowLeft')
-        setActiveIndex((prev) =>
-          prev !== null
-            ? (prev - 1 + galleryImages.length) % galleryImages.length
-            : prev
+      }
+
+      if (e.key === 'ArrowLeft') {
+        setActiveIndex(
+          (prev) =>
+            prev !== null
+              ? (prev - 1 + galleryImages.length) %
+                galleryImages.length
+              : prev
         );
+      }
     };
 
     window.addEventListener('keydown', handleKey);
