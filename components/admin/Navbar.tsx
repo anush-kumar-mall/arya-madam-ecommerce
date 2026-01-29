@@ -65,19 +65,32 @@ export default function Navbar() {
 
   const getUserInitials = () => {
     if (session?.user?.name) {
-      return session.user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+      return session.user.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
     }
-    return 'U';
+    return "U";
   };
 
   const navItems = ["Home", "Shop", "Collections", "Remedies", "Gallery", "About", "Contact"];
 
   return (
     <>
-      <div className={`sticky top-0 z-50 transition-all ${scrolled ? "bg-white backdrop-blur-md" : "bg-white"} border-b border-[#e6cfa7]/20`}>
+      <div
+        className={`sticky top-0 z-50 transition-all ${
+          scrolled ? "bg-white backdrop-blur-md" : "bg-white"
+        } border-b border-[#e6cfa7]/20`}
+      >
         <nav className="flex items-center justify-between px-3 sm:px-4 lg:px-6 py-3 sm:py-4 lg:py-5 max-w-7xl mx-auto">
-          {/* Logo - Improved Mobile */}
-          <Link href="/" onClick={(e) => handleNavClick(e, "Home")} className="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink">
+          {/* Logo */}
+          <Link
+            href="/"
+            onClick={(e) => handleNavClick(e, "Home")}
+            className="flex items-center gap-2 sm:gap-3 min-w-0 flex-shrink"
+          >
             <div className="w-9 h-9 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-[rgb(44_95_124)] rounded-xl border border-[#e6cfa7]/40 flex items-center justify-center flex-shrink-0">
               <Palette className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7 text-white" />
             </div>
@@ -89,9 +102,21 @@ export default function Navbar() {
           {/* Desktop Links */}
           <div className="hidden lg:flex gap-6 xl:gap-10">
             {navItems.map((item) => {
-              const href = item === "Home" ? "/" : item === "Contact" ? "/contact#contact" : item === "About" ? "/about#about" : `/${item.toLowerCase()}`;
+              const href =
+                item === "Home"
+                  ? "/"
+                  : item === "Contact"
+                  ? "/contact#contact"
+                  : item === "About"
+                  ? "/about#about"
+                  : `/${item.toLowerCase()}`;
               return (
-                <Link key={item} href={href} onClick={(e) => handleNavClick(e, item)} className="text-black hover:text-[#E76F51] transition whitespace-nowrap">
+                <Link
+                  key={item}
+                  href={href}
+                  onClick={(e) => handleNavClick(e, item)}
+                  className="text-black hover:text-[#E76F51] transition whitespace-nowrap"
+                >
                   {item}
                 </Link>
               );
@@ -102,7 +127,10 @@ export default function Navbar() {
           <div className="flex gap-2 sm:gap-3 lg:gap-4 items-center flex-shrink-0">
             {/* Search */}
             <div className="relative">
-              <Search className="w-5 h-5 sm:w-6 sm:h-6 text-black cursor-pointer" onClick={() => setSearchOpen((p) => !p)} />
+              <Search
+                className="w-5 h-5 sm:w-6 sm:h-6 text-black cursor-pointer"
+                onClick={() => setSearchOpen((p) => !p)}
+              />
               {searchOpen && (
                 <input
                   autoFocus
@@ -126,12 +154,15 @@ export default function Navbar() {
               )}
             </button>
 
-            {/* User Profile / Login */}
+            {/* User */}
             {status === "loading" ? (
               <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-gray-200 animate-pulse" />
             ) : session ? (
               <div className="relative hidden sm:block">
-                <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-2 hover:opacity-80 transition">
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className="flex items-center gap-2 hover:opacity-80 transition"
+                >
                   <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[rgb(44_95_124)] flex items-center justify-center text-white font-semibold text-sm">
                     {getUserInitials()}
                   </div>
@@ -141,7 +172,7 @@ export default function Navbar() {
                   <div className="absolute right-0 mt-2 w-52 sm:w-56 bg-white rounded-lg shadow-xl border border-[#e6cfa7]/40 overflow-hidden z-50">
                     <div className="px-4 py-3 bg-[rgb(44_95_124)]/5 border-b border-[#e6cfa7]/40">
                       <p className="text-sm font-semibold text-[rgb(44_95_124)] truncate">
-                        {session.user?.name || 'User'}
+                        {session.user?.name || "User"}
                       </p>
                       <p className="text-xs text-gray-600 truncate">
                         {session.user?.email}
@@ -149,25 +180,23 @@ export default function Navbar() {
                     </div>
 
                     <div className="py-2">
-                      <Link href="/profile" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-[rgb(44_95_124)]/10 transition" onClick={() => setProfileOpen(false)}>
-                        <User className="w-4 h-4" />
-                        My Profile
-                      </Link>
-                      <Link href="/orders" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-[rgb(44_95_124)]/10 transition" onClick={() => setProfileOpen(false)}>
-                        <ShoppingCart className="w-4 h-4" />
-                        My Orders
-                      </Link>
-                      
-                      {session.user?.role === 'ADMIN' && (
-                        <Link href="/admin/products" className="flex items-center gap-3 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 transition" onClick={() => setProfileOpen(false)}>
+                      {session.user?.role === "ADMIN" && (
+                        <Link
+                          href="/admin/products"
+                          onClick={() => setProfileOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2 text-sm text-blue-600 hover:bg-blue-50 transition"
+                        >
                           <Palette className="w-4 h-4" />
                           Admin Panel
                         </Link>
                       )}
 
                       <hr className="my-2 border-[#e6cfa7]/40" />
-                      
-                      <button onClick={handleLogout} className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition">
+
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition"
+                      >
                         <LogOut className="w-4 h-4" />
                         Logout
                       </button>
@@ -176,7 +205,10 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              <Link href="/auth/login" className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-[rgb(44_95_124)] text-white hover:bg-[rgb(44_95_124)]/90 transition text-sm">
+              <Link
+                href="/auth/login"
+                className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-[rgb(44_95_124)] text-white hover:bg-[rgb(44_95_124)]/90 transition text-sm"
+              >
                 <LogIn className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden md:inline">Login</span>
               </Link>
@@ -184,7 +216,11 @@ export default function Navbar() {
 
             {/* Hamburger */}
             <button onClick={() => setMenuOpen((p) => !p)} className="lg:hidden p-1.5 sm:p-2">
-              {menuOpen ? <X className="w-6 h-6 sm:w-7 sm:h-7 text-black" /> : <Menu className="w-6 h-6 sm:w-7 sm:h-7 text-black" />}
+              {menuOpen ? (
+                <X className="w-6 h-6 sm:w-7 sm:h-7 text-black" />
+              ) : (
+                <Menu className="w-6 h-6 sm:w-7 sm:h-7 text-black" />
+              )}
             </button>
           </div>
         </nav>
@@ -193,56 +229,69 @@ export default function Navbar() {
         {menuOpen && (
           <div className="lg:hidden bg-[rgb(44_95_124)]/95 backdrop-blur-md border-t border-white/20">
             <div className="flex flex-col px-4 sm:px-6 py-4 sm:py-6 gap-4 sm:gap-6 max-h-[calc(100vh-4rem)] overflow-y-auto">
-              {/* User Info in Mobile */}
-              {session ? (
+              {session && (
                 <div className="pb-3 sm:pb-4 border-b border-white/20">
                   <div className="flex items-center gap-3 mb-3">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold flex-shrink-0">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 flex items-center justify-center text-white font-semibold">
                       {getUserInitials()}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-white font-semibold text-sm sm:text-base truncate">
-                        {session.user?.name || 'User'}
+                      <p className="text-white font-semibold truncate">
+                        {session.user?.name || "User"}
                       </p>
-                      <p className="text-white/70 text-xs sm:text-sm truncate">
+                      <p className="text-white/70 text-xs truncate">
                         {session.user?.email}
                       </p>
                     </div>
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <Link href="/profile" onClick={() => setMenuOpen(false)} className="text-white/90 text-sm hover:text-white transition">
-                      My Profile
-                    </Link>
-                    <Link href="/orders" onClick={() => setMenuOpen(false)} className="text-white/90 text-sm hover:text-white transition">
-                      My Orders
-                    </Link>
-                    {session.user?.role === 'ADMIN' && (
-                      <Link href="/admin/products" onClick={() => setMenuOpen(false)} className="text-yellow-300 text-sm hover:text-yellow-200 transition">
-                        Admin Panel
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              ) : null}
 
-              {/* Nav Items */}
+                  {session.user?.role === "ADMIN" && (
+                    <Link
+                      href="/admin/products"
+                      onClick={() => setMenuOpen(false)}
+                      className="text-yellow-300 text-sm hover:text-yellow-200 transition"
+                    >
+                      Admin Panel
+                    </Link>
+                  )}
+                </div>
+              )}
+
               {navItems.map((item) => {
-                const href = item === "Home" ? "/" : item === "Contact" ? "/contact#contact" : item === "About" ? "/about#about" : `/${item.toLowerCase()}`;
+                const href =
+                  item === "Home"
+                    ? "/"
+                    : item === "Contact"
+                    ? "/contact#contact"
+                    : item === "About"
+                    ? "/about#about"
+                    : `/${item.toLowerCase()}`;
                 return (
-                  <Link key={item} href={href} onClick={(e) => handleNavClick(e, item)} className="text-white text-base sm:text-lg hover:text-[#eadbc4] transition">
+                  <Link
+                    key={item}
+                    href={href}
+                    onClick={(e) => handleNavClick(e, item)}
+                    className="text-white text-base sm:text-lg hover:text-[#eadbc4] transition"
+                  >
                     {item}
                   </Link>
                 );
               })}
 
-              {/* Login/Logout */}
               {session ? (
-                <button onClick={handleLogout} className="flex items-center gap-2 text-red-300 text-base sm:text-lg hover:text-red-200 transition mt-2">
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 text-red-300 text-base sm:text-lg hover:text-red-200 transition mt-2"
+                >
                   <LogOut className="w-5 h-5" />
                   Logout
                 </button>
               ) : (
-                <Link href="/auth/login" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 text-white text-base sm:text-lg hover:text-[#eadbc4] transition mt-2">
+                <Link
+                  href="/auth/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 text-white text-base sm:text-lg hover:text-[#eadbc4] transition mt-2"
+                >
                   <LogIn className="w-5 h-5" />
                   Login
                 </Link>
