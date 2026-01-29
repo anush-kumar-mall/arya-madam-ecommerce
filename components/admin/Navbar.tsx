@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { signOut, useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface NavItem {
   label: string;
@@ -14,6 +16,8 @@ const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const navItems: NavItem[] = [
     // { label: 'Dashboard', href: '/admin/dashboard', icon: '📊' },
@@ -26,13 +30,37 @@ const Navbar: React.FC = () => {
 
   const isActive = (href: string) => pathname === href;
 
+  const handleLogout = async () => {
+    try {
+      await signOut({ 
+        callbackUrl: '/auth/login',
+        redirect: true 
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  // Get user initials for avatar
+  const getUserInitials = () => {
+    if (session?.user?.name) {
+      return session.user.name
+        .split(' ')
+        .map(n => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    return 'AD';
+  };
+
   return (
     <nav className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-b border-slate-700 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <Link href="/admin" className="flex items-center space-x-3">
+            <Link href="/admin/products" className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-xl">A</span>
               </div>
@@ -60,14 +88,8 @@ const Navbar: React.FC = () => {
             ))}
           </div>
 
-          {/* Right Side - Notifications & Profile */}
+          {/* Right Side - Profile */}
           <div className="flex items-center space-x-4">
-            {/* Notification Bell
-            <button className="relative p-2 text-gray-300 hover:text-white hover:bg-slate-700 rounded-lg transition-colors">
-              <span className="text-xl">🔔</span>
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button> */}
-
             {/* Profile Dropdown */}
             <div className="relative">
               <button
@@ -75,11 +97,18 @@ const Navbar: React.FC = () => {
                 className="flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-700 transition-colors"
               >
                 <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-semibold">AD</span>
+                  <span className="text-white text-sm font-semibold">
+                    {getUserInitials()}
+                  </span>
                 </div>
-                <span className="hidden md:block text-white text-sm font-medium">
-                  Admin
-                </span>
+                <div className="hidden md:block text-left">
+                  <div className="text-white text-sm font-medium">
+                    {session?.user?.name || 'Admin'}
+                  </div>
+                  <div className="text-gray-400 text-xs">
+                    {session?.user?.email}
+                  </div>
+                </div>
                 <svg
                   className={`w-4 h-4 text-gray-300 transition-transform ${
                     isProfileOpen ? 'rotate-180' : ''
@@ -99,22 +128,51 @@ const Navbar: React.FC = () => {
 
               {/* Dropdown Menu */}
               {isProfileOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-xl z-50">
+                <div className="absolute right-0 mt-2 w-56 bg-slate-800 border border-slate-700 rounded-lg shadow-xl z-50">
                   <div className="py-2">
+                    {/* User Info */}
+                    <div className="px-4 py-3 border-b border-slate-700">
+                      <p className="text-sm text-white font-medium">
+                        {session?.user?.name || 'Admin User'}
+                      </p>
+                      <p className="text-xs text-gray-400 truncate">
+                        {session?.user?.email}
+                      </p>
+                      <p className="text-xs text-blue-400 mt-1">
+                        Role: {session?.user?.role || 'ADMIN'}
+                      </p>
+                    </div>
+
+                    {/* Menu Items */}
+                    <Link
+                      href="/"
+                      className="block px-4 py-2 text-sm text-gray-300 hover:bg-slate-700 hover:text-white"
+                      onClick={() => setIsProfileOpen(false)}
+                    >
+                      🏠 View Store
+                    </Link>
                     <Link
                       href="/admin/profile"
                       className="block px-4 py-2 text-sm text-gray-300 hover:bg-slate-700 hover:text-white"
+                      onClick={() => setIsProfileOpen(false)}
                     >
                       👤 Profile
                     </Link>
                     <Link
                       href="/admin/settings"
                       className="block px-4 py-2 text-sm text-gray-300 hover:bg-slate-700 hover:text-white"
+                      onClick={() => setIsProfileOpen(false)}
                     >
                       ⚙️ Settings
                     </Link>
+                    
                     <hr className="my-2 border-slate-700" />
-                    <button className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-slate-700">
+                    
+                    {/* Logout Button */}
+                    <button 
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-colors"
+                    >
                       🚪 Logout
                     </button>
                   </div>
@@ -173,6 +231,14 @@ const Navbar: React.FC = () => {
                 {item.label}
               </Link>
             ))}
+            
+            {/* Mobile Logout */}
+            <button
+              onClick={handleLogout}
+              className="block w-full text-left px-3 py-2 rounded-lg text-base font-medium text-red-400 hover:bg-red-900/20"
+            >
+              🚪 Logout
+            </button>
           </div>
         </div>
       )}
