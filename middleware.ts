@@ -16,20 +16,10 @@ export default withAuth(
   },
   {
     callbacks: {
-      authorized: ({ token, req }) => {
-        const path = req.nextUrl.pathname;
-
-        // Admin routes need auth
-        if (path.startsWith("/admin")) {
-          return !!token;
-        }
-
-        // Profile / checkout also need auth
-        if (path.startsWith("/profile") || path.startsWith("/checkout")) {
-          return !!token;
-        }
-
-        return true;
+      authorized: ({ token }) => {
+        // IMPORTANT: Sirf check karo ki token hai ya nahi
+        // Role checking middleware function mein ho rahi hai
+        return !!token;
       },
     },
   }

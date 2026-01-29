@@ -42,56 +42,52 @@ export default function FAQClient() {
   return (
     <section
       id="faqs"
-      className="relative min-h-screen px-6 py-32 font-serif overflow-hidden"
+      className="relative min-h-screen px-6 py-32 font-serif bg-white"
     >
-      {/* BACKGROUND */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1505904267569-1fdda0a87a07?auto=format&fit=crop&w=1920&q=80')",
-        }}
-      />
-      <div className="absolute inset-0 bg-[#2b1d12]/90" />
+      <div className="mx-auto max-w-4xl text-[#3b2a1a]">
 
-      {/* CONTENT */}
-      <motion.div
-        initial={{
-          clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)',
-          opacity: 0,
-        }}
-        whileInView={{
-          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-          opacity: 1,
-        }}
-        viewport={{ once: false }}
-        transition={{ duration: 1.1, ease: [0.77, 0, 0.18, 1] }}
-        className="relative z-10 mx-auto max-w-4xl text-[#eadbc4]"
-      >
-        {/* HERO */}
-        <div className="mb-24 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#fdfaf6]">
+        {/* HEADER */}
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: false }}
+          className="mb-24 text-center"
+        >
+          <span
+            className="inline-block mb-6 px-6 py-2
+                       border border-[#2c5f7c]/40
+                       rounded-full
+                       text-[#2c5f7c]
+                       tracking-widest uppercase text-xs"
+          >
+            FAQs
+          </span>
+
+          <h1 className="text-4xl md:text-5xl font-bold text-[#2c5f7c]">
             Frequently Asked Questions
           </h1>
-          <p className="mt-6 mx-auto max-w-2xl text-lg">
+
+          <div className="my-6 text-[#2c5f7c] tracking-widest">
+            ───── ✦ ─────
+          </div>
+
+          <p className="mx-auto max-w-2xl text-lg text-gray-600">
             Answers to common questions about working with us
           </p>
-        </div>
+        </motion.div>
 
         {/* FAQ LIST */}
         <div className="space-y-6">
           {faqs.map((item, index) => (
             <motion.div
               key={index}
-              initial={{ clipPath: 'inset(0 100% 0 0)', opacity: 0 }}
-              whileInView={{ clipPath: 'inset(0 0% 0 0)', opacity: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: false }}
-              transition={{
-                duration: 0.9,
-                ease: [0.77, 0, 0.18, 1],
-                delay: index * 0.12,
-              }}
-              className="rounded-2xl border border-[#e6cfa7]/30 bg-[#2b1d12]/80"
+              transition={{ duration: 0.6, delay: index * 0.08 }}
+              className="rounded-2xl border border-[#2c5f7c]/20 bg-white
+                         shadow-[0_10px_40px_rgba(0,0,0,0.06)]"
             >
               <button
                 onClick={() =>
@@ -99,11 +95,11 @@ export default function FAQClient() {
                 }
                 className="flex w-full items-center justify-between p-6 text-left"
               >
-                <h3 className="text-lg font-semibold text-[#fdfaf6]">
+                <h3 className="text-lg font-semibold text-[#2c5f7c]">
                   {item.q}
                 </h3>
-                <span className="text-xl text-[#e6cfa7]">
-                  {openIndex === index ? '—' : '+'}
+                <span className="text-2xl text-[#2c5f7c]">
+                  {openIndex === index ? '−' : '+'}
                 </span>
               </button>
 
@@ -113,8 +109,8 @@ export default function FAQClient() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="overflow-hidden px-6 pb-6 text-sm"
+                    transition={{ duration: 0.4 }}
+                    className="overflow-hidden px-6 pb-6 text-sm text-gray-600 leading-relaxed"
                   >
                     {item.a}
                   </motion.div>
@@ -128,12 +124,19 @@ export default function FAQClient() {
         <div className="mt-32 text-center">
           <Link
             href="/contact#contact"
-            className="inline-block px-8 py-3 border border-[#e6cfa7] text-[#e6cfa7] rounded-full"
+            className="inline-block px-10 py-3
+                       border border-[#2c5f7c]
+                       text-[#2c5f7c]
+                       rounded-full
+                       font-semibold
+                       hover:bg-[#2c5f7c]
+                       hover:text-white
+                       transition-colors"
           >
             Contact Us
           </Link>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -132,9 +132,10 @@ export default function CartDrawer({ open, onClose }: Props) {
             <span className="text-green-600 font-medium">FREE</span>
           </div>
 
+          {/* 👇 FIXED HERE */}
           <div className="flex justify-between text-xl font-bold pt-2">
-            <span>Total</span>
-            <span className="text-[#1f4f67]">₹{totalPrice}</span>
+            <span className="text-black">Total</span>
+            <span className="text-black">₹{totalPrice}</span>
           </div>
 
           <button

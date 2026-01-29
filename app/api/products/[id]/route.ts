@@ -1,102 +1,56 @@
+// app/api/products/[id]/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// ================== GET - Fetch Products ==================
-export async function GET(req: NextRequest) {
+// ================== GET - Fetch Single Product ==================
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const { searchParams } = new URL(req.url);
-    const category = searchParams.get("category");
-    const maxPrice = searchParams.get("maxPrice");
-    const search = searchParams.get("search");
-    const bestSeller = searchParams.get("bestSeller"); // ✅ Added
+    const { id } = await params;
+    
+    console.log("📥 GET /api/products/:id called");
+    console.log("Product ID:", id);
 
-    console.log("📥 GET /api/products called");
-    console.log("Query params:", { category, maxPrice, search, bestSeller });
-
-    // Build the where clause dynamically
-    const where: any = {
-      status: "ACTIVE",
-    };
-
-    // ✅ Filter by best seller
-    if (bestSeller === "true") {
-      where.badge = "Best Seller";
-    }
-
-    // Filter by category if provided
-    if (category && category !== "All") {
-      if (category === "Gifts Under Rs.699") {
-        where.price = { lte: 699 };
-      } else {
-        where.category = category;
-      }
-    }
-
-    // Filter by max price if provided
-    if (maxPrice) {
-      const priceLimit = parseInt(maxPrice);
-      if (!where.price) {
-        where.price = {};
-      }
-      where.price.lte = priceLimit;
-    }
-
-    // Search in title if query provided
-    if (search) {
-      where.title = {
-        contains: search,
-        mode: "insensitive",
-      };
-    }
-
-    console.log("🔍 Fetching products with filter:", where);
-
-    // Fetch products from database
-    const products = await prisma.product.findMany({
-      where,
-      orderBy: {
-        createdAt: "desc",
-      },
+    const product = await prisma.product.findUnique({
+      where: { id },
     });
 
-    console.log(`✅ Found ${products.length} products`);
+    if (!product) {
+      return NextResponse.json(
+        { error: "Product not found" },
+        { status: 404 }
+      );
+    }
 
-    // ✅ Transform data: title → name for frontend
-    const transformedProducts = products.map(product => ({
-      ...product,
-      name: product.title, // Add 'name' field for frontend compatibility
-    }));
-
-    // ✅ ALWAYS return array
-    return NextResponse.json(transformedProducts, { status: 200 });
-    
+    console.log("✅ Product found:", product.title);
+    return NextResponse.json(product, { status: 200 });
   } catch (error: any) {
-    console.error("❌ Error fetching products:", error);
-    
-    // ✅ Return empty array on error
-    return NextResponse.json([], { status: 200 });
+    console.error("❌ Error fetching product:", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to fetch product" },
+      { status: 500 }
+    );
   }
 }
 
-// ================== POST - Create Product ==================
-export async function POST(req: NextRequest) {
+// ================== PUT - Update Product ==================
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
     const body = await req.json();
 
-    console.log("📥 POST /api/products called");
-    console.log("Body:", body);
+    console.log("📥 PUT /api/products/:id called");
+    console.log("Product ID:", id);
+    console.log("Update data:", body);
 
-    const generateSKU = (category: string) => {
-      const categoryPrefix = category.substring(0, 3).toUpperCase();
-      const randomNumber = Math.floor(10000 + Math.random() * 90000);
-      return `${categoryPrefix}-${randomNumber}`;
-    };
-
-    const sku = generateSKU(body.category || "PRD");
-    const stock = typeof body.stock === 'number' ? body.stock : 
-                  typeof body.initialStock === 'number' ? body.initialStock : 0;
-
-    const product = await prisma.product.create({
+    const product = await prisma.product.update({
+      where: { id },
       data: {
         title: body.title,
         details: body.details || null,
@@ -104,36 +58,66 @@ export async function POST(req: NextRequest) {
         price: body.price,
         oldPrice: body.oldPrice || null,
         exclusive: body.exclusive || null,
-        stock: stock,
+        stock: body.stock,
         images: body.images || [],
         video: body.video || null,
         colour: body.colour || [],
         insideBox: body.insideBox || [],
-        rating: body.rating || 0,
-        reviews: body.reviews || 0,
         badge: body.badge || null,
-        sku: sku,
-        category: body.category || "Other",
+        category: body.category,
         stone: body.stone || null,
         status: body.status || "ACTIVE",
       },
     });
 
-    console.log("✅ Product created:", product.id);
-
+    console.log("✅ Product updated:", product.id);
+    return NextResponse.json({ success: true, product }, { status: 200 });
+  } catch (error: any) {
+    console.error("❌ Error updating product:", error);
     return NextResponse.json(
-      { 
-        success: true, 
-        product,
-        id: product.id,
-        productId: product.id 
-      },
-      { status: 201 }
+      { error: error.message || "Failed to update product" },
+      { status: 500 }
+    );
+  }
+}
+
+// ================== DELETE - Delete Product ==================
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+
+    console.log("📥 DELETE /api/products/:id called");
+    console.log("Product ID:", id);
+
+    // Check if product exists
+    const existingProduct = await prisma.product.findUnique({
+      where: { id },
+    });
+
+    if (!existingProduct) {
+      return NextResponse.json(
+        { error: "Product not found" },
+        { status: 404 }
+      );
+    }
+
+    // Delete the product
+    await prisma.product.delete({
+      where: { id },
+    });
+
+    console.log("✅ Product deleted successfully");
+    return NextResponse.json(
+      { success: true, message: "Product deleted successfully" },
+      { status: 200 }
     );
   } catch (error: any) {
-    console.error("❌ Error creating product:", error);
+    console.error("❌ Error deleting product:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to create product" },
+      { error: error.message || "Failed to delete product" },
       { status: 500 }
     );
   }
