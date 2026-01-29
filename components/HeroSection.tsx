@@ -35,7 +35,7 @@ const Hero: React.FC = () => {
   return (
     <div
       ref={heroRef}
-      className="relative min-h-screen font-serif overflow-hidden"
+      className="relative min-h-screen font-serif overflow-hidden w-full"
     >
       {/* ✅ GRADIENT BACKGROUND - No image needed */}
       <div
@@ -53,21 +53,21 @@ const Hero: React.FC = () => {
 
       {/* CONTENT */}
       <div
-        className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-32
+        className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20 sm:py-28 lg:py-32
           ${active ? 'luxury-reveal' : 'luxury-hidden'}
         `}
       >
         {/* BADGE */}
-        <span className="inline-block mb-8 px-6 py-2 border border-white/40
-          rounded-full text-white uppercase text-sm tracking-widest">
+        <span className="inline-block mb-6 sm:mb-8 px-4 sm:px-6 py-2 border border-white/40
+          rounded-full text-white uppercase text-xs sm:text-sm tracking-widest">
           Premium Craft Supplies
         </span>
 
         {/* HEADING */}
         <h1
           className="
-            text-[clamp(2.4rem,7vw,4.5rem)]
-            font-bold text-white mb-6
+            text-[clamp(2rem,8vw,4.5rem)]
+            font-bold text-white mb-4 sm:mb-6
             leading-[1.1]
             tracking-tight
             max-w-3xl
@@ -78,17 +78,17 @@ const Hero: React.FC = () => {
         </h1>
 
         {/* DESCRIPTION */}
-        <p className="text-lg sm:text-xl text-white/90 mb-12 max-w-2xl leading-relaxed">
+        <p className="text-base sm:text-lg lg:text-xl text-white/90 mb-8 sm:mb-12 max-w-2xl leading-relaxed">
           Professional-grade materials inspired by heritage craftsmanship.
           Carefully curated for artisans who value tradition and quality.
         </p>
 
         {/* CTA */}
-        <div className="flex flex-col sm:flex-row gap-6 mb-12">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-8 sm:mb-12">
           <Link
             href="/shop"
-            className="inline-flex items-center justify-center px-10 py-4
-              bg-[#F4A261] text-white font-semibold rounded-md
+            className="inline-flex items-center justify-center px-8 sm:px-10 py-3 sm:py-4
+              bg-[#F4A261] text-white font-semibold rounded-md text-sm sm:text-base
               hover:bg-[#E76F51] transition-all duration-300"
           >
             Explore Collection
@@ -96,8 +96,8 @@ const Hero: React.FC = () => {
 
           <Link
             href="/collections"
-            className="inline-flex items-center justify-center px-10 py-4
-              border-2 border-white/40 text-white font-semibold rounded-md
+            className="inline-flex items-center justify-center px-8 sm:px-10 py-3 sm:py-4
+              border-2 border-white/40 text-white font-semibold rounded-md text-sm sm:text-base
               hover:bg-white/10 hover:border-white transition-all duration-300"
           >
             View Catalog
@@ -105,13 +105,13 @@ const Hero: React.FC = () => {
         </div>
 
         {/* FEATURES */}
-        <div className="flex flex-col md:flex-row gap-8 md:gap-12">
+        <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 lg:gap-12">
           {[Shield, Truck, Headphones].map((Icon, i) => (
-            <div key={i} className="flex items-center gap-4">
-              <div className="w-12 h-12 border border-white/40 bg-white/10 rounded-lg flex items-center justify-center">
+            <div key={i} className="flex items-center gap-3 sm:gap-4">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 border border-white/40 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Icon className="w-5 h-5 text-white" />
               </div>
-              <span className="text-white">
+              <span className="text-white text-sm sm:text-base">
                 {['Quality Assured', 'Fast Delivery', 'Expert Support'][i]}
               </span>
             </div>

@@ -61,27 +61,27 @@ export default function FeaturedCollections() {
   }, []);
 
   return (
-    <section className="py-24 bg-white overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-20 lg:py-24 bg-white overflow-hidden w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
 
         {/* Heading */}
-        <div data-animate="card" className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold text-[#2C5F7C] mb-4 tracking-tight">
+        <div data-animate="card" className="text-center mb-12 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#2C5F7C] mb-3 sm:mb-4 tracking-tight">
             Featured Collections
           </h2>
 
-          <p className="text-gray-600 text-base max-w-2xl mx-auto">
+          <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto px-4">
             Curated selections of professional-grade materials for every creative need
           </p>
         </div>
 
         {/* Grid */}
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:gap-8 lg:gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {collections.map((item, index) => (
             <div
               key={index}
               data-animate="card"
-              className="group relative h-[280px] overflow-hidden rounded-lg
+              className="group relative h-[240px] sm:h-[260px] lg:h-[280px] overflow-hidden rounded-lg
                          cursor-pointer bg-white border border-black/10
                          transition-all duration-500 hover:shadow-2xl"
             >
@@ -104,23 +104,23 @@ export default function FeaturedCollections() {
               />
 
               {/* Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-                <span className="mb-3 inline-block text-xs font-semibold tracking-wide text-white/80">
+              <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 lg:p-8 text-white">
+                <span className="mb-2 sm:mb-3 inline-block text-xs font-semibold tracking-wide text-white/80">
                   {item.items}
                 </span>
 
-                <h3 className="text-2xl font-semibold">
+                <h3 className="text-xl sm:text-2xl font-semibold mb-1 sm:mb-2">
                   {item.title}
                 </h3>
 
-                <p className="text-white/85 text-sm mb-4">
+                <p className="text-white/85 text-xs sm:text-sm mb-3 sm:mb-4">
                   {item.subtitle}
                 </p>
 
                 <Link
                   href="#"
                   className="inline-flex items-center gap-2
-                             text-sm font-semibold text-[#F4A261]
+                             text-xs sm:text-sm font-semibold text-[#F4A261]
                              hover:gap-3 transition-all duration-300"
                 >
                   Explore Collection →

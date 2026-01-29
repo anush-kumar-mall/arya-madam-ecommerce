@@ -3,7 +3,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/admin/Navbar";
 import Footer from "@/components/Footer";
 import { useCart } from "@/app/providers/CartProvider";
 import { useParams, useRouter } from "next/navigation";
