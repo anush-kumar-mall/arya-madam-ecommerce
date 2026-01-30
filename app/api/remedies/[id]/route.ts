@@ -1,5 +1,3 @@
-// app/api/remedies/[id]/route.ts
-
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
@@ -9,7 +7,6 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Await params in Next.js 15+
     const { id } = await params;
 
     console.log('📦 Fetching remedy with ID:', id);
@@ -36,7 +33,7 @@ export async function GET(
   }
 }
 
-// PUT/PATCH - Update remedy
+// PUT - Update remedy (SIMPLIFIED - only basic fields)
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -47,9 +44,21 @@ export async function PUT(
 
     console.log('🔄 Updating remedy:', id);
 
+    // ✅ ONLY UPDATE FIELDS THAT EXIST IN YOUR SCHEMA
     const updatedRemedy = await prisma.remedy.update({
       where: { id },
-      data: body,
+      data: {
+        title: body.title,
+        description: body.description,
+        category: body.category,
+        ailment: body.ailment,
+        price: body.price,
+        oldPrice: body.oldPrice || null,
+        stock: body.stock,
+        images: body.images || [],
+        video: body.video || null,
+        status: body.status || 'ACTIVE',
+      },
     });
 
     console.log('✅ Remedy updated:', updatedRemedy.title);

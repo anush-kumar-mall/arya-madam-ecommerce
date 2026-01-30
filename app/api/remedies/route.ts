@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma'; // ✅ Use existing prisma instance
+import { prisma } from '@/lib/prisma';
 
 // GET - Fetch all remedies with filters
 export async function GET(request: NextRequest) {
@@ -44,36 +44,35 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Create new remedy
+// POST - Create new remedy (SIMPLIFIED - only basic fields)
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
+    console.log('📝 Creating remedy with data:', body);
+
+    // ✅ ONLY USE FIELDS THAT EXIST IN YOUR SCHEMA
     const remedy = await prisma.remedy.create({
       data: {
         title: body.title,
         description: body.description,
-        ailment: body.ailment,
-        ingredients: body.ingredients || [],
-        instructions: body.instructions || [],
-        dosage: body.dosage,
-        precautions: body.precautions || [],
-        duration: body.duration,
         category: body.category,
+        ailment: body.ailment,
         price: body.price,
-        oldPrice: body.oldPrice,
-        stock: body.stock,
+        oldPrice: body.oldPrice || null,
+        stock: body.stock || 0,
         images: body.images || [],
-        video: body.video,
+        video: body.video || null,
         rating: 0,
         reviews: 0,
         status: 'ACTIVE',
       },
     });
 
+    console.log('✅ Remedy created:', remedy.id);
     return NextResponse.json(remedy, { status: 201 });
   } catch (error) {
-    console.error('Error creating remedy:', error);
+    console.error('❌ Error creating remedy:', error);
     return NextResponse.json(
       { error: 'Failed to create remedy' },
       { status: 500 }

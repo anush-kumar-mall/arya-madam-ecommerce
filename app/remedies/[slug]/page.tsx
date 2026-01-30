@@ -120,7 +120,7 @@ export default function RemedyProductsPage() {
                     </div>
 
                     {/* TITLE */}
-                    <h3 className="font-bold text-[rgb(44_95_124)] min-h-[2.5rem] leading-tight">
+                    <h3 className="font-bold text-[rgb(44_95_124)] min-h-[2.5rem] line-clamp-2 leading-tight">
                       {p.title}
                     </h3>
 

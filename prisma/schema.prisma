@@ -101,28 +101,23 @@ model Product {
   @@index([sku])
 }
 
-// ✅ REMEDY PRODUCTS MODEL (SEPARATE)
+// ✅ REMEDY PRODUCTS MODEL (CORRECTED)
 model Remedy {
-  id            String        @id @default(uuid())
-  title         String
-  description   String
-  ailment       String        // What it treats/helps with
-  ingredients   String[]      // List of ingredients
-  instructions  String[]      // Step-by-step instructions
-  dosage        String        // How to use / dosage
-  precautions   String[]      // Safety precautions
-  duration      String        // How long to use
-  category      String        // Type of remedy (wealth, health, etc.)
-  price         Int
-  oldPrice      Int?
-  stock         Int           @default(0)
-  images        String[]
-  video         String?
-  rating        Float         @default(0)
-  reviews       Int           @default(0)
-  status        ProductStatus @default(ACTIVE)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id          String        @id @default(uuid())
+  title       String
+  description String
+  category    String
+  ailment     String        // ✅ REQUIRED FIELD
+  price       Int
+  oldPrice    Int?
+  stock       Int           @default(0)
+  images      String[]
+  video       String?
+  status      ProductStatus @default(ACTIVE)
+  rating      Float         @default(0)
+  reviews     Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
   @@index([category])
   @@index([status])

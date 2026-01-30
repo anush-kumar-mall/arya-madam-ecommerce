@@ -23,6 +23,8 @@ export default function Navbar() {
   const [query, setQuery] = useState("");
 
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const remediesButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileRemediesRef = useRef<HTMLDivElement>(null);
 
   const { items } = useCart();
   const totalItems = items.reduce((s, i) => s + i.quantity, 0);
@@ -39,7 +41,12 @@ export default function Navbar() {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current && 
+        !dropdownRef.current.contains(event.target as Node) &&
+        remediesButtonRef.current &&
+        !remediesButtonRef.current.contains(event.target as Node)
+      ) {
         setRemediesOpen(false);
       }
     };
@@ -52,6 +59,25 @@ export default function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [remediesOpen]);
+
+  // Scroll mobile remedies dropdown into view when opened
+  useEffect(() => {
+    if (remediesOpen && mobileRemediesRef.current) {
+      setTimeout(() => {
+        mobileRemediesRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest"
+        });
+      }, 100);
+    }
+  }, [remediesOpen]);
+
+  // Close remedies dropdown when mobile menu closes
+  useEffect(() => {
+    if (!menuOpen) {
+      setRemediesOpen(false);
+    }
+  }, [menuOpen]);
 
   const handleNavClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
@@ -108,6 +134,16 @@ export default function Navbar() {
 
   const navItems = ["Home", "Shop", "Collections"];
 
+  // Calculate dropdown position
+  const [dropdownPosition, setDropdownPosition] = useState({ left: 0 });
+
+  useEffect(() => {
+    if (remediesOpen && remediesButtonRef.current) {
+      const rect = remediesButtonRef.current.getBoundingClientRect();
+      setDropdownPosition({ left: rect.left });
+    }
+  }, [remediesOpen]);
+
   return (
     <>
       <div
@@ -117,17 +153,15 @@ export default function Navbar() {
       >
         <nav className="flex items-center justify-between px-6 py-5 max-w-7xl mx-auto">
           <Link href="/" className="flex items-center">
-  <Image
-    src="/assets/logo.jpeg"
-    alt="Arya Madam"
-    width={140}
-    height={40}
-    priority
-    className="object-contain"
-  />
-</Link>
-
-
+            <Image
+              src="/assets/logo.jpeg"
+              alt="Arya Madam"
+              width={140}
+              height={40}
+              priority
+              className="object-contain"
+            />
+          </Link>
 
           <div className="hidden md:flex gap-10 items-center">
             {navItems.map((item) => {
@@ -152,30 +186,16 @@ export default function Navbar() {
               );
             })}
 
-            {/* REMEDIES DROPDOWN */}
-            <div className="relative" ref={dropdownRef}>
+            {/* REMEDIES DROPDOWN - DESKTOP */}
+            <div className="relative">
               <button
+                ref={remediesButtonRef}
                 onClick={() => setRemediesOpen(!remediesOpen)}
                 className="flex items-center gap-1 text-black hover:text-[#E76F51] transition"
               >
                 Remedies
                 <ChevronDown className={`w-4 h-4 transition-transform ${remediesOpen ? 'rotate-180' : ''}`} />
               </button>
-
-              {remediesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-[#e6cfa7]/40 rounded-lg shadow-xl py-2 max-h-[70vh] overflow-y-auto z-[100]">
-                  {remedyCategories.map((cat) => (
-                    <Link
-                      key={cat.slug}
-                      href={`/${cat.slug}`}
-                      onClick={() => setRemediesOpen(false)}
-                      className="block px-4 py-2 text-black hover:bg-[#e6cfa7]/20 hover:text-[#E76F51] transition"
-                    >
-                      {cat.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
             </div>
 
             <Link
@@ -226,73 +246,108 @@ export default function Navbar() {
               )}
             </button>
 
-            <button onClick={() => setMenuOpen((p) => !p)} className="md:hidden">
-              {menuOpen ? <X /> : <Menu />}
+            <button
+              onClick={() => {
+                setMenuOpen((p) => !p);
+                // Close remedies when closing menu
+                if (menuOpen) {
+                  setRemediesOpen(false);
+                }
+              }}
+              className="md:hidden text-black"
+            >
+              {menuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </nav>
 
         {/* MOBILE MENU */}
         {menuOpen && (
-          <div className="md:hidden bg-[rgb(44_95_124)]/95 px-6 py-6 space-y-6">
-            {navItems.map((item) => (
+          <div className="md:hidden bg-white border-t border-[#e6cfa7]/20 max-h-[calc(100vh-80px)] overflow-y-auto">
+            <div className="px-6 py-4 space-y-4">
+              {navItems.map((item) => (
+                <Link
+                  key={item}
+                  href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+                  onClick={(e) => handleNavClick(e, item)}
+                  className="block text-black hover:text-[#E76F51] text-base font-medium transition py-2"
+                >
+                  {item}
+                </Link>
+              ))}
+
+              {/* MOBILE REMEDIES DROPDOWN */}
+              <div ref={mobileRemediesRef}>
+                <button
+                  onClick={() => setRemediesOpen(!remediesOpen)}
+                  className="flex items-center justify-between w-full text-black hover:text-[#E76F51] text-base font-medium py-2 transition"
+                >
+                  Remedies
+                  <ChevronDown className={`w-5 h-5 transition-transform ${remediesOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                {remediesOpen && (
+                  <div className="mt-2 ml-4 space-y-2 bg-[#e6cfa7]/10 rounded-lg p-3 max-h-[50vh] overflow-y-auto">
+                    {remedyCategories.map((cat) => (
+                      <Link
+                        key={cat.slug}
+                        href={`/${cat.slug}`}
+                        onClick={() => {
+                          setMenuOpen(false);
+                          setRemediesOpen(false);
+                        }}
+                        className="block text-black hover:text-[#E76F51] text-sm py-2 px-3 hover:bg-white/50 rounded transition"
+                      >
+                        {cat.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <Link
-                key={item}
-                href={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-                onClick={(e) => handleNavClick(e, item)}
-                className="block text-white text-lg"
+                href="/about#about"
+                onClick={(e) => handleNavClick(e, "About")}
+                className="block text-black hover:text-[#E76F51] text-base font-medium transition py-2"
               >
-                {item}
+                About
               </Link>
-            ))}
 
-            {/* MOBILE REMEDIES */}
-            <div>
-              <button
-                onClick={() => setRemediesOpen(!remediesOpen)}
-                className="flex items-center justify-between w-full text-white text-lg"
+              <Link
+                href="/contact#contact"
+                onClick={(e) => handleNavClick(e, "Contact")}
+                className="block text-black hover:text-[#E76F51] text-base font-medium transition py-2"
               >
-                Remedies
-                <ChevronDown className={`w-5 h-5 transition-transform ${remediesOpen ? 'rotate-180' : ''}`} />
-              </button>
-
-              {remediesOpen && (
-                <div className="mt-4 ml-4 space-y-3">
-                  {remedyCategories.map((cat) => (
-                    <Link
-                      key={cat.slug}
-                      href={`/${cat.slug}`}
-                      onClick={() => {
-                        setMenuOpen(false);
-                        setRemediesOpen(false);
-                      }}
-                      className="block text-white/90 hover:text-white"
-                    >
-                      {cat.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
+                Contact
+              </Link>
             </div>
-
-            <Link
-              href="/about#about"
-              onClick={(e) => handleNavClick(e, "About")}
-              className="block text-white text-lg"
-            >
-              About
-            </Link>
-
-            <Link
-              href="/contact#contact"
-              onClick={(e) => handleNavClick(e, "Contact")}
-              className="block text-white text-lg"
-            >
-              Contact
-            </Link>
           </div>
         )}
       </div>
+
+      {/* DESKTOP REMEDIES DROPDOWN - FIXED OVERLAY */}
+      {remediesOpen && (
+        <div 
+          ref={dropdownRef}
+          style={{ left: `${dropdownPosition.left}px` }}
+          className="hidden md:block fixed top-[80px] w-56 bg-white border border-[#e6cfa7]/40 rounded-lg shadow-xl py-2 max-h-[70vh] overflow-y-auto z-[100]"
+        >
+          {remedyCategories.map((cat) => (
+            <Link
+              key={cat.slug}
+              href={`/${cat.slug}`}
+              onClick={() => setRemediesOpen(false)}
+              className="block px-4 py-2 text-black hover:bg-[#e6cfa7]/20 hover:text-[#E76F51] transition"
+            >
+              {cat.label}
+            </Link>
+          ))}
+        </div>
+      )}
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
     </>

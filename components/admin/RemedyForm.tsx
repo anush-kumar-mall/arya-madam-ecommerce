@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { X, Plus, Video } from "lucide-react";
 import Image from "next/image";
@@ -21,15 +21,9 @@ interface RemedyFormProps {
 const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
   const router = useRouter();
   
-  // Form States
+  // Form States (NO AILMENT IN UI)
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [ailment, setAilment] = useState("");
-  const [ingredients, setIngredients] = useState<string[]>([""]);
-  const [instructions, setInstructions] = useState<string[]>([""]);
-  const [dosage, setDosage] = useState("");
-  const [precautions, setPrecautions] = useState<string[]>([""]);
-  const [duration, setDuration] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState<number>(0);
   const [oldPrice, setOldPrice] = useState<number | null>(null);
@@ -55,52 +49,50 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
     { value: 'root-chakra', label: 'Root Chakra' },
   ];
 
-  // Handle Ingredients
-  const handleIngredientChange = (index: number, value: string) => {
-    const newIngredients = [...ingredients];
-    newIngredients[index] = value;
-    setIngredients(newIngredients);
-    if (index === ingredients.length - 1 && value.trim() !== "") {
-      setIngredients([...newIngredients, ""]);
+  useEffect(() => {
+    if (mode === "update" && id) {
+      fetchRemedyData();
+    }
+  }, [mode, id]);
+
+  const fetchRemedyData = async () => {
+    if (!id) return;
+    
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/remedies/${id}`);
+      if (!res.ok) throw new Error("Failed to fetch remedy");
+      
+      const data = await res.json();
+      
+      setTitle(data.title || "");
+      setDescription(data.description || "");
+      setCategory(data.category || "");
+      setPrice(data.price || 0);
+      setOldPrice(data.oldPrice || null);
+      setStock(data.stock || 0);
+      
+      if (data.images?.length) {
+        const existingImages = data.images.map((url: string, index: number) => ({
+          id: `existing_${index}`,
+          url: url,
+        }));
+        setImages(existingImages);
+      }
+      
+      if (data.video) {
+        setVideo({ url: data.video });
+      }
+      
+      toast.success("Remedy loaded successfully");
+    } catch (error) {
+      console.error("Error fetching remedy:", error);
+      toast.error("Failed to load remedy data");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleIngredientRemove = (index: number) => {
-    const newIngredients = ingredients.filter((_, i) => i !== index);
-    setIngredients(newIngredients.length ? newIngredients : [""]);
-  };
-
-  // Handle Instructions
-  const handleInstructionChange = (index: number, value: string) => {
-    const newInstructions = [...instructions];
-    newInstructions[index] = value;
-    setInstructions(newInstructions);
-    if (index === instructions.length - 1 && value.trim() !== "") {
-      setInstructions([...newInstructions, ""]);
-    }
-  };
-
-  const handleInstructionRemove = (index: number) => {
-    const newInstructions = instructions.filter((_, i) => i !== index);
-    setInstructions(newInstructions.length ? newInstructions : [""]);
-  };
-
-  // Handle Precautions
-  const handlePrecautionChange = (index: number, value: string) => {
-    const newPrecautions = [...precautions];
-    newPrecautions[index] = value;
-    setPrecautions(newPrecautions);
-    if (index === precautions.length - 1 && value.trim() !== "") {
-      setPrecautions([...newPrecautions, ""]);
-    }
-  };
-
-  const handlePrecautionRemove = (index: number) => {
-    const newPrecautions = precautions.filter((_, i) => i !== index);
-    setPrecautions(newPrecautions.length ? newPrecautions : [""]);
-  };
-
-  // Image Handling - FIXED
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -125,14 +117,13 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
     setImages(prev => [...prev, ...newPreviews]);
     toast.success(`${files.length} image(s) added`);
     
-    // Reset input
     e.target.value = '';
   };
 
   const handleRemoveImage = (imgId: string) => {
     setImages((prev) => {
       const imgToRemove = prev.find((i) => i.id === imgId);
-      if (imgToRemove?.url) {
+      if (imgToRemove?.url && imgToRemove.file) {
         URL.revokeObjectURL(imgToRemove.url);
       }
       return prev.filter((i) => i.id !== imgId);
@@ -140,7 +131,6 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
     toast.success('Image removed');
   };
 
-  // Video Handling
   const handleVideoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -164,19 +154,20 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
   };
 
   const handleRemoveVideo = () => {
-    if (video?.url) URL.revokeObjectURL(video.url);
+    if (video?.url && video.file) URL.revokeObjectURL(video.url);
     setVideo(null);
     toast.success('Video removed');
   };
 
-  // Upload Functions
   const uploadImages = async (remedyId: string): Promise<string[]> => {
     const uploadedUrls: string[] = [];
+    
+    const existingImages = images.filter(i => !i.file).map(i => i.url);
     const newFiles = images.filter((i) => i.file).map((i) => i.file!);
     
-    if (!newFiles.length) return uploadedUrls;
+    if (newFiles.length === 0) return existingImages;
 
-    console.log(`📤 Uploading ${newFiles.length} images`);
+    console.log(`📤 Uploading ${newFiles.length} new images`);
 
     const formData = new FormData();
     newFiles.forEach((file) => formData.append("files", file));
@@ -193,15 +184,16 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
     if (res.ok && (data.urls?.length || data.url)) {
       if (data.urls?.length) uploadedUrls.push(...data.urls);
       else if (data.url) uploadedUrls.push(data.url);
-      console.log('✅ Images uploaded:', uploadedUrls);
+      console.log('✅ New images uploaded:', uploadedUrls);
     } else {
       throw new Error(data.error || "Image upload failed");
     }
 
-    return uploadedUrls;
+    return [...existingImages, ...uploadedUrls];
   };
 
   const uploadVideo = async (remedyId: string): Promise<string | null> => {
+    if (video && !video.file) return video.url;
     if (!video?.file) return null;
 
     setUploadingVideo(true);
@@ -228,9 +220,7 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
     }
   };
 
-  // Submit Handler
   const handleSubmit = async () => {
-    // Validation
     if (!title.trim()) {
       toast.error("Please enter a title");
       return;
@@ -241,23 +231,8 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
       return;
     }
     
-    if (!ailment.trim()) {
-      toast.error("Please enter what this remedy treats");
-      return;
-    }
-    
     if (!category) {
       toast.error("Please select a category");
-      return;
-    }
-    
-    if (!dosage.trim()) {
-      toast.error("Please enter dosage instructions");
-      return;
-    }
-    
-    if (!duration.trim()) {
-      toast.error("Please enter duration");
       return;
     }
     
@@ -278,91 +253,111 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
 
     setLoading(true);
     try {
-      console.log('🚀 Creating remedy...');
-      
-      // Create remedy
-      const res = await fetch("/api/remedies", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          description,
-          ailment,
-          ingredients: ingredients.filter((i) => i.trim() !== ""),
-          instructions: instructions.filter((i) => i.trim() !== ""),
-          dosage,
-          precautions: precautions.filter((i) => i.trim() !== ""),
-          duration,
-          category,
-          price,
-          oldPrice,
-          stock,
-          images: [],
-          video: null,
-        }),
-      });
+      if (mode === "update" && id) {
+        console.log('🔄 Updating remedy...');
+        
+        const allImageUrls = await uploadImages(id);
+        const videoUrl = await uploadVideo(id);
+        
+        const res = await fetch(`/api/remedies/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title,
+            description,
+            category,
+            ailment: "General Wellness", // ✅ DEFAULT VALUE
+            price,
+            oldPrice,
+            stock,
+            images: allImageUrls,
+            video: videoUrl,
+          }),
+        });
 
-      const data = await res.json();
-      
-      if (!res.ok) {
-        toast.error(data.error || "Failed to create remedy");
-        setLoading(false);
-        return;
+        if (!res.ok) {
+          const data = await res.json();
+          toast.error(data.error || "Failed to update remedy");
+          setLoading(false);
+          return;
+        }
+
+        toast.success("Remedy updated successfully!");
+        setTimeout(() => router.push("/admin/remedies"), 1500);
+        
+      } else {
+        console.log('🚀 Creating remedy...');
+        
+        const res = await fetch("/api/remedies", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title,
+            description,
+            category,
+            ailment: "General Wellness", // ✅ DEFAULT VALUE
+            price,
+            oldPrice,
+            stock,
+            images: [],
+            video: null,
+          }),
+        });
+
+        const data = await res.json();
+        
+        if (!res.ok) {
+          toast.error(data.error || "Failed to create remedy");
+          setLoading(false);
+          return;
+        }
+
+        const remedyId = data.id;
+        if (!remedyId) {
+          toast.error("Remedy created but ID missing");
+          setLoading(false);
+          return;
+        }
+
+        console.log('✅ Remedy created:', remedyId);
+
+        const uploadedImageUrls = await uploadImages(remedyId);
+        if (!uploadedImageUrls.length) {
+          toast.error("Image upload failed");
+          setLoading(false);
+          return;
+        }
+
+        let videoUrl = null;
+        if (video?.file) {
+          videoUrl = await uploadVideo(remedyId);
+        }
+
+        const updateRes = await fetch(`/api/remedies/${remedyId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title,
+            description,
+            category,
+            ailment: "General Wellness", // ✅ DEFAULT VALUE
+            price,
+            oldPrice,
+            stock,
+            images: uploadedImageUrls,
+            video: videoUrl,
+          }),
+        });
+
+        if (!updateRes.ok) {
+          toast.error("Remedy created but update failed");
+          setLoading(false);
+          return;
+        }
+
+        toast.success("Remedy created successfully!");
+        setTimeout(() => router.push("/admin/remedies"), 1500);
       }
-
-      const remedyId = data.id;
-      if (!remedyId) {
-        toast.error("Remedy created but ID missing");
-        setLoading(false);
-        return;
-      }
-
-      console.log('✅ Remedy created:', remedyId);
-
-      // Upload images
-      const uploadedImageUrls = await uploadImages(remedyId);
-      if (!uploadedImageUrls.length) {
-        toast.error("Image upload failed");
-        setLoading(false);
-        return;
-      }
-
-      // Upload video
-      let videoUrl = null;
-      if (video?.file) {
-        videoUrl = await uploadVideo(remedyId);
-      }
-
-      // Update with media
-      const updateRes = await fetch(`/api/remedies/${remedyId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          description,
-          ailment,
-          ingredients: ingredients.filter((i) => i.trim() !== ""),
-          instructions: instructions.filter((i) => i.trim() !== ""),
-          dosage,
-          precautions: precautions.filter((i) => i.trim() !== ""),
-          duration,
-          category,
-          price,
-          oldPrice,
-          stock,
-          images: uploadedImageUrls,
-          video: videoUrl,
-        }),
-      });
-
-      if (!updateRes.ok) {
-        toast.error("Remedy created but update failed");
-        setLoading(false);
-        return;
-      }
-
-      toast.success("Remedy created successfully!");
-      setTimeout(() => router.push("/admin/remedies"), 1500);
     } catch (err) {
       console.error("❌ Error:", err);
       toast.error("Something went wrong");
@@ -375,7 +370,7 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow-lg space-y-6">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
-          Create Remedy
+          {mode === "update" ? "Edit Remedy" : "Create Remedy"}
         </h2>
 
         {/* Title */}
@@ -388,22 +383,7 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="E.g., Natural Turmeric Face Pack"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent text-black placeholder:text-gray-800"
-            disabled={loading}
-          />
-        </div>
-
-        {/* Ailment */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">
-            Treats/Helps With <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={ailment}
-            onChange={(e) => setAilment(e.target.value)}
-            placeholder="E.g., Acne, Dark Spots"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent text-black placeholder:text-gray-800"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent text-black placeholder:text-gray-400"
             disabled={loading}
           />
         </div>
@@ -436,97 +416,15 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Brief description"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent text-black placeholder:text-gray-800"
+            placeholder="Brief description of the remedy"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent text-black placeholder:text-gray-400"
             rows={4}
             disabled={loading}
           />
         </div>
 
-        {/* Ingredients */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">
-            Ingredients <span className="text-red-500">*</span>
-          </label>
-          {ingredients.map((ingredient, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <input
-                type="text"
-                value={ingredient}
-                onChange={(e) => handleIngredientChange(index, e.target.value)}
-                placeholder="E.g., 1 tbsp turmeric"
-                className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 text-black placeholder:text-gray-800"
-              />
-              {ingredients.length > 1 && (
-                <button
-                  onClick={() => handleIngredientRemove(index)}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                >
-                  Remove
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Instructions */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">
-            Instructions <span className="text-red-500">*</span>
-          </label>
-          {instructions.map((instruction, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <textarea
-                value={instruction}
-                onChange={(e) => handleInstructionChange(index, e.target.value)}
-                placeholder={`Step ${index + 1}`}
-                className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 text-black placeholder:text-gray-800"
-                rows={2}
-              />
-              {instructions.length > 1 && (
-                <button
-                  onClick={() => handleInstructionRemove(index)}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                >
-                  Remove
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Dosage */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">
-            Dosage <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            value={dosage}
-            onChange={(e) => setDosage(e.target.value)}
-            placeholder="How to use"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent text-black placeholder:text-gray-800"
-            rows={3}
-            disabled={loading}
-          />
-        </div>
-
-        {/* Duration */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">
-            Duration <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            placeholder="E.g., 2-3 weeks"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent text-black placeholder:text-gray-800"
-            disabled={loading}
-          />
-        </div>
-
         {/* Price & Stock */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-gray-700 font-medium mb-2">
               Price (₹) <span className="text-red-500">*</span>
@@ -543,6 +441,21 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
           
           <div>
             <label className="block text-gray-700 font-medium mb-2">
+              Old Price (₹) <span className="text-gray-500 text-sm">(optional)</span>
+            </label>
+            <input
+              type="number"
+              min="0"
+              value={oldPrice || ""}
+              onChange={(e) => setOldPrice(e.target.value ? parseInt(e.target.value) : null)}
+              placeholder="Original price"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent text-black placeholder:text-gray-400"
+              disabled={loading}
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-medium mb-2">
               Stock <span className="text-red-500">*</span>
             </label>
             <input
@@ -556,33 +469,7 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
           </div>
         </div>
 
-        {/* Precautions */}
-        <div>
-          <label className="block text-gray-700 font-medium mb-2">
-            Precautions (optional)
-          </label>
-          {precautions.map((precaution, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <input
-                type="text"
-                value={precaution}
-                onChange={(e) => handlePrecautionChange(index, e.target.value)}
-                placeholder="E.g., Do patch test"
-                className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 text-black placeholder:text-gray-800"
-              />
-              {precautions.length > 1 && (
-                <button
-                  onClick={() => handlePrecautionRemove(index)}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                >
-                  Remove
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Images - FIXED */}
+        {/* Images */}
         <div>
           <label className="block text-gray-700 font-medium mb-2">
             Images <span className="text-red-500">*</span>
@@ -601,7 +488,7 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
                 <button
                   type="button"
                   onClick={() => handleRemoveImage(img.id)}
-                  className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700"
+                  className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 transition"
                   disabled={loading}
                 >
                   <X className="w-4 h-4" />
@@ -627,24 +514,24 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
         {/* Video */}
         <div>
           <label className="block text-gray-700 font-medium mb-2">
-            Video (optional)
+            Video <span className="text-gray-500 text-sm">(optional)</span>
           </label>
           
           {video ? (
             <div className="relative w-full max-w-md">
-              <video src={video.url} controls className="w-full rounded-lg" />
+              <video src={video.url} controls className="w-full rounded-lg border-2 border-gray-300" />
               <button
                 onClick={handleRemoveVideo}
-                className="absolute top-2 right-2 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center"
+                className="absolute top-2 right-2 w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 transition"
                 disabled={loading || uploadingVideo}
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
           ) : (
-            <label className="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-amber-400">
+            <label className="w-full h-32 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-amber-400 transition">
               <Video className="w-8 h-8 text-gray-400 mb-2" />
-              <span className="text-sm text-gray-500">Upload Video</span>
+              <span className="text-sm text-gray-500">Upload Video (Max 50MB)</span>
               <input
                 type="file"
                 accept="video/mp4,video/webm,video/ogg"
@@ -657,20 +544,24 @@ const RemedyForm = ({ id, mode = "create", remedy }: RemedyFormProps) => {
         </div>
 
         {/* Buttons */}
-        <div className="flex gap-4 justify-end pt-4">
+        <div className="flex gap-4 justify-end pt-4 border-t">
           <button
             onClick={() => router.push("/admin/remedies")}
-            className="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+            className="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
             disabled={loading || uploadingVideo}
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="px-6 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50"
+            className="px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed transition font-medium"
             disabled={loading || uploadingVideo}
           >
-            {loading || uploadingVideo ? "Saving..." : "Create Remedy"}
+            {loading || uploadingVideo 
+              ? "Saving..." 
+              : mode === "update" 
+                ? "Update Remedy" 
+                : "Create Remedy"}
           </button>
         </div>
       </div>

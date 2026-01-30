@@ -91,18 +91,18 @@ export default function CartDrawer({ open, onClose }: Props) {
                   <div className="flex items-center mt-2 gap-2">
                     <button
                       onClick={() => decreaseQty(item.id)}
-                      className="w-8 h-8 border rounded-md flex items-center justify-center"
+                      className="w-8 h-8 border text-black rounded-md flex items-center justify-center"
                     >
                       <Minus size={14} />
                     </button>
 
-                    <span className="w-6 text-center font-medium">
+                    <span className="w-6 text-center text-black font-medium">
                       {item.quantity}
                     </span>
 
                     <button
                       onClick={() => increaseQty(item.id)}
-                      className="w-8 h-8 border rounded-md flex items-center justify-center"
+                      className="w-8 h-8 border rounded-md text-black flex items-center justify-center"
                     >
                       <Plus size={14} />
                     </button>
