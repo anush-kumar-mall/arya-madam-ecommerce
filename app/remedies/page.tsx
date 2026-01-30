@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import Navbar from "@/components/admin/Navbar";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion, type Variants } from "framer-motion";
 import {

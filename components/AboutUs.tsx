@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -11,8 +11,10 @@ import {
   Heart,
   Mail,
   ShoppingBag,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import { motion, animate, useMotionValue, useInView } from "framer-motion";
+import { motion, animate, useMotionValue, useInView, AnimatePresence } from "framer-motion";
 import ThreeDCard from "@/components/ThreeDCard";
 
 /* ================= Animated Counter ================= */
@@ -23,7 +25,7 @@ const AnimatedCounter = ({ value }: { value: string }) => {
   const motionValue = useMotionValue(0);
   const [displayValue, setDisplayValue] = useState("0");
 
-  const ref = useRef(null);
+  const ref = React.useRef(null);
   const isInView = useInView(ref, { once: false, margin: "-50px" });
 
   useEffect(() => {
@@ -48,8 +50,29 @@ const AnimatedCounter = ({ value }: { value: string }) => {
   return <motion.span ref={ref}>{displayValue}{suffix}</motion.span>;
 };
 
+/* ================= Gallery Images ================= */
+const galleryImages: string[] = [
+  '/gallery/g1.jpeg',
+  '/gallery/g2.jpeg',
+  '/gallery/g3.jpeg',
+  '/gallery/g4.jpeg',
+  '/gallery/g5.jpeg',
+  '/gallery/g6.jpeg',
+  '/gallery/g7.jpeg',
+  '/gallery/g8.jpeg',
+  '/gallery/g9.jpeg',
+  '/gallery/g10.jpeg',
+  '/gallery/g11.jpeg',
+  '/gallery/g12.jpeg',
+  '/gallery/g13.jpeg',
+  '/gallery/g14.jpeg',
+];
+
 /* ================= PAGE ================= */
 export default function AboutUs() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+
   useEffect(() => {
     if (window.location.hash === "#about") {
       setTimeout(() => {
@@ -57,6 +80,38 @@ export default function AboutUs() {
       }, 150);
     }
   }, []);
+
+  // Auto-slide every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [currentImageIndex]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") handlePrev();
+      if (e.key === "ArrowRight") handleNext();
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [currentImageIndex]);
+
+  const handleNext = () => {
+    setDirection(1);
+    setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length);
+  };
+
+  const handlePrev = () => {
+    setDirection(-1);
+    setCurrentImageIndex(
+      (prev) => (prev - 1 + galleryImages.length) % galleryImages.length
+    );
+  };
 
   const stats = [
     { value: "10,000+", label: "Happy Customers" },
@@ -92,32 +147,20 @@ export default function AboutUs() {
     },
   ];
 
-  const team = [
-    {
-      name: "Sophia Bennett",
-      role: "Founder & CEO",
-      description: "Empowering artisans with premium materials",
-      image: "/assets/team1.jpeg",
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
     },
-    {
-      name: "Ethan Hughes",
-      role: "Head of Operations",
-      description: "Ensuring seamless delivery and logistics",
-      image: "/assets/team3.jpeg",
-    },
-    {
-      name: "Olivia Parker",
-      role: "Product Curator",
-      description: "Handpicks the finest craft supplies",
-      image: "/assets/team2.jpeg",
-    },
-    {
-      name: "Liam Thompson",
-      role: "Customer Success Manager",
-      description: "Focused on customer happiness",
-      image: "/assets/team4.jpeg",
-    },
-  ];
+    exit: (direction: number) => ({
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0,
+    }),
+  };
 
   return (
     <div id="about" className="font-serif bg-white">
@@ -312,52 +355,87 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* ================= TEAM ================= */}
-      <section className="py-28 px-6">
+      {/* ================= GALLERY SLIDER ================= */}
+      <section className="py-10 px-6">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-center text-4xl font-bold text-[rgb(44_95_124)] mb-4">
-            Meet Our Team
+            Our Gallery
           </h2>
 
           <p className="text-center text-black text-lg mb-16">
-            Passionate professionals dedicated to your creative success
+            Explore our beautiful collection of craft works
           </p>
 
-          <motion.div
-            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-12"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: false }}
-            variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
-          >
-            {team.map((member, i) => (
-              <motion.div
-                key={i}
-                variants={{
-                  hidden: { opacity: 0, y: 20 },
-                  visible: { opacity: 1, y: 0 },
-                }}
+          {/* Slider Container */}
+          <div className="relative max-w-4xl mx-auto">
+            <div className="relative h-[500px] md:h-[600px] overflow-hidden rounded-2xl bg-gray-100">
+              <AnimatePresence initial={false} custom={direction}>
+                <motion.div
+                  key={currentImageIndex}
+                  custom={direction}
+                  variants={slideVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    x: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.2 },
+                  }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={galleryImages[currentImageIndex]}
+                    alt={`Gallery Image ${currentImageIndex + 1}`}
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Previous Button */}
+              <button
+                onClick={handlePrev}
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all z-10"
+                aria-label="Previous Image"
               >
-                <ThreeDCard>
-                  <div className="text-center">
-                    <div className="relative h-80 rounded-2xl overflow-hidden border border-[#e6cfa7]/30">
-                      <Image
-                        src={member.image}
-                        alt={member.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <h3 className="mt-6 text-[rgb(44_95_124)] text-xl font-semibold mb-2">
-                      {member.name}
-                    </h3>
-                    <p className="text-black text-sm mb-3">{member.role}</p>
-                    <p className="text-black text-sm mt-2">{member.description}</p>
-                  </div>
-                </ThreeDCard>
-              </motion.div>
-            ))}
-          </motion.div>
+                <ChevronLeft className="w-6 h-6 text-[rgb(44_95_124)]" />
+              </button>
+
+              {/* Next Button */}
+              <button
+                onClick={handleNext}
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition-all z-10"
+                aria-label="Next Image"
+              >
+                <ChevronRight className="w-6 h-6 text-[rgb(44_95_124)]" />
+              </button>
+
+              {/* Image Counter */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/70 text-white px-4 py-2 rounded-full text-sm z-10">
+                {currentImageIndex + 1} / {galleryImages.length}
+              </div>
+            </div>
+
+            {/* Thumbnail Dots */}
+            <div className="flex justify-center gap-2 mt-6">
+              {galleryImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => {
+                    setDirection(index > currentImageIndex ? 1 : -1);
+                    setCurrentImageIndex(index);
+                  }}
+                  className={`w-3 h-3 rounded-full transition-all ${
+                    index === currentImageIndex
+                      ? "bg-[rgb(44_95_124)] w-8"
+                      : "bg-gray-300 hover:bg-gray-400"
+                  }`}
+                  aria-label={`Go to image ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 

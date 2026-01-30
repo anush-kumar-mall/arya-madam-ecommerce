@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import Navbar from "@/components/admin/Navbar";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FAQClient from "@/components/FaqClient";
 

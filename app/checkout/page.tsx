@@ -1,5 +1,5 @@
 import Checkout from "@/components/Checkout"; 
-import Navbar from "@/components/admin/Navbar";
+import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function Page() {

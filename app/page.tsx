@@ -1,4 +1,4 @@
-import Navbar from "@/components/admin/Navbar";
+import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
