@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
   const router = useRouter();
 
   const navItems: NavItem[] = [
-    { label: "Shop", href: "/admin/products", icon: "📦" },
+    { label: "Shop", href: "/admin/shop", icon: "📦" },
     { label: "Remedies", href: "/admin/remedies", icon: "🛒" },
   ];
 
@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* LOGO */}
-          <Link href="/admin/products" className="flex items-center space-x-3">
+          <Link href="/admin/shop" className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">A</span>
             </div>

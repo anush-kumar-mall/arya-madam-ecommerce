@@ -7,7 +7,11 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const files = formData.getAll('files') as File[];
     const type = formData.get('type') as string;
+    
+    // Support both productId and remedyId
     const productId = formData.get('productId') as string;
+    const remedyId = formData.get('remedyId') as string;
+    const itemId = productId || remedyId;
 
     if (!files || files.length === 0) {
       return NextResponse.json(
@@ -16,18 +20,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log(`📤 Uploading ${files.length} file(s) for product ${productId}`);
+    console.log(`📤 Uploading ${files.length} file(s) for ${remedyId ? 'remedy' : 'product'} ${itemId}`);
 
     const uploadPromises = files.map(async (file) => {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
       return new Promise((resolve, reject) => {
+        // Dynamic folder based on whether it's product or remedy
+        const folder = remedyId 
+          ? (type === 'video' ? 'remedies/videos' : 'remedies/images')
+          : (type === 'video' ? 'products/videos' : 'products/images');
+
         const uploadStream = cloudinary.uploader.upload_stream(
           {
-            folder: type === 'video' ? 'products/videos' : 'products/images',
+            folder: folder,
             resource_type: type === 'video' ? 'video' : 'image',
-            public_id: `${productId}_${Date.now()}_${Math.random().toString(36).substring(7)}`,
+            public_id: `${itemId}_${Date.now()}_${Math.random().toString(36).substring(7)}`,
           },
           (error, result) => {
             if (error) {

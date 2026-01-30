@@ -342,7 +342,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
       }
 
       showMessage("Product created successfully!");
-      setTimeout(() => router.push("/admin/products"), 1000);
+      setTimeout(() => router.push("/admin/shop"), 1000);
     } catch (err) {
       console.error("❌ Error:", err);
       showMessage("Something went wrong. Please try again.", true);
@@ -420,7 +420,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
       }
 
       showMessage("Product updated successfully!");
-      setTimeout(() => router.push("/admin/products"), 1000);
+      setTimeout(() => router.push("/admin/shop"), 1000);
     } catch (err) {
       console.error("Update error:", err);
       showMessage("Unexpected error", true);
@@ -793,7 +793,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end pt-2 sm:pt-4">
           <button
             type="button"
-            onClick={() => router.push("/admin/products")}
+            onClick={() => router.push("/admin/shop")}
             className="w-full sm:w-auto px-4 sm:px-6 py-2 text-sm sm:text-base bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
             disabled={loading || uploadingVideo}
           >

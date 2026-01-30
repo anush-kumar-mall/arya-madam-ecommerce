@@ -21,7 +21,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (status === "authenticated") {
       if (session?.user?.role === "ADMIN") {
-        router.replace("/admin/products");
+        router.replace("//admin/shop");
       } else {
         router.replace("/");
       }
@@ -83,7 +83,9 @@ export default function LoginPage() {
             onChange={(e) =>
               setFormData({ ...formData, email: e.target.value })
             }
-            className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[rgb(44_95_124)] outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-300 
+            focus:ring-2 focus:ring-[rgb(44_95_124)] outline-none
+            text-black placeholder:text-black"
           />
 
           <input
@@ -94,7 +96,9 @@ export default function LoginPage() {
             onChange={(e) =>
               setFormData({ ...formData, password: e.target.value })
             }
-            className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[rgb(44_95_124)] outline-none"
+            className="w-full px-4 py-3 rounded-xl border border-gray-300 
+            focus:ring-2 focus:ring-[rgb(44_95_124)] outline-none
+            text-black placeholder:text-black"
           />
 
           <button

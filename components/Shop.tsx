@@ -87,19 +87,19 @@ export default function ProductsPage() {
     cartItems.find((item) => item.id === id);
 
   return (
-    <section className="relative min-h-screen px-6 py-24 font-serif bg-[rgb(44_95_124)] text-white">
+    <section className="relative min-h-screen px-6 py-24 font-serif bg-[#fdfaf6] text-[#2b1d12]">
       <div className="max-w-7xl mx-auto">
         {/* HEADER */}
         <div className="mb-16 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold">
+          <h1 className="text-4xl md:text-5xl font-bold text-[rgb(44_95_124)]">
             Shop All Products
           </h1>
 
           {query && (
-            <p className="mt-4 text-lg">
+            <p className="mt-4 text-lg text-gray-600">
               Showing results for{' '}
-              <span className="text-[#e6cfa7] font-semibold">
-                {query}
+              <span className="text-[#2b1d12] font-semibold">
+                "{query}"
               </span>
             </p>
           )}
@@ -107,10 +107,10 @@ export default function ProductsPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
           {/* SIDEBAR */}
-          <aside className="bg-white text-[#2b1d12] p-6 rounded-2xl space-y-10">
+          <aside className="bg-white border border-gray-200 text-[#2b1d12] p-6 rounded-2xl space-y-8 shadow-sm h-fit">
             {/* CATEGORY */}
             <div>
-              <h3 className="text-lg font-semibold mb-4">
+              <h3 className="text-lg font-bold mb-4 text-[#2b1d12]">
                 Categories
               </h3>
 
@@ -119,10 +119,10 @@ export default function ProductsPage() {
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
-                    className={`px-3 py-1 rounded-full text-sm font-semibold transition ${
+                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                       selectedCategory === cat
-                        ? 'bg-[#e6cfa7]'
-                        : 'bg-[#f5f1ea] hover:bg-[#e6cfa7]/40'
+                        ? 'bg-[#2b1d12] text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
                     {cat}
@@ -132,14 +132,14 @@ export default function ProductsPage() {
             </div>
 
             {/* PRICE */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4">
+            <div className="border-t border-gray-200 pt-6">
+              <h3 className="text-lg font-bold mb-4 text-[#2b1d12]">
                 Price Range
               </h3>
 
-              <div className="flex justify-between text-sm mb-2">
+              <div className="flex justify-between text-sm mb-3 font-semibold text-gray-700">
                 <span>₹0</span>
-                <span>₹{maxPrice}</span>
+                <span>₹{maxPrice.toLocaleString()}</span>
               </div>
 
               <input
@@ -150,22 +150,23 @@ export default function ProductsPage() {
                 onChange={(e) =>
                   setMaxPrice(Number(e.target.value))
                 }
-                className="w-full accent-[#e6cfa7]"
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#2b1d12]"
               />
             </div>
           </aside>
 
           {/* PRODUCTS */}
-          <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {loading ? (
               <div className="col-span-full text-center py-12">
-                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent"></div>
-                <p className="mt-4">Loading products...</p>
+                <div className="inline-block h-10 w-10 animate-spin rounded-full border-4 border-solid border-[#e6cfa7] border-r-transparent"></div>
+                <p className="mt-4 text-gray-600 font-medium">Loading products...</p>
               </div>
             ) : products.length === 0 ? (
-              <p className="col-span-full text-center">
-                No products found 😕
-              </p>
+              <div className="col-span-full text-center py-12">
+                <p className="text-xl text-gray-600">No products found 😕</p>
+                <p className="text-sm text-gray-500 mt-2">Try adjusting your filters</p>
+              </div>
             ) : (
               products.map((p) => {
                 const cartItem = cartItemById(p.id);
@@ -173,19 +174,19 @@ export default function ProductsPage() {
                 return (
                   <div
                     key={p.id}
-                    className="bg-white text-[#2b1d12] p-6 rounded-2xl flex flex-col group shadow-lg hover:shadow-2xl transition-shadow"
+                    className="bg-white border border-gray-200 text-[#2b1d12] p-5 rounded-2xl flex flex-col group shadow-sm hover:shadow-lg hover:border-gray-300 transition-all"
                   >
                     {/* Product Link */}
                     <Link href={`/product/${p.id}`} className="block">
                       {/* Image Container */}
-                      <div className="relative h-48 w-full mb-4 rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+                      <div className="relative h-48 w-full mb-4 rounded-xl overflow-hidden bg-gray-50">
                         {p.images && p.images.length > 0 ? (
                           <Image
                             src={p.images[0]}
                             alt={p.title}
                             fill
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            className="object-cover transition-transform duration-500 group-hover:scale-110"
                             priority={false}
                             onError={(e) => {
                               console.error('Image failed to load:', p.images[0]);
@@ -193,63 +194,72 @@ export default function ProductsPage() {
                             }}
                           />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                          <div className="w-full h-full flex items-center justify-center bg-gray-100">
                             <span className="text-gray-400 text-sm">No Image</span>
                           </div>
                         )}
                         
                         {/* Badge */}
                         {p.badge && (
-                          <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                          <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
                             {p.badge}
                           </div>
                         )}
                       </div>
 
                       {/* Title */}
-                      <h3 className="font-semibold text-[#2b1d12] group-hover:text-[#E76F51] transition min-h-[2.5rem]">
+                      <h3 className="font-bold text-[#2b1d12] group-hover:text-[#E76F51] transition min-h-[2.5rem] leading-tight">
                         {p.title}
                       </h3>
                     </Link>
 
                     {/* Details */}
                     {p.details && (
-                      <p className="text-xs text-gray-600 mt-1 line-clamp-2">
+                      <p className="text-xs text-gray-500 mt-1 line-clamp-2">
                         {p.details}
                       </p>
                     )}
 
                     {/* Rating */}
-                    <div className="mt-2 text-xs text-[#8a6a44]">
-                      ★ {p.rating.toFixed(1)}{" "}
-                      <span className="text-[#5c4a3a]/70">
-                        ({p.reviews} reviews)
+                    <div className="mt-2 flex items-center gap-1">
+                      <div className="flex text-amber-500 text-sm">
+                        {'★'.repeat(Math.floor(p.rating))}
+                        {'☆'.repeat(5 - Math.floor(p.rating))}
+                      </div>
+                      <span className="text-xs text-gray-500">
+                        ({p.reviews})
                       </span>
                     </div>
 
                     {/* Price */}
-                    <div className="mt-3 flex items-center gap-2 mb-4">
-                      <span className="font-bold text-lg text-[#2b1d12]">
+                    <div className="mt-3 flex items-center gap-2 mb-3">
+                      <span className="font-bold text-xl text-[#2b1d12]">
                         ₹{p.price.toLocaleString()}
                       </span>
                       {p.oldPrice && (
-                        <span className="text-sm text-[#5c4a3a]/60 line-through">
-                          ₹{p.oldPrice.toLocaleString()}
-                        </span>
-                      )}
-                      {p.oldPrice && (
-                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
-                          {Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100)}% OFF
-                        </span>
+                        <>
+                          <span className="text-sm text-gray-400 line-through">
+                            ₹{p.oldPrice.toLocaleString()}
+                          </span>
+                          <span className="text-xs bg-green-100 text-green-700 font-semibold px-2 py-1 rounded-md">
+                            {Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100)}% OFF
+                          </span>
+                        </>
                       )}
                     </div>
 
                     {/* Stock Info */}
-                    <div className="text-xs mb-3">
+                    <div className="text-xs mb-4">
                       {p.stock > 0 ? (
-                        <span className="text-green-600">In Stock ({p.stock})</span>
+                        <div className="flex items-center gap-2 text-green-600">
+                          <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                          <span className="font-medium">In Stock ({p.stock})</span>
+                        </div>
                       ) : (
-                        <span className="text-red-600 font-semibold">Out of Stock</span>
+                        <div className="flex items-center gap-2 text-red-600">
+                          <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                          <span className="font-semibold">Out of Stock</span>
+                        </div>
                       )}
                     </div>
 
@@ -265,23 +275,23 @@ export default function ProductsPage() {
                             quantity: 1,
                           })
                         }
-                        className="mt-auto bg-[#E76F51] text-white py-2 rounded-lg hover:bg-[#D55A3A] transition font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+                        className="mt-auto bg-[#2b1d12] text-white py-3 rounded-xl hover:bg-[#1a120a] transition-all font-semibold disabled:bg-gray-300 disabled:cursor-not-allowed shadow-sm"
                         disabled={p.stock === 0}
                       >
                         {p.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
                       </button>
                     ) : (
-                      <div className="mt-auto flex justify-between items-center border-2 border-[#E76F51] rounded-lg px-4 py-2 bg-[#E76F51]/5">
+                      <div className="mt-auto flex justify-between items-center border-2 border-gray-300 rounded-xl px-4 py-3 bg-gray-50">
                         <button
                           onClick={() => decreaseQty(cartItem.id)}
-                          className="text-lg font-semibold text-[#E76F51] w-8 h-8 flex items-center justify-center hover:bg-[#E76F51]/10 rounded"
+                          className="text-xl font-bold text-[#2b1d12] w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-lg transition"
                         >
-                          -
+                          −
                         </button>
-                        <span className="font-semibold text-[#2b1d12]">{cartItem.quantity}</span>
+                        <span className="font-bold text-[#2b1d12]">{cartItem.quantity}</span>
                         <button
                           onClick={() => increaseQty(cartItem.id)}
-                          className="text-lg font-semibold text-[#E76F51] w-8 h-8 flex items-center justify-center hover:bg-[#E76F51]/10 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="text-xl font-bold text-[#2b1d12] w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                           disabled={cartItem.quantity >= p.stock}
                         >
                           +

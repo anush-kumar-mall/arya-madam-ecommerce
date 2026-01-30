@@ -8,21 +8,19 @@ import toast from "react-hot-toast";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 
-interface Product {
+interface Remedy {
   id: string;
   title: string;
   description: string;
+  category: string;
+  price: number;
   stock: number;
   images: string[];
-  price: number;
-  oldPrice: number;
-  exclusive?: number;
-  category: string;
 }
 
 export default function RemediesPage() {
   const router = useRouter();
-  const [products, setProducts] = useState<Product[]>([]);
+  const [remedies, setRemedies] = useState<Remedy[]>([]);
   const [loading, setLoading] = useState(true);
   const [popupImages, setPopupImages] = useState<string[] | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -32,78 +30,35 @@ export default function RemediesPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
-  // Remedy categories - matches the categories from your remedies page
-  const REMEDY_CATEGORIES = [
-    'wealth',
-    'health', 
-    'relationship',
-    'protection',
-    'self-confidence',
-    'education',
-    'crown-chakra',
-    'third-eye-chakra',
-    'throat-chakra',
-    'heart-chakra',
-    'solar-plexus-chakra',
-    'sacral-chakra',
-    'root-chakra'
-  ];
-
-  // Fetch products
+  // Fetch remedies
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchRemedies = async () => {
       setLoading(true);
       try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 10000);
-
-        const res = await fetch("/api/products", { signal: controller.signal });
-        clearTimeout(timeout);
-
-        if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
+        const res = await fetch("/api/remedies");
+        if (!res.ok) throw new Error("Failed to fetch");
 
         const data = await res.json();
-        console.log("✅ Fetched products:", data);
-
-        let fetchedProducts: Product[] = [];
-
-        if (Array.isArray(data)) fetchedProducts = data;
-        else if (Array.isArray(data.products)) fetchedProducts = data.products;
-
-        // ✅ Filter to only show remedy products
-        const remedyProducts = fetchedProducts.filter(product => 
-          REMEDY_CATEGORIES.includes(product.category?.toLowerCase())
-        );
-
-        setProducts(remedyProducts.reverse());
-      } catch (error: any) {
-        if (error.name === "AbortError") {
-          console.error("Request timed out");
-          toast.error("Request timed out while fetching products");
-        } else {
-          console.error("Failed to fetch products:", error);
-          toast.error("Failed to fetch products");
-        }
-        setProducts([]);
+        setRemedies(data.reverse());
+      } catch (error) {
+        console.error("Failed to fetch remedies:", error);
+        toast.error("Failed to fetch remedies");
+        setRemedies([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProducts();
+    fetchRemedies();
   }, []);
 
-  const filteredProducts = products.filter((product) =>
-    product.category?.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredRemedies = remedies.filter((remedy) =>
+    remedy.category?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const uniqueCategories = [
-    ...new Set(products.map((p) => p.category).filter(Boolean)),
+    ...new Set(remedies.map((r) => r.category).filter(Boolean)),
   ];
-
-  const getTotalStock = (stock: number | undefined) => {
-    return stock || 0;
-  };
 
   const handleDelete = (id: string) => {
     setPendingDeleteId(id);
@@ -117,7 +72,7 @@ export default function RemediesPage() {
     setIsDialogOpen(false);
 
     try {
-      const res = await fetch(`/api/products/${id}`, {
+      const res = await fetch(`/api/remedies/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -125,8 +80,8 @@ export default function RemediesPage() {
         const data = await res.json();
         throw new Error(data.error || "Delete failed");
       }
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-      toast.success("Product deleted successfully!");
+      setRemedies((prev) => prev.filter((r) => r.id !== id));
+      toast.success("Remedy deleted successfully!");
     } catch (err) {
       console.error(err);
       toast.error(err instanceof Error ? err.message : "Delete failed");
@@ -144,7 +99,9 @@ export default function RemediesPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Remedies Management</h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+          Remedy Management
+        </h2>
         <button
           onClick={() => router.push("/admin/remedies/create")}
           className="flex items-center gap-2 px-3 md:px-4 py-2 text-sm md:text-base bg-amber-600 text-white rounded-lg hover:bg-amber-700 cursor-pointer transition duration-150 whitespace-nowrap"
@@ -176,9 +133,9 @@ export default function RemediesPage() {
                 <button
                   key={index}
                   onClick={() => setSearchTerm(category)}
-                  className="px-3 py-1.5 bg-gray-100 text-amber-600 text-xs font-medium rounded-full hover:bg-amber-50 transition capitalize"
+                  className="px-3 py-1.5 bg-gray-100 text-amber-600 text-xs font-medium rounded-full hover:bg-amber-50 transition"
                 >
-                  {category.replace(/-/g, ' ')}
+                  {category}
                 </button>
               ))}
             </div>
@@ -195,7 +152,7 @@ export default function RemediesPage() {
           {searchTerm && (
             <div className="flex justify-between items-center">
               <h3 className="font-semibold text-lg text-gray-900">
-                Results for "{searchTerm}" ({filteredProducts.length})
+                Results for "{searchTerm}" ({filteredRemedies.length})
               </h3>
               <button
                 onClick={() => setSearchTerm("")}
@@ -216,6 +173,7 @@ export default function RemediesPage() {
                       "Title",
                       "Description",
                       "Category",
+                      "Price",
                       "Stock",
                       "Images",
                       "Actions",
@@ -231,41 +189,43 @@ export default function RemediesPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredProducts.length > 0 ? (
-                    filteredProducts.map((product) => {
-                      const totalStock = getTotalStock(product.stock);
-                      const isDeleting = deletingId === product.id;
+                  {filteredRemedies.length > 0 ? (
+                    filteredRemedies.map((remedy) => {
+                      const isDeleting = deletingId === remedy.id;
                       return (
                         <tr
-                          key={product.id}
+                          key={remedy.id}
                           className="hover:bg-gray-50 transition duration-100 text-sm sm:text-base"
                         >
                           <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">
-                            {product.title}
+                            {remedy.title}
                           </td>
                           <td className="px-6 py-4 text-gray-600 max-w-xs truncate">
-                            {product.description}
+                            {remedy.description}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium capitalize">
-                              {product.category?.replace(/-/g, ' ') || "N/A"}
+                            <span className="px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
+                              {remedy.category || "N/A"}
                             </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                            ₹{remedy.price}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-gray-600">
                             <span
                               className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                                totalStock > 0
+                                remedy.stock > 0
                                   ? "bg-green-100 text-green-800"
                                   : "bg-red-100 text-red-800"
                               }`}
                             >
-                              {totalStock}
+                              {remedy.stock}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <button
                               onClick={() => {
-                                setPopupImages(product.images);
+                                setPopupImages(remedy.images);
                                 setCurrentImageIndex(0);
                               }}
                               className="text-amber-500 hover:text-amber-600 font-medium text-sm cursor-pointer"
@@ -277,18 +237,18 @@ export default function RemediesPage() {
                             <div className="flex gap-2">
                               <button
                                 onClick={() =>
-                                  router.push(`/admin/products/${product.id}`)
+                                  router.push(`/admin/remedies/${remedy.id}`)
                                 }
                                 className="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition cursor-pointer"
-                                title="Edit Product"
+                                title="Edit Remedy"
                                 disabled={isDeleting}
                               >
                                 <Edit className="w-4 h-4" />
                               </button>
                               <button
-                                onClick={() => handleDelete(product.id)}
+                                onClick={() => handleDelete(remedy.id)}
                                 className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer disabled:opacity-50"
-                                title="Delete Product"
+                                title="Delete Remedy"
                                 disabled={isDeleting}
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -301,7 +261,7 @@ export default function RemediesPage() {
                   ) : (
                     <tr>
                       <td
-                        colSpan={6}
+                        colSpan={7}
                         className="text-center py-8 text-gray-500 text-sm"
                       >
                         {searchTerm
@@ -317,58 +277,55 @@ export default function RemediesPage() {
 
           {/* Mobile View */}
           <div className="md:hidden space-y-4">
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => {
-                const totalStock = getTotalStock(product.stock);
-                const isDeleting = deletingId === product.id;
+            {filteredRemedies.length > 0 ? (
+              filteredRemedies.map((remedy) => {
+                const isDeleting = deletingId === remedy.id;
                 return (
                   <div
-                    key={product.id}
+                    key={remedy.id}
                     className="bg-white p-4 rounded-xl shadow border border-gray-100"
                   >
                     <div className="flex justify-between mb-2">
-                      <span className="font-semibold text-gray-800">
-                        Title:
-                      </span>
-                      <span className="text-sm">{product.title}</span>
+                      <span className="font-semibold text-gray-800">Title:</span>
+                      <span className="text-sm">{remedy.title}</span>
                     </div>
                     <div className="flex justify-between mb-2">
                       <span className="font-semibold text-gray-800">
                         Description:
                       </span>
                       <span className="text-sm text-gray-600 truncate max-w-[180px]">
-                        {product.description}
+                        {remedy.description}
                       </span>
                     </div>
                     <div className="flex justify-between mb-2">
                       <span className="font-semibold text-gray-800">
                         Category:
                       </span>
-                      <span className="px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium capitalize">
-                        {product.category?.replace(/-/g, ' ') || "N/A"}
+                      <span className="px-2 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
+                        {remedy.category || "N/A"}
                       </span>
                     </div>
                     <div className="flex justify-between mb-2">
-                      <span className="font-semibold text-gray-800">
-                        Stock:
-                      </span>
+                      <span className="font-semibold text-gray-800">Price:</span>
+                      <span>₹{remedy.price}</span>
+                    </div>
+                    <div className="flex justify-between mb-2">
+                      <span className="font-semibold text-gray-800">Stock:</span>
                       <span
                         className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          totalStock > 0
+                          remedy.stock > 0
                             ? "bg-green-100 text-green-800"
                             : "bg-red-100 text-red-800"
                         }`}
                       >
-                        {totalStock}
+                        {remedy.stock}
                       </span>
                     </div>
                     <div className="flex justify-between items-center mb-3">
-                      <span className="font-semibold text-gray-800">
-                        Images:
-                      </span>
+                      <span className="font-semibold text-gray-800">Images:</span>
                       <button
                         onClick={() => {
-                          setPopupImages(product.images);
+                          setPopupImages(remedy.images);
                           setCurrentImageIndex(0);
                         }}
                         className="text-amber-500 hover:text-amber-600 font-medium text-sm cursor-pointer"
@@ -379,18 +336,18 @@ export default function RemediesPage() {
                     <div className="flex gap-2 mt-3">
                       <button
                         onClick={() =>
-                          router.push(`/admin/products/${product.id}`)
+                          router.push(`/admin/remedies/${remedy.id}`)
                         }
                         className="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition cursor-pointer"
-                        title="Edit Product"
+                        title="Edit Remedy"
                         disabled={isDeleting}
                       >
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => handleDelete(product.id)}
+                        onClick={() => handleDelete(remedy.id)}
                         className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition cursor-pointer disabled:opacity-50"
-                        title="Delete Product"
+                        title="Delete Remedy"
                         disabled={isDeleting}
                       >
                         <Trash2 className="w-4 h-4" />
@@ -422,7 +379,7 @@ export default function RemediesPage() {
                 <div className="relative w-full h-96 rounded-xl overflow-hidden bg-transparent flex items-center justify-center">
                   <Image
                     src={popupImages[currentImageIndex]}
-                    alt={`Product Image ${currentImageIndex + 1}`}
+                    alt={`Remedy Image ${currentImageIndex + 1}`}
                     fill
                     className="object-contain"
                   />

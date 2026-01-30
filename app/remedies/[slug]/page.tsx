@@ -58,16 +58,14 @@ export default function RemedyProductsPage() {
     <>
       <Navbar />
 
-      {/* PAGE BG SAME AS SHOP */}
-      <section className="min-h-screen px-6 py-24 bg-[rgb(44_95_124)] text-white">
+      <section className="min-h-screen px-6 py-24 bg-[#fdfaf6]">
         <div className="max-w-7xl mx-auto">
-
           {/* HEADER */}
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold capitalize">
+            <h1 className="text-4xl md:text-5xl font-bold text-[#2b1d12] capitalize">
               {slug?.toString().replace(/-/g, " ")}
             </h1>
-            <p className="mt-4 text-lg text-[#e6cfa7]">
+            <p className="mt-4 text-lg text-gray-700">
               Carefully curated spiritual products aligned with your energy
             </p>
           </div>
@@ -75,35 +73,38 @@ export default function RemedyProductsPage() {
           {/* CONTENT */}
           {loading ? (
             <div className="text-center py-20">
-              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-white border-r-transparent"></div>
-              <p className="mt-4">Loading products...</p>
+              <div className="inline-block h-10 w-10 animate-spin rounded-full border-4 border-[#e6cfa7] border-r-transparent"></div>
+              <p className="mt-4 text-gray-600 font-medium">Loading products...</p>
             </div>
           ) : error ? (
-            <div className="text-center py-20 text-red-300">
-              {error}
+            <div className="text-center py-20">
+              <div className="text-red-600 text-lg font-medium">{error}</div>
+              <p className="text-gray-500 mt-2">Please try again later</p>
             </div>
           ) : products.length === 0 ? (
-            <div className="text-center py-20 text-white/80">
-              No products available yet.
+            <div className="text-center py-20">
+              <div className="text-gray-600 text-xl font-medium">No products available yet</div>
+              <p className="text-gray-500 mt-2">Check back soon for new items</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.map((p) => {
                 const cartItem = cartItemById(p.id);
 
                 return (
                   <div
                     key={p.id}
-                    className="bg-white text-[#2b1d12] p-6 rounded-2xl flex flex-col shadow-lg hover:shadow-2xl transition"
+                    className="bg-white border border-gray-200 text-[#2b1d12] p-5 rounded-2xl flex flex-col shadow-sm hover:shadow-lg hover:border-gray-300 transition-all"
                   >
                     {/* IMAGE */}
-                    <div className="relative h-48 w-full mb-4 rounded-xl overflow-hidden bg-gray-100 border border-gray-200">
+                    <div className="relative h-48 w-full mb-4 rounded-xl overflow-hidden bg-gray-50">
                       {p.images?.length > 0 ? (
                         <Image
-                          src={p.images[0]}
+                          src={p.images[0] || "/placeholder.jpg"}
                           alt={p.title}
                           fill
-                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover transition-transform duration-500 hover:scale-110"
                         />
                       ) : (
                         <div className="h-full flex items-center justify-center text-gray-400 text-sm">
@@ -112,48 +113,61 @@ export default function RemedyProductsPage() {
                       )}
 
                       {p.stock === 0 && (
-                        <span className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full">
+                        <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
                           Out of Stock
                         </span>
                       )}
                     </div>
 
                     {/* TITLE */}
-                    <h3 className="font-semibold min-h-[2.5rem]">
+                    <h3 className="font-bold text-[#2b1d12] min-h-[2.5rem] leading-tight">
                       {p.title}
                     </h3>
 
                     {/* RATING */}
-                    <div className="mt-1 text-xs text-[#8a6a44]">
-                      ★ {p.rating.toFixed(1)}
+                    <div className="mt-2 flex items-center gap-1">
+                      <div className="flex text-amber-500 text-sm">
+                        {'★'.repeat(Math.floor(p.rating))}
+                        {'☆'.repeat(5 - Math.floor(p.rating))}
+                      </div>
+                      <span className="text-xs text-gray-500">
+                        ({p.rating.toFixed(1)})
+                      </span>
                     </div>
 
                     {/* PRICE */}
-                    <div className="mt-3 flex items-center gap-2">
-                      <span className="font-bold text-lg">
-                        ₹{p.price}
+                    <div className="mt-3 flex items-center gap-2 mb-3">
+                      <span className="font-bold text-xl text-[#2b1d12]">
+                        ₹{p.price.toLocaleString()}
                       </span>
                       {p.oldPrice && (
-                        <span className="text-sm line-through text-gray-500">
-                          ₹{p.oldPrice}
-                        </span>
+                        <>
+                          <span className="text-sm line-through text-gray-400">
+                            ₹{p.oldPrice.toLocaleString()}
+                          </span>
+                          <span className="text-xs bg-green-100 text-green-700 font-semibold px-2 py-1 rounded-md">
+                            {Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100)}% OFF
+                          </span>
+                        </>
                       )}
                     </div>
 
                     {/* STOCK */}
-                    <div className="text-xs mt-2 mb-4">
+                    <div className="text-xs mb-4">
                       {p.stock > 0 ? (
-                        <span className="text-green-600">
-                          In Stock ({p.stock})
-                        </span>
+                        <div className="flex items-center gap-2 text-green-600">
+                          <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                          <span className="font-medium">In Stock ({p.stock})</span>
+                        </div>
                       ) : (
-                        <span className="text-red-600 font-semibold">
-                          Out of Stock
-                        </span>
+                        <div className="flex items-center gap-2 text-red-600">
+                          <span className="w-2 h-2 bg-red-600 rounded-full"></span>
+                          <span className="font-semibold">Out of Stock</span>
+                        </div>
                       )}
                     </div>
 
-                    {/* CART ACTIONS — SAME AS SHOP */}
+                    {/* CART ACTIONS */}
                     {!cartItem ? (
                       <button
                         onClick={() =>
@@ -166,25 +180,25 @@ export default function RemedyProductsPage() {
                           })
                         }
                         disabled={p.stock === 0}
-                        className="mt-auto bg-[#E76F51] text-white py-2 rounded-lg hover:bg-[#D55A3A] transition font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+                        className="mt-auto bg-[#2b1d12] text-white py-3 rounded-xl hover:bg-[#1a120a] transition-all font-semibold disabled:bg-gray-300 disabled:cursor-not-allowed shadow-sm"
                       >
                         {p.stock === 0 ? "Out of Stock" : "Add to Cart"}
                       </button>
                     ) : (
-                      <div className="mt-auto flex justify-between items-center border-2 border-[#E76F51] rounded-lg px-4 py-2 bg-[#E76F51]/5">
+                      <div className="mt-auto flex justify-between items-center border-2 border-gray-300 rounded-xl px-4 py-3 bg-gray-50">
                         <button
                           onClick={() => decreaseQty(cartItem.id)}
-                          className="text-lg font-semibold text-[#E76F51] w-8 h-8 flex items-center justify-center hover:bg-[#E76F51]/10 rounded"
+                          className="text-xl font-bold text-[#2b1d12] w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-lg transition"
                         >
                           −
                         </button>
-                        <span className="font-semibold">
+                        <span className="font-bold text-[#2b1d12]">
                           {cartItem.quantity}
                         </span>
                         <button
                           onClick={() => increaseQty(cartItem.id)}
                           disabled={cartItem.quantity >= p.stock}
-                          className="text-lg font-semibold text-[#E76F51] w-8 h-8 flex items-center justify-center hover:bg-[#E76F51]/10 rounded disabled:opacity-50"
+                          className="text-xl font-bold text-[#2b1d12] w-8 h-8 flex items-center justify-center hover:bg-gray-200 rounded-lg transition disabled:opacity-50"
                         >
                           +
                         </button>

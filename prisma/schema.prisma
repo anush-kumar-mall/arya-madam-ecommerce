@@ -69,7 +69,7 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// Your existing Product model
+// ✅ SHOP PRODUCTS MODEL
 model Product {
   id          String        @id @default(uuid())
   title       String
@@ -99,6 +99,34 @@ model Product {
   @@index([status])
   @@index([createdAt])
   @@index([sku])
+}
+
+// ✅ REMEDY PRODUCTS MODEL (SEPARATE)
+model Remedy {
+  id            String        @id @default(uuid())
+  title         String
+  description   String
+  ailment       String        // What it treats/helps with
+  ingredients   String[]      // List of ingredients
+  instructions  String[]      // Step-by-step instructions
+  dosage        String        // How to use / dosage
+  precautions   String[]      // Safety precautions
+  duration      String        // How long to use
+  category      String        // Type of remedy (wealth, health, etc.)
+  price         Int
+  oldPrice      Int?
+  stock         Int           @default(0)
+  images        String[]
+  video         String?
+  rating        Float         @default(0)
+  reviews       Int           @default(0)
+  status        ProductStatus @default(ACTIVE)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([category])
+  @@index([status])
+  @@index([createdAt])
 }
 
 // Enhanced Order model

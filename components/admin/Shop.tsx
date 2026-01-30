@@ -129,9 +129,9 @@ export const Products = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Product Management</h2>
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Shop Management</h2>
         <button
-          onClick={() => router.push("/admin/products/create")}
+          onClick={() => router.push("/admin/shop/create")}
           className="flex items-center gap-2 px-3 md:px-4 py-2 text-sm md:text-base bg-amber-600 text-white rounded-lg hover:bg-amber-700 cursor-pointer transition duration-150 whitespace-nowrap"
         >
           <Plus className="w-4 h-4" /> Create Product
@@ -262,7 +262,7 @@ export const Products = () => {
                             <div className="flex gap-2">
                               <button
                                 onClick={() =>
-                                  router.push(`/admin/products/${product.id}`)
+                                  router.push(`/admin/shop/${product.id}`)
                                 }
                                 className="p-2 text-amber-600 hover:bg-amber-50 rounded-lg transition cursor-pointer"
                                 title="Edit Product"
