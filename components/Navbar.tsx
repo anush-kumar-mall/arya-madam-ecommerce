@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import React, { useEffect, useState, useRef } from "react";
 import {
-  Palette,
   Search,
   ShoppingCart,
   Menu,
@@ -116,18 +116,18 @@ export default function Navbar() {
         border-b border-[#e6cfa7]/20`}
       >
         <nav className="flex items-center justify-between px-6 py-5 max-w-7xl mx-auto">
-          <Link
-            href="/"
-            onClick={(e) => handleNavClick(e, "Home")}
-            className="flex items-center gap-3"
-          >
-            <div className="w-12 h-12 bg-[rgb(44_95_124)] rounded-xl border border-[#e6cfa7]/40 flex items-center justify-center">
-              <Palette className="w-7 h-7 text-white" />
-            </div>
-            <span className="text-[rgb(44_95_124)] text-lg font-bold">
-              Arya Madam Craft Supplies
-            </span>
-          </Link>
+          <Link href="/" className="flex items-center">
+  <Image
+    src="/assets/logo.jpeg"
+    alt="Arya Madam"
+    width={140}
+    height={40}
+    priority
+    className="object-contain"
+  />
+</Link>
+
+
 
           <div className="hidden md:flex gap-10 items-center">
             {navItems.map((item) => {

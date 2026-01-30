@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -35,12 +36,17 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/admin/shop" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">A</span>
-            </div>
-            <span className="text-white font-bold text-xl hidden sm:block">
-              Admin Portal
-            </span>
+            <Link href="/admin/shop" className="flex items-center">
+  <Image
+    src="/assets/logo.jpeg"
+    alt="Arya Madam Admin"
+    width={120}
+    height={36}
+    priority
+    className="object-contain"
+  />
+</Link>
+
           </Link>
 
           <div className="hidden md:flex items-center space-x-1">
