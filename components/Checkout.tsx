@@ -123,7 +123,7 @@ Please confirm my order and share delivery details.
                       </div>
 
                       <button
-                        onClick={() => removeFromCart(String(item.id))}
+                        onClick={() => removeItem(String(item.id))}
                         className="text-red-500 hover:text-red-700 transition"
                         title="Remove item"
                       >
