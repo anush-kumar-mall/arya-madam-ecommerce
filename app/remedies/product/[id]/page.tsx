@@ -103,7 +103,10 @@ export default function RemedyProductPage() {
 
   const handleWhatsAppOrder = () => {
     if (product) {
-      const productUrl = `https://h-chen.vercel.app/remedies/product/${product.id}`;
+      // Get current website URL dynamically
+      const currentUrl = typeof window !== 'undefined' ? window.location.origin : '';
+      const productUrl = `${currentUrl}/remedies/product/${product.id}`;
+      
       const message = `Hello,%0A%0AI want to order the *${product.title}*%0A%0AProduct Link: ${productUrl}%0APrice: ₹${product.price}%0AQuantity: ${cartItem?.quantity || quantity}`;
       const whatsappUrl = `https://wa.me/919140257673?text=${message}`;
       window.open(whatsappUrl, '_blank');
