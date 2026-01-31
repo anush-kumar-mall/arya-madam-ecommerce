@@ -112,7 +112,7 @@ export default function Navbar() {
         <nav className="flex items-center justify-between px-6 py-5 max-w-7xl mx-auto">
           <Link href="/">
             <Image
-              src="/assets/logo.jpeg"
+              src="/assets/logo4.svg"
               alt="Arya Madam"
               width={140}
               height={40}

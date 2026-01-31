@@ -187,10 +187,20 @@ export default function BestSellers() {
                     Add to Cart
                   </button>
                 ) : (
-                  <div className="mt-5 flex justify-between border rounded-lg px-4 py-2">
-                    <button onClick={() => decreaseQty(cartItem.id)}>-</button>
-                    <span>{cartItem.quantity}</span>
-                    <button onClick={() => increaseQty(cartItem.id)}>+</button>
+                  <div className="mt-5 flex justify-between items-center border rounded-lg px-4 py-2 bg-gray-50">
+                    <button 
+                      onClick={() => decreaseQty(cartItem.id)}
+                      className="text-black font-bold text-xl hover:text-[#E76F51]"
+                    >
+                      -
+                    </button>
+                    <span className="text-black font-semibold">{cartItem.quantity}</span>
+                    <button 
+                      onClick={() => increaseQty(cartItem.id)}
+                      className="text-black font-bold text-xl hover:text-[#E76F51]"
+                    >
+                      +
+                    </button>
                   </div>
                 )}
               </div>

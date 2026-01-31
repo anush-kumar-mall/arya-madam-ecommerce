@@ -38,7 +38,7 @@ const Navbar: React.FC = () => {
           <Link href="/admin/shop" className="flex items-center space-x-3">
             <Link href="/admin/shop" className="flex items-center">
   <Image
-    src="/assets/logo.jpeg"
+    src="/assets/logo4.svg"
     alt="Arya Madam Admin"
     width={120}
     height={36}
