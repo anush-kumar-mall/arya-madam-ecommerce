@@ -2,6 +2,7 @@
 
 import { FC, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Facebook,
   Instagram,
@@ -45,9 +46,15 @@ const Footer: FC = () => {
 
           {/* BRAND */}
           <div>
-            <h2 className="text-3xl font-bold tracking-widest text-white mb-6">
-              ARYA MADAM
-            </h2>
+            <div className="mb-6">
+              <Image
+                src="/assets/logo6.png"
+                alt="Arya Madam"
+                width={180}
+                height={60}
+                className="object-contain"
+              />
+            </div>
             <p className="leading-relaxed mb-8 text-white">
               Professional-grade craft supplies rooted in tradition,
               precision, and timeless craftsmanship.
