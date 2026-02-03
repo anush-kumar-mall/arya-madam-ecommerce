@@ -2,25 +2,17 @@
 
 import Image from "next/image";
 import React, { useEffect, useState, useRef } from "react";
-import {
-  Search,
-  ShoppingCart,
-  Menu,
-  X,
-  ChevronDown,
-} from "lucide-react";
+import { Search, ShoppingCart, Menu, X, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useCart } from "@/app/providers/CartProvider";
 import CartDrawer from "@/components/CartDrawer";
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // 🔥 SEPARATE STATES (important)
   const [desktopRemediesOpen, setDesktopRemediesOpen] = useState(false);
   const [mobileRemediesOpen, setMobileRemediesOpen] = useState(false);
 
@@ -35,14 +27,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
 
-  /* ---------------- SCROLL EFFECT ---------------- */
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 0);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  /* ---------------- DESKTOP OUTSIDE CLICK ---------------- */
+  /* ---------------- DESKTOP DROPDOWN OUTSIDE CLICK ---------------- */
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -59,9 +44,7 @@ export default function Navbar() {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [desktopRemediesOpen]);
 
   /* ---------------- NAV HANDLER ---------------- */
@@ -80,10 +63,22 @@ export default function Navbar() {
     }
   };
 
-  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      router.replace(`?q=${encodeURIComponent(query)}`, { scroll: false });
-      setSearchOpen(false);
+  /* ---------------- SEARCH LOGIC ---------------- */
+  const performSearch = () => {
+    if (!query.trim()) return;
+    router.push(`/shop?q=${encodeURIComponent(query)}`);
+    setSearchOpen(false);
+  };
+
+  const handleSearchKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") performSearch();
+  };
+
+  const handleSearchClick = () => {
+    if (searchOpen && query.trim()) {
+      performSearch();
+    } else {
+      setSearchOpen((p) => !p);
     }
   };
 
@@ -108,7 +103,7 @@ export default function Navbar() {
 
   return (
     <>
-      <div className={`sticky top-0 z-50 bg-white border-b border-[#e6cfa7]/20`}>
+      <div className="sticky top-0 z-50 bg-white border-b border-[#e6cfa7]/20">
         <nav className="flex items-center justify-between px-6 py-5 max-w-7xl mx-auto">
           <Link href="/">
             <Image
@@ -133,13 +128,10 @@ export default function Navbar() {
               </Link>
             ))}
 
-            {/* DESKTOP REMEDIES */}
             <div className="relative">
               <button
                 ref={remediesButtonRef}
-                onClick={() =>
-                  setDesktopRemediesOpen((p) => !p)
-                }
+                onClick={() => setDesktopRemediesOpen((p) => !p)}
                 className="flex items-center gap-1 text-black hover:text-[#E76F51]"
               >
                 Remedies
@@ -151,16 +143,34 @@ export default function Navbar() {
               </button>
             </div>
 
-            <Link href="/about" className="text-black hover:text-[#E76F51]">About</Link>
-            <Link href="/contact" className="text-black hover:text-[#E76F51]">Contact</Link>
+            <Link href="/about" className="text-black hover:text-[#E76F51]">
+              About
+            </Link>
+            <Link href="/contact" className="text-black hover:text-[#E76F51]">
+              Contact
+            </Link>
           </div>
 
           {/* ---------------- RIGHT ICONS ---------------- */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 relative">
             <Search
               className="w-6 h-6 text-black cursor-pointer"
-              onClick={() => setSearchOpen((p) => !p)}
+              onClick={handleSearchClick}
             />
+
+            {searchOpen && (
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleSearchKey}
+                placeholder="Search products..."
+                className="absolute top-10 right-0 w-64 px-3 py-2 rounded border 
+                bg-white shadow 
+                text-black placeholder:text-gray-500 caret-black"
+                autoFocus
+              />
+            )}
 
             <button onClick={() => setCartOpen(true)} className="relative">
               <ShoppingCart className="w-6 h-6 text-black" />
@@ -194,11 +204,8 @@ export default function Navbar() {
               </Link>
             ))}
 
-            {/* MOBILE REMEDIES */}
             <button
-              onClick={() =>
-                setMobileRemediesOpen((p) => !p)
-              }
+              onClick={() => setMobileRemediesOpen((p) => !p)}
               className="flex justify-between w-full py-2 text-black"
             >
               Remedies
@@ -215,8 +222,7 @@ export default function Navbar() {
                   <Link
                     key={cat.slug}
                     href={`/${cat.slug}`}
-                    onClick={(e) => {
-                      e.stopPropagation(); // 🔥 KEY FIX
+                    onClick={() => {
                       setMenuOpen(false);
                       setMobileRemediesOpen(false);
                     }}
@@ -227,18 +233,15 @@ export default function Navbar() {
                 ))}
               </div>
             )}
-
-            <Link href="/about" className="block py-2 text-black">About</Link>
-            <Link href="/contact" className="block py-2 text-black">Contact</Link>
           </div>
         )}
       </div>
 
-      {/* ---------------- DESKTOP DROPDOWN ---------------- */}
+      {/* ---------------- DESKTOP REMEDIES DROPDOWN ---------------- */}
       {desktopRemediesOpen && (
         <div
           ref={dropdownRef}
-          className="hidden md:block fixed top-[80px] left-[50%] translate-x-[-50%]
+          className="hidden md:block fixed top-[80px] left-1/2 -translate-x-1/2 
           bg-white border rounded shadow-xl w-56 z-50"
         >
           {remedyCategories.map((cat) => (
