@@ -20,22 +20,66 @@ interface ProductFormProps {
   product?: any;
 }
 
-// ✅ Nested Category Structure
+// ✅ UPDATED 3-Level Nested Category Structure
 const CATEGORY_STRUCTURE = {
   "Remedies": {
-    subcategories: ["Wealth", "Health", "Relationship", "Protection", "Self-Confidence", "Education", "Crown Chakra", "Third Eye Chakra", "Throat Chakra", "Heart Chakra", "Solar Plexus Chakra", "Sacral Chakra", "Root Chakra", "Vastu"]
+    subcategories: [
+      "Wealth", 
+      "Health", 
+      "Relationship", 
+      "Protection", 
+      "Self-Confidence", 
+      "Education", 
+      "Crown Chakra", 
+      "Third Eye Chakra", 
+      "Throat Chakra", 
+      "Heart Chakra", 
+      "Solar Plexus Chakra", 
+      "Sacral Chakra", 
+      "Root Chakra", 
+      "Vastu"
+    ]
   },
   "Crystals & Spiritual": {
-    subcategories: ["Natural Crystals", "Crystal Frames", "Crystal Birds", "Crystal Trees", "Crystal Angles", "Crystal Balls", "Crystal Rings", "Anklets", "Yantras"]
+    subcategories: {
+      "Natural Crystals": [],
+      "Crystal Frames": [],
+      "Crystal Birds": [],
+      "Crystal Trees": [],
+      "Crystal Angles": [],
+      "Crystal Balls": [],
+      "Crystal Rings": [],
+      "Anklets": [
+        "All Anklets",
+        "Crystal Clocks",
+        "Crystal Pyramid",
+        "Crystal Pencils",
+        "Crystal Box",
+        "Crystal Idols",
+        "Pyrite Dust Frames",
+        "Seven Chakra Healing Frames",
+        "Crystal Strings",
+        "Crystal Animals"
+      ],
+      "Yantras": [],
+      "Thakur Ji Dresses": [
+        "All Dresses",
+        "Rudraksh",
+        "Pooja Items"
+      ],
+      "Sage": [
+        "All Sage",
+        "God Idols"
+      ]
+    }
   },
   "Creative & Handcrafted": {
-    subcategories: ["Art & Craft", "Handmade Occasion-Special Items", "Jutt Item", "Coir Products"]
-  },
-  "Sage": {
-    subcategories: ["God Idols", "Incense", "Smudging"]
-  },
-  "Thakur Ji Dresses": {
-    subcategories: ["Rudraksh", "Pooja Items", "Deity Clothing"]
+    subcategories: {
+      "Art & Craft": [],
+      "Handmade Occasion-Special Items": [],
+      "Jutt Item": [],
+      "Coir Products": ["Dry Flowers"]
+    }
   },
   "Shop": {
     subcategories: []
@@ -51,10 +95,12 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
   const [video, setVideo] = useState<{ url: string; file?: File; serverId?: string } | null>(null);
   const [uploadingVideo, setUploadingVideo] = useState(false);
 
-  // ✅ Category States
+  // ✅ Category States (3 levels)
   const [mainCategory, setMainCategory] = useState("");
   const [subCategory, setSubCategory] = useState("");
+  const [thirdCategory, setThirdCategory] = useState("");
   const [showSubcategories, setShowSubcategories] = useState(false);
+  const [showThirdCategories, setShowThirdCategories] = useState(false);
 
   const handleChange = (index: number, value: string) => {
     const newItems = [...items];
@@ -118,13 +164,67 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
     setTimeout(() => setMessage(null), 5000);
   };
 
-  // ✅ Get final category (Main > Sub or just Main)
+  // ✅ Get final category (3 levels)
   const getFinalCategory = () => {
+    if (thirdCategory) return `${mainCategory} > ${subCategory} > ${thirdCategory}`;
     if (subCategory) return `${mainCategory} > ${subCategory}`;
     return mainCategory;
   };
 
-  // ✅ Parse category on update mode
+  // ✅ Get subcategories based on main category
+  const getSubcategories = () => {
+    if (!mainCategory) return [];
+    const subcats = CATEGORY_STRUCTURE[mainCategory as keyof typeof CATEGORY_STRUCTURE]?.subcategories;
+    
+    if (Array.isArray(subcats)) {
+      return subcats;
+    } else if (typeof subcats === 'object') {
+      return Object.keys(subcats);
+    }
+    return [];
+  };
+
+  // ✅ Get third level categories
+  const getThirdCategories = () => {
+    if (!mainCategory || !subCategory) return [];
+    const subcats = CATEGORY_STRUCTURE[mainCategory as keyof typeof CATEGORY_STRUCTURE]?.subcategories;
+    
+    if (subcats && typeof subcats === 'object' && !Array.isArray(subcats)) {
+      const thirdLevel = subcats[subCategory as keyof typeof subcats];
+      return Array.isArray(thirdLevel) ? thirdLevel : [];
+    }
+    return [];
+  };
+
+  // ✅ Handle main category change
+  const handleMainCategoryChange = (value: string) => {
+    setMainCategory(value);
+    setSubCategory("");
+    setThirdCategory("");
+    
+    const subcats = CATEGORY_STRUCTURE[value as keyof typeof CATEGORY_STRUCTURE]?.subcategories;
+    const hasSubcategories = subcats && (Array.isArray(subcats) ? subcats.length > 0 : Object.keys(subcats).length > 0);
+    setShowSubcategories(hasSubcategories);
+    setShowThirdCategories(false);
+  };
+
+  // ✅ Handle sub category change
+  const handleSubCategoryChange = (value: string) => {
+    setSubCategory(value);
+    setThirdCategory("");
+    
+    if (mainCategory && value) {
+      const subcats = CATEGORY_STRUCTURE[mainCategory as keyof typeof CATEGORY_STRUCTURE]?.subcategories;
+      if (subcats && typeof subcats === 'object' && !Array.isArray(subcats)) {
+        const thirdLevelCategories = subcats[value as keyof typeof subcats];
+        setShowThirdCategories(Array.isArray(thirdLevelCategories) && thirdLevelCategories.length > 0);
+      }
+    } else {
+      setShowThirdCategories(false);
+    }
+  };
+
+  // ✅ Parse 3-level category on update mode
   useEffect(() => {
     if (!isUpdateMode || !product) return;
 
@@ -140,10 +240,16 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
     setItems(product.insideBox?.length ? product.insideBox : [""]);
     setColour(product.colour?.length ? [...product.colour, ""] : [""]);
 
-    // ✅ Parse nested category
+    // ✅ Parse 3-level nested category
     if (product.category) {
       const parts = product.category.split(" > ");
-      if (parts.length === 2) {
+      if (parts.length === 3) {
+        setMainCategory(parts[0]);
+        setSubCategory(parts[1]);
+        setThirdCategory(parts[2]);
+        setShowSubcategories(true);
+        setShowThirdCategories(true);
+      } else if (parts.length === 2) {
         setMainCategory(parts[0]);
         setSubCategory(parts[1]);
         setShowSubcategories(true);
@@ -471,14 +577,6 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
     else await handleCreate();
   };
 
-  // ✅ Handle main category change
-  const handleMainCategoryChange = (value: string) => {
-    setMainCategory(value);
-    setSubCategory("");
-    const hasSubcategories = CATEGORY_STRUCTURE[value as keyof typeof CATEGORY_STRUCTURE]?.subcategories?.length > 0;
-    setShowSubcategories(hasSubcategories);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-8">
       <div className="max-w-3xl mx-auto p-4 sm:p-6 bg-white rounded-xl shadow-lg border border-gray-100 space-y-4 sm:space-y-6">
@@ -528,7 +626,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
           />
         </div>
 
-        {/* ✅ Nested Category Selection */}
+        {/* ✅ 3-Level Category Selection */}
         <div className="space-y-3">
           <label className="block text-gray-700 font-medium mb-1 text-sm sm:text-base">
             Category <span className="text-red-500">*</span>
@@ -549,16 +647,16 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
             ))}
           </select>
 
-          {/* Sub Category (conditional) */}
+          {/* Sub Category (Level 2) */}
           {showSubcategories && mainCategory && (
             <select
               value={subCategory}
-              onChange={(e) => setSubCategory(e.target.value)}
+              onChange={(e) => handleSubCategoryChange(e.target.value)}
               className="w-full p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
               disabled={loading}
             >
               <option value="">Select Subcategory (Optional)</option>
-              {CATEGORY_STRUCTURE[mainCategory as keyof typeof CATEGORY_STRUCTURE]?.subcategories.map((sub) => (
+              {getSubcategories().map((sub) => (
                 <option key={sub} value={sub}>
                   {sub}
                 </option>
@@ -566,11 +664,45 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
             </select>
           )}
 
+          {/* Third Category (Level 3) */}
+          {showThirdCategories && subCategory && (
+            <select
+              value={thirdCategory}
+              onChange={(e) => setThirdCategory(e.target.value)}
+              className="w-full p-2.5 sm:p-3 text-sm sm:text-base text-gray-900 outline-none border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-transparent bg-white"
+              disabled={loading}
+            >
+              <option value="">Select Third Level (Optional)</option>
+              {getThirdCategories().map((third) => (
+                <option key={third} value={third}>
+                  {third}
+                </option>
+              ))}
+            </select>
+          )}
+
           {/* Display final category */}
           {mainCategory && (
-            <div className="text-xs text-gray-500 mt-1">
-              <span className="font-medium">Final Category:</span>{" "}
-              <span className="text-amber-600">{getFinalCategory()}</span>
+            <div className="text-xs text-gray-500 mt-1 space-y-1">
+              <div>
+                <span className="font-medium">Final Category:</span>{" "}
+                <span className="text-amber-600">{getFinalCategory()}</span>
+              </div>
+              {thirdCategory && (
+                <div className="flex items-center gap-1 text-xs flex-wrap">
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded">
+                    {mainCategory}
+                  </span>
+                  <span>→</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded">
+                    {subCategory}
+                  </span>
+                  <span>→</span>
+                  <span className="px-2 py-1 bg-amber-100 text-amber-800 rounded">
+                    {thirdCategory}
+                  </span>
+                </div>
+              )}
             </div>
           )}
         </div>

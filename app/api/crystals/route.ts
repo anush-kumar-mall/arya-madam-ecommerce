@@ -13,10 +13,18 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // Convert slug to proper category name
+    // e.g., "natural-crystals" → "Natural Crystals"
+    const categoryName = category
+      .split("-")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+
+    // Search for products where category contains this subcategory
     const products = await prisma.product.findMany({
       where: {
         category: {
-          equals: category,
+          contains: categoryName,
           mode: "insensitive",
         },
       },

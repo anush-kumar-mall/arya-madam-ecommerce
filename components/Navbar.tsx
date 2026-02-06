@@ -170,7 +170,6 @@ export default function Navbar() {
       slug: "crystalsAndSpiritual/sage",
       submenu: [{ label: "God Idols", slug: "crystalsAndSpiritual/sage/god-idols" }],
     },
-    { label: "Talk to our experts", slug: "talk-to-our-experts" },
   ];
 
   const remediesCategories = [
@@ -200,7 +199,7 @@ export default function Navbar() {
           </Link>
 
           {/* ---------------- DESKTOP NAV ---------------- */}
-          <div className="hidden md:flex items-center gap-7 text-black">
+          <div className="hidden md:flex items-center gap-5 text-black">
             <Link 
               href="/" 
               onClick={(e) => handleNavClick(e, "Home")}
@@ -326,6 +325,7 @@ export default function Navbar() {
               )}
             </div>
 
+            <Link href="/experts">Talk to our experts</Link>
             <Link href="/about">About</Link>
             <Link href="/contact">Contact</Link>
           </div>
@@ -559,6 +559,13 @@ export default function Navbar() {
                 )}
               </div>
 
+              <Link
+                href="/experts"
+                className="block py-2 text-black hover:text-[#e6cfa7]"
+                onClick={() => setMenuOpen(false)}
+              >
+                Talk to our experts
+              </Link>
               <Link
                 href="/about"
                 className="block py-2 text-black hover:text-[#e6cfa7]"
