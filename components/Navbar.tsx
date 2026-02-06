@@ -199,7 +199,7 @@ export default function Navbar() {
           </Link>
 
           {/* ---------------- DESKTOP NAV ---------------- */}
-          <div className="hidden md:flex items-center gap-5 text-black">
+          <div className="hidden lg:flex items-center gap-5 text-black">
             <Link 
               href="/" 
               onClick={(e) => handleNavClick(e, "Home")}
@@ -361,7 +361,7 @@ export default function Navbar() {
             </button>
 
             <button
-              className="md:hidden text-black"
+              className="lg:hidden text-black"
               onClick={() => setMenuOpen((p) => !p)}
             >
               {menuOpen ? <X /> : <Menu />}
@@ -371,7 +371,7 @@ export default function Navbar() {
 
         {/* ---------------- MOBILE MENU ---------------- */}
         {menuOpen && (
-          <div className="md:hidden bg-white border-t max-h-[80vh] overflow-y-auto">
+          <div className="lg:hidden bg-white border-t max-h-[80vh] overflow-y-auto">
             <div className="px-6 py-4 space-y-3">
               <Link
                 href="/"
