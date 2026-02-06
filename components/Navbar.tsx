@@ -29,6 +29,12 @@ export default function Navbar() {
   const [mobileCrystalsOpen, setMobileCrystalsOpen] = useState(false);
   const [mobileRemediesOpen, setMobileRemediesOpen] = useState(false);
 
+  // Mobile nested submenu states
+  const [mobileCoirOpen, setMobileCoirOpen] = useState(false);
+  const [mobileAnkletsOpen, setMobileAnkletsOpen] = useState(false);
+  const [mobileThakurOpen, setMobileThakurOpen] = useState(false);
+  const [mobileSageOpen, setMobileSageOpen] = useState(false);
+
   const [query, setQuery] = useState("");
 
   const creativeBtnRef = useRef<HTMLButtonElement>(null);
@@ -407,26 +413,43 @@ export default function Navbar() {
                   <div className="ml-4 mt-2 space-y-2">
                     {creativeCategories.map((cat) => (
                       <div key={cat.slug}>
-                        <Link
-                          href={`/${cat.slug}`}
-                          className="block py-1 text-sm text-black hover:text-[#e6cfa7]"
-                          onClick={() => setMenuOpen(false)}
-                        >
-                          {cat.label}
-                        </Link>
-                        {cat.submenu && (
-                          <div className="ml-4 mt-1 space-y-1">
-                            {cat.submenu.map((sub) => (
-                              <Link
-                                key={sub.slug}
-                                href={`/${sub.slug}`}
-                                className="block py-1 text-xs text-black hover:text-[#e6cfa7]"
-                                onClick={() => setMenuOpen(false)}
-                              >
-                                {sub.label}
-                              </Link>
-                            ))}
-                          </div>
+                        {cat.submenu ? (
+                          <>
+                            <button
+                              onClick={() => setMobileCoirOpen((p) => !p)}
+                              className="w-full flex items-center justify-between py-1 text-sm text-black"
+                            >
+                              <span>{cat.label}</span>
+                              <ChevronDown
+                                size={14}
+                                className={`transition-transform ${
+                                  mobileCoirOpen ? "rotate-180" : ""
+                                }`}
+                              />
+                            </button>
+                            {mobileCoirOpen && (
+                              <div className="ml-4 mt-1 space-y-1">
+                                {cat.submenu.map((sub) => (
+                                  <Link
+                                    key={sub.slug}
+                                    href={`/${sub.slug}`}
+                                    className="block py-1 text-xs text-black hover:text-[#e6cfa7]"
+                                    onClick={() => setMenuOpen(false)}
+                                  >
+                                    {sub.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <Link
+                            href={`/${cat.slug}`}
+                            className="block py-1 text-sm text-black hover:text-[#e6cfa7]"
+                            onClick={() => setMenuOpen(false)}
+                          >
+                            {cat.label}
+                          </Link>
                         )}
                       </div>
                     ))}
@@ -452,26 +475,53 @@ export default function Navbar() {
                   <div className="ml-4 mt-2 space-y-2">
                     {crystalsCategories.map((cat) => (
                       <div key={cat.slug}>
-                        <Link
-                          href={`/${cat.slug}`}
-                          className="block py-1 text-sm text-black hover:text-[#e6cfa7]"
-                          onClick={() => setMenuOpen(false)}
-                        >
-                          {cat.label}
-                        </Link>
-                        {cat.submenu && (
-                          <div className="ml-4 mt-1 space-y-1">
-                            {cat.submenu.map((sub) => (
-                              <Link
-                                key={sub.slug}
-                                href={`/${sub.slug}`}
-                                className="block py-1 text-xs text-black hover:text-[#e6cfa7]"
-                                onClick={() => setMenuOpen(false)}
-                              >
-                                {sub.label}
-                              </Link>
-                            ))}
-                          </div>
+                        {cat.submenu ? (
+                          <>
+                            <button
+                              onClick={() => {
+                                if (cat.label === "Anklets") setMobileAnkletsOpen((p) => !p);
+                                if (cat.label === "Thakur Ji Dresses") setMobileThakurOpen((p) => !p);
+                                if (cat.label === "Sage") setMobileSageOpen((p) => !p);
+                              }}
+                              className="w-full flex items-center justify-between py-1 text-sm text-black"
+                            >
+                              <span>{cat.label}</span>
+                              <ChevronDown
+                                size={14}
+                                className={`transition-transform ${
+                                  (cat.label === "Anklets" && mobileAnkletsOpen) ||
+                                  (cat.label === "Thakur Ji Dresses" && mobileThakurOpen) ||
+                                  (cat.label === "Sage" && mobileSageOpen)
+                                    ? "rotate-180"
+                                    : ""
+                                }`}
+                              />
+                            </button>
+                            {((cat.label === "Anklets" && mobileAnkletsOpen) ||
+                              (cat.label === "Thakur Ji Dresses" && mobileThakurOpen) ||
+                              (cat.label === "Sage" && mobileSageOpen)) && (
+                              <div className="ml-4 mt-1 space-y-1">
+                                {cat.submenu.map((sub) => (
+                                  <Link
+                                    key={sub.slug}
+                                    href={`/${sub.slug}`}
+                                    className="block py-1 text-xs text-black hover:text-[#e6cfa7]"
+                                    onClick={() => setMenuOpen(false)}
+                                  >
+                                    {sub.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <Link
+                            href={`/${cat.slug}`}
+                            className="block py-1 text-sm text-black hover:text-[#e6cfa7]"
+                            onClick={() => setMenuOpen(false)}
+                          >
+                            {cat.label}
+                          </Link>
                         )}
                       </div>
                     ))}
