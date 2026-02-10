@@ -9,7 +9,7 @@ const reviewsData = [
     rating: 5,
     review: "Amazing quality! The embroidery work is so detailed and beautiful. Highly recommended! 🌟",
     date: "2 days ago",
-    image: "/api/placeholder/50/50"
+    image: "/assets/reviews/girl1.webp",
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ const reviewsData = [
     rating: 5,
     review: "Ordered for my sister's wedding. Everyone loved the designs. Fast delivery too!",
     date: "1 week ago",
-    image: "/api/placeholder/50/50"
+    image: "/assets/reviews/man1.webp",
   },
   {
     id: 3,
@@ -25,7 +25,7 @@ const reviewsData = [
     rating: 4,
     review: "Beautiful collection! Fabric quality is top-notch. Will definitely order again.",
     date: "2 weeks ago",
-    image: "/api/placeholder/50/50"
+    image: "/assets/reviews/girl3.webp",
   },
   {
     id: 4,
@@ -33,27 +33,28 @@ const reviewsData = [
     rating: 5,
     review: "Loved the customization options. Got exactly what I wanted! ❤️",
     date: "3 weeks ago",
-    image: "/api/placeholder/50/50"
+    image: "/assets/reviews/girl2.webp",
   },
   {
     id: 5,
-    name: "Kavita Reddy",
+    name: "Kavi Reddy",
     rating: 5,
     review: "Perfect fit and stunning colors. Customer service is also very helpful.",
     date: "1 month ago",
-    image: "/api/placeholder/50/50"
-  }
+    image: "/assets/reviews/man2.webp",
+  },
 ];
+
 
 export default function ReviewsFloating() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      {/* Floating Button - Website Theme */}
+      {/* Floating Button - Left Side */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed right-0 top-1/2 -translate-y-1/2 bg-[rgb(44,95,124)] text-white px-2 py-3 rounded-l-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_8px_40px_rgba(213,90,58,0.5)] hover:px-4 hover:bg-[#D55A3A] transition-all duration-500 z-40 border-l-4 border-[#D55A3A]"
+        className="fixed left-0 top-1/2 -translate-y-1/2 bg-[rgb(44,95,124)] text-white px-2 py-3 rounded-r-xl shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:shadow-[0_8px_40px_rgba(213,90,58,0.5)] hover:px-4 hover:bg-[#D55A3A] transition-all duration-500 z-40 border-r-4 border-[#D55A3A]"
         style={{ writingMode: "vertical-rl" }}
       >
         <span className="text-sm font-semibold tracking-[0.3em] flex items-center gap-1.5 uppercase">
