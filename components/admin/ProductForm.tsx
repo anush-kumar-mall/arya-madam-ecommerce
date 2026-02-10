@@ -20,7 +20,7 @@ interface ProductFormProps {
   product?: any;
 }
 
-// ✅ UPDATED 3-Level Nested Category Structure
+// ✅ UPDATED 3-Level Nested Category Structure - Rudraksh & Pooja Items SEPARATED
 const CATEGORY_STRUCTURE = {
   "Remedies": {
     subcategories: [
@@ -62,11 +62,9 @@ const CATEGORY_STRUCTURE = {
         "Crystal Animals"
       ],
       "Yantras": [],
-      "Thakur Ji Dresses": [
-        "All Dresses",
-        "Rudraksh",
-        "Pooja Items"
-      ],
+      "Thakur Ji Dresses": [],
+      "Rudraksh": [],
+      "Pooja Items": [],
       "Sage": [
         "All Sage",
         "God Idols"
@@ -208,7 +206,7 @@ const ProductForm = ({ id, mode = "create", product }: ProductFormProps) => {
     setShowThirdCategories(false);
   };
 
-  // ✅ Handle sub category change - FIXED TypeScript error
+  // ✅ Handle sub category change
   const handleSubCategoryChange = (value: string) => {
     setSubCategory(value);
     setThirdCategory("");
