@@ -7,15 +7,13 @@ import HowItWorks from "@/components/HowItWorks";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import BestSellers from "@/components/BestSellers";
 import HomePopup from "@/components/HomePopup";
-import JoinComm  from "@/components/JoinCommunity";
-
+import JoinComm from "@/components/JoinCommunity";
+import WhatsAppFloating from "@/components/FloatingWhatsApp";
 
 export default function HomePage() {
   return (
     <main>
-      {/* POPUP */}
       <HomePopup />
-
       <Navbar />
       <HeroSection />
       <Collections />
@@ -23,9 +21,11 @@ export default function HomePage() {
       <WhyChooseUs />
       <HowItWorks />
       <Testimonials />
-      
-      <JoinComm/>
+      <JoinComm />
       <Footer />
+
+      {/* Floating WhatsApp Button */}
+      <WhatsAppFloating />
     </main>
   );
 }

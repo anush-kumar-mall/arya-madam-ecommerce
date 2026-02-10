@@ -3,6 +3,7 @@ import Shop from "@/components/Shop";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import JoinComm  from "@/components/JoinCommunity";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 
 export default function Page() {
   return (
@@ -16,6 +17,7 @@ export default function Page() {
       <JoinComm />
 
       <Footer />
+      <FloatingWhatsApp /> {/* Floating WhatsApp Button */}
     </>
   );
 }

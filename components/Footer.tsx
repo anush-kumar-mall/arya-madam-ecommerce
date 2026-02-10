@@ -32,10 +32,7 @@ const Footer: FC = () => {
 
   return (
     <footer
-      className="relative font-serif text-white overflow-hidden"
-      style={{
-        backgroundColor: "rgb(44 95 124 / var(--tw-bg-opacity, 1))",
-      }}
+      className="relative font-serif text-black overflow-hidden bg-white"
     >
       {/* Main Footer */}
       <div
@@ -55,30 +52,30 @@ const Footer: FC = () => {
                 className="object-contain"
               />
             </div>
-            <p className="leading-relaxed mb-8 text-white">
+            <p className="leading-relaxed mb-8 text-black">
               Professional-grade craft supplies rooted in tradition,
               precision, and timeless craftsmanship.
             </p>
 
             <div className="flex gap-4">
               <a href="https://facebook.com" target="_blank">
-                <Facebook className="text-[#e6cfa7]" />
+                <Facebook className="text-[#2c5f7c]" />
               </a>
               <a href="https://instagram.com" target="_blank">
-                <Instagram className="text-[#e6cfa7]" />
+                <Instagram className="text-[#2c5f7c]" />
               </a>
               <a href="https://linkedin.com" target="_blank">
-                <Linkedin className="text-[#e6cfa7]" />
+                <Linkedin className="text-[#2c5f7c]" />
               </a>
             </div>
           </div>
 
           {/* COMPANY */}
           <div>
-            <h3 className="text-lg font-semibold mb-6 text-white">
+            <h3 className="text-lg font-semibold mb-6 text-black">
               Company
             </h3>
-            <ul className="space-y-4 text-white">
+            <ul className="space-y-4 text-black">
               <li><Link href="/about#about">About Us</Link></li>
               <li><Link href="/career">Careers</Link></li>
               <li><Link href="/press">Press</Link></li>
@@ -88,10 +85,10 @@ const Footer: FC = () => {
 
           {/* SUPPORT */}
           <div>
-            <h3 className="text-lg font-semibold mb-6 text-white">
+            <h3 className="text-lg font-semibold mb-6 text-black">
               Support
             </h3>
-            <ul className="space-y-4 text-white">
+            <ul className="space-y-4 text-black">
               <li><Link href="/faqs">FAQs</Link></li>
               <li><Link href="/shippingPolicy">Shipping Policy</Link></li>
               <li><Link href="/returnsAndExchanges">Returns & Exchanges</Link></li>
@@ -101,10 +98,10 @@ const Footer: FC = () => {
 
           {/* CONTACT */}
           <div>
-            <h3 className="text-lg font-semibold mb-6 text-white">
+            <h3 className="text-lg font-semibold mb-6 text-black">
               Contact Info
             </h3>
-            <ul className="space-y-5 text-white">
+            <ul className="space-y-5 text-black">
               <li className="flex gap-4">
                 <MapPin className="text-[rgb(244_162_97)]" />
                 Mumbai, Maharashtra 400001
@@ -126,9 +123,9 @@ const Footer: FC = () => {
       {/* Bottom Bar */}
       <div
         data-animate="card"
-        className="relative border-t border-white/30"
+        className="relative border-t border-black/20"
       >
-        <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between text-sm text-white">
+        <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between text-sm text-black">
           <p>© 2026 Arya Madam Craft Supplies</p>
           <Link href="/privacy-policy">Privacy Policy</Link>
         </div>

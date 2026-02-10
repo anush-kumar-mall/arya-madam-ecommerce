@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FAQClient from "@/components/FaqClient";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 
 export default function Page() {
   return (
@@ -13,6 +14,7 @@ export default function Page() {
       </Suspense>
 
       <Footer />
+      <FloatingWhatsApp /> {/* Floating WhatsApp Button */}
     </>
   );
 }

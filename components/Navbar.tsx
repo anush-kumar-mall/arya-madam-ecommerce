@@ -32,7 +32,6 @@ export default function Navbar() {
   // Mobile nested submenu states
   const [mobileCoirOpen, setMobileCoirOpen] = useState(false);
   const [mobileAnkletsOpen, setMobileAnkletsOpen] = useState(false);
-  const [mobileThakurOpen, setMobileThakurOpen] = useState(false);
   const [mobileSageOpen, setMobileSageOpen] = useState(false);
 
   const [query, setQuery] = useState("");
@@ -157,14 +156,9 @@ export default function Navbar() {
       ],
     },
     { label: "Yantras", slug: "crystalsAndSpiritual/yantras" },
-    {
-      label: "Thakur Ji Dresses",
-      slug: "crystalsAndSpiritual/thakur-ji-dresses",
-      submenu: [
-        { label: "Rudraksh", slug: "crystalsAndSpiritual/thakur-ji-dresses/rudraksh" },
-        { label: "Pooja Items", slug: "crystalsAndSpiritual/thakur-ji-dresses/pooja-items" },
-      ],
-    },
+    { label: "Thakur Ji Dresses", slug: "crystalsAndSpiritual/thakur-ji-dresses" },
+    { label: "Rudraksh", slug: "crystalsAndSpiritual/rudraksh" },
+    { label: "Pooja Items", slug: "crystalsAndSpiritual/pooja-items" },
     {
       label: "Sage",
       slug: "crystalsAndSpiritual/sage",
@@ -480,7 +474,6 @@ export default function Navbar() {
                             <button
                               onClick={() => {
                                 if (cat.label === "Anklets") setMobileAnkletsOpen((p) => !p);
-                                if (cat.label === "Thakur Ji Dresses") setMobileThakurOpen((p) => !p);
                                 if (cat.label === "Sage") setMobileSageOpen((p) => !p);
                               }}
                               className="w-full flex items-center justify-between py-1 text-sm text-black"
@@ -490,7 +483,6 @@ export default function Navbar() {
                                 size={14}
                                 className={`transition-transform ${
                                   (cat.label === "Anklets" && mobileAnkletsOpen) ||
-                                  (cat.label === "Thakur Ji Dresses" && mobileThakurOpen) ||
                                   (cat.label === "Sage" && mobileSageOpen)
                                     ? "rotate-180"
                                     : ""
@@ -498,7 +490,6 @@ export default function Navbar() {
                               />
                             </button>
                             {((cat.label === "Anklets" && mobileAnkletsOpen) ||
-                              (cat.label === "Thakur Ji Dresses" && mobileThakurOpen) ||
                               (cat.label === "Sage" && mobileSageOpen)) && (
                               <div className="ml-4 mt-1 space-y-1">
                                 {cat.submenu.map((sub) => (
