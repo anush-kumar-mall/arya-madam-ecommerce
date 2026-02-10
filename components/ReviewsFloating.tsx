@@ -135,13 +135,7 @@ export default function ReviewsFloating() {
 
             {/* Footer - Website Theme */}
             <div className="bg-[rgb(44,95,124)] p-3 text-center">
-              <p className="text-xs text-white">
-                Share your experience •{" "}
-                <button className="text-[#D55A3A] bg-white px-3 py-1 rounded-full font-semibold hover:bg-gray-100 transition-colors inline-flex items-center gap-1">
-                  <Star size={12} />
-                  Write a Review
-                </button>
-              </p>
+              
             </div>
           </div>
         </div>
