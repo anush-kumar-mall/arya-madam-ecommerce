@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 const sections = [
   {
@@ -35,6 +36,7 @@ const BLUE = 'rgb(44,95,124)';
 export default function ShippingPolicyPage() {
   const { scrollYProgress } = useScroll();
   const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const router = useRouter();
 
   return (
     <section
@@ -137,14 +139,13 @@ export default function ShippingPolicyPage() {
           </p>
 
           <motion.button
-            initial={{ borderBottomWidth: 0 }}
+            onClick={() => router.push('/contact')}
             whileHover={{
-              borderBottomWidth: 2,
               backgroundColor: BLUE,
               color: '#fff',
             }}
             transition={{ duration: 0.3 }}
-            className="px-8 py-3 rounded-full border transition"
+            className="px-8 py-3 rounded-full border transition font-medium"
             style={{ borderColor: BLUE, color: BLUE }}
           >
             Contact Support

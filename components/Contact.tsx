@@ -17,12 +17,19 @@ const info = [
   {
     title: "Visit Our Store",
     icon: MapPin,
-    lines: ["123 Craft Street", "Mumbai, Maharashtra", "India"],
+    lines: [
+      "Gali No: 1 Rudra Colony",
+      "Bhiwani, Haryana - 127021",
+      "India"
+    ],
   },
   {
     title: "Call Us",
     icon: Phone,
-    lines: ["+91 98765 43210", "Mon–Sat: 9AM – 7PM"],
+    lines: [
+      "+91 93066 62709",
+      "Mon–Sat: 9AM – 7PM"
+    ],
   },
   {
     title: "Email Us",
@@ -44,14 +51,10 @@ export default function ContactPage() {
     subject: "Select a subject",
     message: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [statusMessage, setStatusMessage] = useState("");
 
-  /* Scroll to top on page load */
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    
-    // Then handle hash navigation if present
+
     if (window.location.hash === "#contact") {
       setTimeout(() => {
         const element = document.getElementById("contact");
@@ -59,7 +62,7 @@ export default function ContactPage() {
           const navbarHeight = 80;
           const elementPosition = element.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
-          
+
           window.scrollTo({
             top: offsetPosition,
             behavior: "smooth"
@@ -69,7 +72,6 @@ export default function ContactPage() {
     }
   }, []);
 
-  /* Intersection Animation */
   useEffect(() => {
     const elements = document.querySelectorAll('[data-animate="antique"]');
     const observer = new IntersectionObserver(
@@ -83,47 +85,45 @@ export default function ContactPage() {
     return () => observer.disconnect();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setStatusMessage("");
 
-    // Validation
     if (formData.subject === "Select a subject") {
-      setStatusMessage("❌ Please select a subject");
-      setLoading(false);
+      alert("❌ Please select a subject");
       return;
     }
 
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setStatusMessage("✅ " + data.message);
-        // Reset form
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          subject: "Select a subject",
-          message: "",
-        });
-      } else {
-        setStatusMessage("❌ " + data.error);
-      }
-    } catch (error) {
-      setStatusMessage("❌ Failed to send message. Please try again.");
-    } finally {
-      setLoading(false);
+    // WhatsApp message format karo
+    const whatsappNumber = "919306662709"; // +91 ko 91 kar diya (country code)
+    
+    let whatsappMessage = `*New Contact Form Message*\n\n`;
+    whatsappMessage += `*Name:* ${formData.name}\n`;
+    whatsappMessage += `*Email:* ${formData.email}\n`;
+    
+    if (formData.phone) {
+      whatsappMessage += `*Phone:* ${formData.phone}\n`;
     }
+    
+    whatsappMessage += `*Subject:* ${formData.subject}\n\n`;
+    whatsappMessage += `*Message:*\n${formData.message}`;
+
+    // URL encode karo message ko
+    const encodedMessage = encodeURIComponent(whatsappMessage);
+    
+    // WhatsApp URL banao
+    const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    
+    // WhatsApp pe redirect karo
+    window.open(whatsappURL, '_blank');
+
+    // Form reset karo
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      subject: "Select a subject",
+      message: "",
+    });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -193,8 +193,7 @@ export default function ContactPage() {
           </h2>
 
           <p className="text-black text-lg mb-8 font-medium">
-            Fill out the form below and our team will get back to you within 24 hours.
-            We're here to help with any questions about our products, orders, or services.
+            Fill out the form below and connect with us on WhatsApp.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -204,9 +203,7 @@ export default function ContactPage() {
               onChange={handleChange}
               placeholder="Enter Your Full Name *"
               required
-              disabled={loading}
-              className="w-full border-2 border-black rounded-md px-4 py-3
-                         text-black placeholder:text-black text-base font-medium disabled:opacity-50"
+              className="w-full border-2 border-black rounded-md px-4 py-3 text-black"
             />
 
             <input
@@ -216,9 +213,7 @@ export default function ContactPage() {
               onChange={handleChange}
               placeholder="Email Address *"
               required
-              disabled={loading}
-              className="w-full border-2 border-black rounded-md px-4 py-3
-                         text-black placeholder:text-black text-base font-medium disabled:opacity-50"
+              className="w-full border-2 border-black rounded-md px-4 py-3 text-black"
             />
 
             <input
@@ -226,20 +221,15 @@ export default function ContactPage() {
               value={formData.phone}
               onChange={handleChange}
               placeholder="Phone Number"
-              disabled={loading}
-              className="w-full border-2 border-black rounded-md px-4 py-3
-                         text-black placeholder:text-black text-base font-medium disabled:opacity-50"
+              className="w-full border-2 border-black rounded-md px-4 py-3 text-black"
             />
 
-            {/* ===== SELECT SUBJECT ===== */}
             <select
               name="subject"
               value={formData.subject}
               onChange={handleChange}
               required
-              disabled={loading}
-              className="w-full border-2 border-black rounded-md px-4 py-3
-                         text-black text-base font-medium leading-normal disabled:opacity-50"
+              className="w-full border-2 border-black rounded-md px-4 py-3 text-black"
             >
               <option>Select a subject</option>
               <option>Orders</option>
@@ -255,38 +245,17 @@ export default function ContactPage() {
               onChange={handleChange}
               placeholder="Your message..."
               required
-              disabled={loading}
-              className="w-full border-2 border-black rounded-md px-4 py-3 resize-none
-                         text-black placeholder:text-black text-base font-medium disabled:opacity-50"
+              className="w-full border-2 border-black rounded-md px-4 py-3 resize-none text-black"
             />
 
-            <p className="text-xs text-black">
-              {formData.message.length}/500 characters
-            </p>
-
-            {/* STATUS MESSAGE */}
-            {statusMessage && (
-              <p className={`text-sm font-semibold ${statusMessage.includes("✅") ? "text-green-600" : "text-red-600"}`}>
-                {statusMessage}
-              </p>
-            )}
-
-            {/* SEND MESSAGE BUTTON */}
             <button
               type="submit"
-              disabled={loading}
-              className="w-full bg-[rgb(44_95_124)] text-white py-3 rounded-md font-semibold
-                         flex items-center justify-center gap-2 disabled:opacity-50 hover:bg-[rgb(34_85_114)] transition"
+              className="w-full bg-[rgb(44_95_124)] text-white py-3 rounded-md font-semibold hover:bg-[rgb(54_105_134)] transition-colors flex items-center justify-center gap-2"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-5 h-5"
-              >
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
               </svg>
-              {loading ? "Sending..." : "Send Message"}
+              Send via WhatsApp
             </button>
           </form>
         </div>
@@ -301,12 +270,9 @@ export default function ContactPage() {
             <h3 className="text-xl font-semibold mb-2">
               Need Immediate Help?
             </h3>
-            <p className="text-sm mb-5">
-              Our customer support team is available during business hours to assist you with any urgent queries.
-            </p>
             <button
-              className="bg-white text-[rgb(44_95_124)] px-4 py-2 rounded-md font-semibold
-                         flex items-center gap-2"
+              onClick={() => window.location.href = "tel:+919306662709"}
+              className="bg-white text-[rgb(44_95_124)] px-4 py-2 rounded-md font-semibold flex items-center gap-2"
             >
               <Phone size={16} />
               Call Now
@@ -318,40 +284,10 @@ export default function ContactPage() {
             className="bg-white rounded-xl overflow-hidden border"
           >
             <iframe
-              src="https://www.google.com/maps?q=Mumbai&output=embed"
+              src="https://www.google.com/maps?q=Gali+No+1+Rudra+Colony+Bhiwani+Haryana+127021&output=embed"
               className="w-full h-64"
+              loading="lazy"
             />
-          </div>
-
-          {/* ===== FOLLOW US ===== */}
-          <div
-            data-animate="antique"
-            className="bg-white rounded-xl p-6 border"
-          >
-            <h3 className="text-xl font-semibold text-[rgb(44_95_124)] mb-3">
-              Follow Us
-            </h3>
-            <p className="text-black mb-3">
-              Stay connected for updates, tutorials, and exclusive offers
-            </p>
-
-            <div className="flex gap-4">
-              <div className="h-10 w-10 rounded-md bg-[#1f4f67] text-white flex items-center justify-center">
-                <Facebook size={18} />
-              </div>
-              <div className="h-10 w-10 rounded-md bg-[#1f4f67] text-white flex items-center justify-center">
-                <Instagram size={18} />
-              </div>
-              <div className="h-10 w-10 rounded-md bg-[#1f4f67] text-white flex items-center justify-center">
-                <Twitter size={18} />
-              </div>
-              <div className="h-10 w-10 rounded-md bg-[#1f4f67] text-white flex items-center justify-center">
-                <Youtube size={18} />
-              </div>
-              <div className="h-10 w-10 rounded-md bg-[#1f4f67] text-white flex items-center justify-center">
-                <Linkedin size={18} />
-              </div>
-            </div>
           </div>
 
         </div>

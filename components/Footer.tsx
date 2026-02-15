@@ -104,11 +104,11 @@ const Footer: FC = () => {
             <ul className="space-y-5 text-black">
               <li className="flex gap-4">
                 <MapPin className="text-[rgb(244_162_97)]" />
-                Mumbai, Maharashtra 400001
+                Gali No: 1 Rudra Colony, Bhiwani, Haryana - 127021
               </li>
               <li className="flex gap-4">
                 <Phone className="text-[rgb(244_162_97)]" />
-                +91 98765 43210
+                +91 93066 62709
               </li>
               <li className="flex gap-4">
                 <Mail className="text-[rgb(244_162_97)]" />
